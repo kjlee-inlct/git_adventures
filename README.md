@@ -76,16 +76,7 @@ Basic         ~30 min   Workflow / Recovery
 Experienced   ~35 min   History / Release / Assessment
 ```
 
-Each preset includes:
-
-- selected Mission numbers
-- one primary test hypothesis
-- observation targets
-- stop / redesign signals
-- before / during / after checklist
-- one-click Mission jumps
-
-Opening a Mission from the Facilitator Console also preselects the corresponding Test Group in the Session Recorder.
+Each preset includes selected Mission numbers, one primary hypothesis, observation targets, stop / redesign signals, and a before / during / after checklist. Opening a Mission from the Console also preselects the corresponding Test Group in the Session Recorder.
 
 See [First Internal Test Cycle Runbook](docs/first-internal-test-cycle.md).
 
@@ -106,28 +97,6 @@ Multiple Session JSON files can be compared by Beginner / Basic / Experienced gr
 Reports with unsupported schema, tester group, or `privacy.piiCollected != false` are rejected.
 
 See [Local Usability Report Aggregation](docs/report-aggregation.md).
-
-## Repository state model
-
-```text
-Repository State
- |
- +--- Current Branch
- +--- Working Tree
- +--- Staging Area
- +--- Conflict Set
- +--- Operation State
- |      +--- rebase
- |      +--- merge
- |      +--- cherry-pick
- +--- Commit History
- +--- Local Release Tags
- +--- Published Release Tags
- +--- Review Gate
- +--- Remote / Tracking
- +--- Stash Stack
- +--- Guardrail State
-```
 
 ## Git vs GitHub vs Team Policy
 
@@ -194,12 +163,9 @@ Reports: `http://localhost:8000/reports.html`
 
 https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 
-## Next depth
+## Next milestone
 
-1. Run the first 3-5 sessions per tester group using the Facilitator presets
-2. Aggregate reports and interview notes
-3. Fix repeated Mission / UI problems before changing global Rubric weights
-4. Decide from evidence whether richer Assessment scenarios or reporting features are needed next
+Run the first **3-5 sessions per tester group** using the Facilitator presets. Aggregate the anonymous reports and qualitative interview notes, then fix repeated Mission / UI problems before changing global Rubric weights or expanding content further.
 
 ## License
 

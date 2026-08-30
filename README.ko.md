@@ -128,6 +128,8 @@ Simulator Command Coverage
 
 **23개 Mission 전체**에 Golden Test를 적용합니다. Invariant Test는 Rebase/Merge Abort의 정확한 State 복원, Conflict 해결 State Transition, Stash Conflict 시 Entry 보존, Remote Divergence, 예상하지 못한 Remote 변경 시 Force-with-Lease Reject를 검증합니다.
 
+상세: [Simulator Command Coverage](docs/command-coverage.md)
+
 ## Local 실행
 
 ```bash

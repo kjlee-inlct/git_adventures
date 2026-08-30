@@ -61,11 +61,9 @@ Git Action
 Outcome Verification
 ```
 
-The Assessment Track is therefore not a command-recall quiz. Minimal hints point toward evidence or policy but do not reveal the answer command.
-
 ### Assessment scoring
 
-Assessment Debrief now uses four explainable axes:
+Assessment Debrief uses four explainable axes:
 
 ```text
 Judgment    40
@@ -74,9 +72,9 @@ Evidence    20
 Efficiency  10
 ```
 
-These are default weights; a Mission can override them when its learning objective requires a different emphasis. Incident Closure, for example, raises Evidence because verification is the main skill being measured.
+These are default weights; Missions may override them when the learning objective requires another emphasis.
 
-PASS uses two conditions:
+PASS uses both total score and a Safety floor:
 
 ```text
 total >= passScore
@@ -87,6 +85,34 @@ safety >= criticalSafetyFloor
 Useful inspection does not reduce Efficiency. Missing required inspection lowers Evidence, and unsafe Shared-History actions can fail the Safety floor even if the learner later reaches the correct state.
 
 See [Assessment Track](docs/assessment-track.md) and [Assessment Scoring Rubric](docs/assessment-scoring.md).
+
+## Internal usability session recorder
+
+The browser now includes an optional **local-only internal test recorder**.
+
+```text
+Choose Test Group
+      |
+Start Session
+      |
+Play normally
+      |
+End Session
+      |
+Export anonymous JSON
+```
+
+Groups:
+
+- Beginner
+- Basic
+- Experienced
+
+A report records Mission timing, relative Command Trace, Hint / Inspection / Detour / Unsafe counts, Guided scores, Assessment scores, and compact final Repository state.
+
+The recorder does not request name, email, employee id, or account id. It uses a separate Local Storage key and exports a versioned JSON report for internal comparison. The data is for product/rubric calibration, not employee ranking or certification.
+
+See [Local Usability Session Report](docs/usability-session-report.md) and [Internal Test Plan](docs/internal-test-plan.md).
 
 ## Repository state model
 
@@ -161,21 +187,9 @@ Propagate final recovery to main
 Incident Closure Verification
 ```
 
-Key rules:
-
-- Backport prerequisite commits before dependent fixes.
-- Keep emergency changes isolated and reviewable.
-- Review exact Hotfix scope before approval.
-- A technically mergeable Branch is not automatically release-approved.
-- Local Tag creation and Remote Tag publication are separate states.
-- Published Release Tags are immutable release identities.
-- Preserve auditable Shared History with explicit Revert when appropriate.
-- Propagate final incident fixes back to main to avoid future regression.
-- End operational workflows with verification, not merely a successful command.
-
 ## Validation gates
 
-Every PR now runs two layers of curriculum validation plus a scoring contract.
+Every PR now validates curriculum, Assessment scoring, and the local test-report contract.
 
 ```text
 Guided curriculum (40)
@@ -203,9 +217,20 @@ Assessment curriculum (4)
   Scoring Rubric Contract
        |
   Unsafe / Evidence-loss Scoring Tests
-```
 
-This keeps the original 40-Mission Regression Gate stable while allowing Assessment behavior and scoring to become stricter without weakening guided Mission coverage.
+Internal usability data
+  Session Report Schema
+       |
+  Tester Group Contract
+       |
+  PII Non-Collection Contract
+       |
+  Command Classification
+       |
+  Guided / Assessment Score Preservation
+       |
+  JSON Summary Validation
+```
 
 ## Run locally
 
@@ -232,6 +257,7 @@ Open `http://localhost:8000`.
 - [Release Governance and Incident Closure](docs/release-governance.md)
 - [Assessment Track](docs/assessment-track.md)
 - [Assessment Scoring Rubric](docs/assessment-scoring.md)
+- [Local Usability Session Report](docs/usability-session-report.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -245,12 +271,12 @@ https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 
 ## Next depth
 
-1. Forward-fix vs Revert vs Rollback Assessment with richer evidence
-2. Multiple simultaneously supported Release Lines
-3. PR Review / Merge Strategy assessment with competing valid-looking options
-4. Remote Branch deletion / Release cleanup policy
-5. Rubric calibration from internal usability sessions
-6. Internal usability testing before large-scale Mission expansion
+1. Run the first Beginner / Basic / Experienced internal sessions
+2. Compare time-to-first-command, Hint, Unsafe, Inspection, and Assessment patterns
+3. Calibrate Rubric weights / Safety floors from observed behavior
+4. Add richer Forward-fix vs Revert vs Rollback Assessment
+5. Add multiple simultaneously supported Release Lines
+6. Improve PR Review / Merge Strategy assessment with competing valid-looking options
 
 ## License
 

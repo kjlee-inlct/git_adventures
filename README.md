@@ -6,7 +6,7 @@ Git Adventures is a scenario-driven Git learning game built around one idea:
 
 > Learn Git by changing repository state, not by memorizing a command list.
 
-The learner receives a realistic repository situation, inspects Local / Remote state, types Git commands, and observes Working Tree, Staging Area, Commit History, Tracking, Stash, Conflict, Release Tag, publication, and in-progress operation state.
+The learner receives realistic repository situations, inspects Local / Remote state, types Git commands, and observes Working Tree, Staging Area, Commit History, Tracking, Stash, Conflict, Release Tag, publication, and in-progress operation state.
 
 ## Current phase
 
@@ -21,19 +21,49 @@ The learner receives a realistic repository situation, inspects Local / Remote s
 
 ## Playable curriculum
 
-The current prototype contains **40 Missions** across five Tracks.
+The browser prototype now contains **44 Missions across six Tracks**.
 
 ```text
-Foundations (4)
-Daily Workflow (8)
-Recovery Lab (6)
-Collaboration (9)
-Release & Incident (13)
+Foundations          4
+Daily Workflow       8
+Recovery Lab         6
+Collaboration        9
+Release & Incident  13
+Assessment           4
 ```
 
-Release & Incident now covers selective Backport, dependency ordering, Hotfix isolation, Conflict / Abort, annotated Tags, Bad Release Revert, Patch recovery, review evidence, approval gating, Tag publication, Hotfix propagation to main, and incident closure verification.
+The first 40 Missions are guided learning / practice. Missions 41-44 form the first Assessment Track and measure decision quality using already learned tools.
+
+Assessment currently covers:
+
+- Published regression: choose auditable Revert instead of erasing shared History
+- Supported release line: choose where a verified Fix actually belongs
+- Approved integration: choose the Merge strategy required by Scenario History Policy
+- Incident closure: verify state instead of assuming the workflow succeeded
 
 Long-term curriculum target: approximately **185-273 core Missions**, plus variations and assessments.
+
+## Assessment design
+
+Assessment Missions use `assessment: true` and intentionally suppress the normal final **Command Shape** hint.
+
+```text
+Scenario Evidence
+      |
+Repository State
+      |
+Team / Release Policy
+      |
+Decision
+      |
+Git Action
+      |
+Outcome Verification
+```
+
+The Assessment Track is therefore not a command-recall quiz. Minimal hints point toward evidence or policy but do not reveal the answer command.
+
+See [Assessment Track](docs/assessment-track.md).
 
 ## Repository state model
 
@@ -72,7 +102,7 @@ Team Policy
   = evidence and approval requirements before integration
 ```
 
-A review approval is therefore not simulated as a fake Git command. Git produces review evidence; the Scenario defines the approval gate.
+A review approval is not simulated as a fake Git command. Git produces review evidence; the Scenario defines the approval gate.
 
 See [Release Governance and Incident Closure](docs/release-governance.md).
 
@@ -122,23 +152,33 @@ Key rules:
 
 ## Validation gates
 
-Every PR runs:
+Every PR now runs two layers of curriculum validation.
 
 ```text
-JavaScript Syntax
-      |
-Content Contract
-      |
-Golden Mission Tests
-      |
-Alternate / Repository Invariants
-      |
-Release Governance Invariants
-      |
-Simulator Command Coverage
+Guided curriculum (40)
+  JavaScript Syntax
+       |
+  Content Contract
+       |
+  Golden Mission Tests
+       |
+  Alternate / Repository Invariants
+       |
+  Release Governance Invariants
+       |
+  Simulator Command Coverage
+
+Assessment curriculum (4)
+  Assessment Schema
+       |
+  Minimal Hint / No Command Leak
+       |
+  Expected Decision Command
+       |
+  Final State Verification
 ```
 
-Golden tests cover all **40 Missions**. Governance invariants verify that unapproved Hotfixes cannot integrate, Local Tags do not imply publication, explicit Tag publication preserves older Release identities, and incident recovery converges back to main.
+This keeps the original 40-Mission Regression Gate stable while allowing Assessment logic to become stricter without weakening guided Mission coverage.
 
 ## Run locally
 
@@ -163,6 +203,7 @@ Open `http://localhost:8000`.
 - [Release and Backport Learning Model](docs/release-and-backport.md)
 - [Release Incident Lifecycle](docs/release-incident-lifecycle.md)
 - [Release Governance and Incident Closure](docs/release-governance.md)
+- [Assessment Track](docs/assessment-track.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -176,11 +217,11 @@ https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 
 ## Next depth
 
-1. Forward-fix vs Revert / Rollback decision scenarios
-2. Multiple supported release lines
-3. PR review strategy and merge strategy assessment
-4. Remote branch deletion / release cleanup policy
-5. Release verification checklist and scored assessment Missions
+1. Forward-fix vs Revert vs Rollback Assessment with richer evidence
+2. Multiple simultaneously supported Release Lines
+3. PR Review / Merge Strategy assessment with competing valid-looking options
+4. Remote Branch deletion / Release cleanup policy
+5. Scored Assessment rubric and mastery thresholds
 6. Internal usability testing before large-scale Mission expansion
 
 ## License

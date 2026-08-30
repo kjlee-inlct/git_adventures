@@ -9,7 +9,7 @@ The current internal-test version should remain simple while preserving clear ex
 ## 2. Current Internal-Test Architecture
 
 ```text
-Internal Web Server
+Internal Static Web Server
       |
       v
 Browser Client
@@ -17,6 +17,10 @@ Browser Client
       +--- UI
       +--- Mission Engine
       +--- Git State Simulator
+      +--- Assessment Scoring
+      +--- Facilitator Console
+      +--- Local Session Recorder
+      +--- Local Report Aggregator
       +--- i18n
       +--- Local Progress
       +--- Static Mission Content
@@ -24,7 +28,49 @@ Browser Client
 
 No backend is required for the first product-validation phase.
 
-## 3. Future Service Architecture
+Current internal-test persistence is browser-local and exported manually when needed.
+
+Detailed deployment choices: [Internal Deployment Options](internal-deployment-options.md).
+
+## 3. Current Deployment Rule
+
+The current runtime has one real service responsibility: serve static files.
+
+Therefore:
+
+```text
+Docker Compose required?  NO
+```
+
+Recommended current choices:
+
+```text
+Development / single PC
+  python -m http.server 8000
+
+Small internal shared server
+  Nginx / Caddy static hosting
+  OR
+  one static-web container
+```
+
+A single container does not require Compose.
+
+Introduce Compose when multiple coordinated runtime services, proxy/persistence coordination, or repeatable operations needs materially justify it.
+
+Typical future trigger:
+
+```text
+static-web
+   +
+report/progress API
+   +
+database or storage
+```
+
+Infrastructure complexity must follow a real product/operations need rather than precede it.
+
+## 4. Future Service Architecture
 
 ```text
 Web Client
@@ -53,7 +99,7 @@ Platform API
 
 Billing is optional and remains outside the learning engine.
 
-## 4. Content-First Design
+## 5. Content-First Design
 
 Mission content must be data.
 
@@ -78,7 +124,7 @@ content/
 
 Prefer language-neutral mechanics with translated copy separated from state transitions.
 
-## 5. Mission Schema Concept
+## 6. Mission Schema Concept
 
 ```json
 {
@@ -105,7 +151,7 @@ During internal testing, Access Policy allows every implemented `accessGroup`.
 
 The engine validates resulting Git state rather than matching one exact command whenever multiple safe solutions exist.
 
-## 6. Git Simulation Layers
+## 7. Git Simulation Layers
 
 ### Phase 1 - Deterministic State Machine
 
@@ -132,7 +178,9 @@ Possible options:
 
 Real Git execution should be introduced only where simulation becomes a learning limitation.
 
-## 7. Engine Boundaries
+If server-side execution introduces API / worker / sandbox services, Docker Compose may become useful for internal development, though stronger isolation may eventually require a more specialized runtime.
+
+## 8. Engine Boundaries
 
 ```text
 Mission Content
@@ -149,7 +197,7 @@ Mission Engine
 
 The UI renders state but should not contain Git rules.
 
-## 8. Progress Model
+## 9. Progress Model
 
 Initial:
 
@@ -173,7 +221,7 @@ Progress data should be portable and versioned.
 
 Never silently discard learner progress during schema migration.
 
-## 9. Access Policy Model
+## 10. Access Policy Model
 
 Mission content describes neutral groups:
 
@@ -195,7 +243,7 @@ Internal test:
 
 Future product packaging can map groups to user or organization entitlements without changing Mission content.
 
-## 10. Multi-User Scale
+## 11. Multi-User Scale
 
 If the service expands publicly:
 
@@ -214,7 +262,7 @@ Potential backend traffic:
 
 This architecture can support many anonymous learners without requiring a server-side Git process for every Mission.
 
-## 11. Team Extensibility
+## 12. Team Extensibility
 
 Future Organization model:
 
@@ -240,7 +288,7 @@ Policy Profile examples:
 
 These policies can configure or generate organization-specific Missions later.
 
-## 12. Analytics Boundary
+## 13. Analytics Boundary
 
 Analytics must not be embedded throughout Mission code.
 
@@ -256,9 +304,11 @@ track.entered
 session.completed
 ```
 
-Initial internal test may record nothing or use an approved internal analytics path.
+The current internal cycle uses a local anonymous Session Recorder and manual JSON export rather than a central telemetry backend.
 
-## 13. Reliability and Content QA
+Do not introduce a central analytics service before there is a concrete operational need and privacy review.
+
+## 14. Reliability and Content QA
 
 Required as content grows:
 
@@ -270,8 +320,9 @@ Required as content grows:
 - unsafe-path regression tests
 - progress migration tests
 - broken-link / content-index validation
+- internal-test operations documentation contract
 
-## 14. Architecture Rule
+## 15. Architecture Rule
 
 ```text
 Product Rule changes
@@ -279,4 +330,12 @@ Product Rule changes
 Game Engine rewrite
 ```
 
-Future login, analytics, team features, or monetization should attach through adapters and policy layers rather than alter the core learning engine.
+and:
+
+```text
+Product validation need
+        !=
+Infrastructure complexity
+```
+
+Future login, analytics, team features, monetization, or deployment services should attach through adapters and policy layers rather than alter the core learning engine.

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Git Adventures · Facilitator</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="facilitator.css">
+</head>
+<body>
+  <main class="facilitator-shell">
+    <header class="facilitator-header panel">
+      <div>
+        <p class="eyebrow">INTERNAL TEST OPERATIONS</p>
+        <h1>Facilitator Console</h1>
+        <p class="muted">Run short, hypothesis-driven sessions without changing the game engine.</p>
+      </div>
+      <nav class="facilitator-nav">
+        <a class="button secondary" href="/">Game</a>
+        <a class="button secondary" href="/reports.html">Reports</a>
+      </nav>
+    </header>
+
+    <section class="panel facilitator-guide">
+      <h2>Session rule</h2>
+      <div class="rule-grid">
+        <article><strong>Do</strong><p>Observe hesitation, state interpretation, and recovery decisions. Ask follow-up questions after a Mission or session segment.</p></article>
+        <article><strong>Do not</strong><p>Explain Git concepts, suggest commands, point at the correct UI element, or rescue the tester before a stop signal is reached.</p></article>
+      </div>
+    </section>
+
+    <section id="presetRoot" class="preset-grid"></section>
+
+    <section class="panel checklist-panel">
+      <h2>Facilitator Checklist</h2>
+      <div class="checklist-grid">
+        <div>
+          <h3>Before</h3>
+          <label><input type="checkbox"> Correct tester group selected</label>
+          <label><input type="checkbox"> Recorder Session started</label>
+          <label><input type="checkbox"> No Git explanation given</label>
+          <label><input type="checkbox"> Browser / screen size recorded separately if relevant</label>
+        </div>
+        <div>
+          <h3>During</h3>
+          <label><input type="checkbox"> Time-to-first-command observed</label>
+          <label><input type="checkbox"> State-board confusion noted</label>
+          <label><input type="checkbox"> Unsafe attempts not verbally prevented</label>
+          <label><input type="checkbox"> Alternate safe solution objections noted</label>
+        </div>
+        <div>
+          <h3>After</h3>
+          <label><input type="checkbox"> Session ended</label>
+          <label><input type="checkbox"> Anonymous JSON exported</label>
+          <label><input type="checkbox"> Short qualitative interview completed</label>
+          <label><input type="checkbox"> Report loaded into Reports only after session</label>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="test-presets.js"></script>
+  <script src="facilitator.js"></script>
+</body>
+</html>

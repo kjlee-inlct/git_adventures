@@ -6,7 +6,7 @@ Git Adventures is a scenario-driven Git learning game built around one idea:
 
 > Learn Git by changing repository state, not by memorizing a command list.
 
-The learner receives a realistic repository situation, inspects Local / Remote state, types Git commands, and observes how Working Tree, Staging Area, Commit History, Tracking, Stash, Conflict, and in-progress operation state change.
+The learner receives a realistic repository situation, inspects Local / Remote state, types Git commands, and observes how Working Tree, Staging Area, Commit History, Tracking, Stash, Conflict, Release Tag, and in-progress operation state change.
 
 ## Current phase
 
@@ -21,7 +21,7 @@ The learner receives a realistic repository situation, inspects Local / Remote s
 
 ## Playable curriculum
 
-The current prototype contains **30 Missions** across five Tracks.
+The current prototype contains **35 Missions** across five Tracks.
 
 ```text
 Foundations (4)
@@ -46,10 +46,14 @@ Collaboration (9)
   multi-file Rebase / Merge Conflict
   deliberate rebase --skip
 
-Release & Incident (3)
+Release & Incident (8)
   selective Cherry-pick / Backport
-  Cherry-pick Conflict -> adapt -> continue
-  wrong Backport -> abort to exact release state
+  Cherry-pick Conflict / Abort
+  dependency-ordered Backport
+  Hotfix Branch isolation
+  annotated Release Tag
+  bad Release Revert
+  new Patch Tag after recovery
 ```
 
 Long-term curriculum target: approximately **185-273 core Missions**, plus variations and assessments.
@@ -69,6 +73,7 @@ Repository State
  |      +--- merge
  |      +--- cherry-pick
  +--- Commit History
+ +--- Release Tags
  +--- Remote / Tracking
  |      +--- tracking branch
  |      +--- known / actual Remote HEAD
@@ -97,36 +102,42 @@ Conflict Set
    +--- skip -> only when the current commit intent is explicitly obsolete
 ```
 
-Rebase and Merge intentionally produce different History outcomes. Abort paths and deliberate Skip are treated as History decisions, not escape shortcuts.
-
 See [Conflict Lifecycle](docs/conflict-lifecycle.md) and [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md).
 
-## Release / Backport model
+## Release / incident model
 
-Release work is taught around **change intent and risk**, not "merge everything newest."
+Release work is taught around **change intent, dependency, identity, and recovery**.
 
 ```text
-Release needs one verified fix
-        |
-        v
-Select exact Commit intent
-        |
-        v
-Cherry-pick / Backport
-        |
-   +----+----+
-   |         |
- clean    conflict
-   |         |
-   |     adapt implementation
-   |     preserve fix intent
-   |         |
-   +----> continue
+Verified Fix
+   |
+Dependency Check
+   |
+Selective Backport
+   |
+Hotfix Branch
+   |
+Verification
+   |
+Annotated Tag
+   |
+Production
+   |
+   +--- Healthy
+   |
+   +--- Regression -> Revert -> Verify -> New Patch Tag
 ```
 
-If the selected Commit does not belong in the release, the correct action may be `git cherry-pick --abort` rather than resolving the conflict.
+Key rules:
 
-See [Release and Backport Learning Model](docs/release-and-backport.md).
+- Backport prerequisite commits before dependent fixes.
+- Keep emergency changes isolated and reviewable on a Hotfix Branch.
+- Tag the exact Commit that passed verification.
+- Do not move a Published Release Tag to hide a bad release.
+- Recover Shared Release History with an explicit Revert when appropriate.
+- Publish verified recovery under a new Patch Version.
+
+See [Release and Backport Learning Model](docs/release-and-backport.md) and [Release Incident Lifecycle](docs/release-incident-lifecycle.md).
 
 ## Force-with-lease policy
 
@@ -163,7 +174,7 @@ Alternate / Invariant Tests
 Simulator Command Coverage
 ```
 
-Golden tests cover all **30 Missions**. Invariants verify exact Rebase/Merge/Cherry-pick Abort restoration, multi-file Conflict completeness, blocked-switch WIP preservation, deliberate Rebase Skip semantics, Stash retention on conflict, Remote divergence behavior, and force-with-lease rejection when Remote changes unexpectedly.
+Golden tests cover all **35 Missions**. Invariants include exact operation Abort restoration, conflict completeness, blocked-switch WIP preservation, dependency-ordered Backports, immutable Published Tags, auditable Bad Release Revert, and new Patch Tag creation for verified recovery.
 
 ## Run locally
 
@@ -189,6 +200,7 @@ Open `http://localhost:8000`.
 - [Conflict Lifecycle](docs/conflict-lifecycle.md)
 - [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md)
 - [Release and Backport Learning Model](docs/release-and-backport.md)
+- [Release Incident Lifecycle](docs/release-incident-lifecycle.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -210,12 +222,13 @@ Current design screens:
 
 ## Next depth
 
-1. Backport dependency chains and multi-commit ordering
-2. Hotfix Branch + Release PR workflow
-3. PR Review / Merge Strategy decisions
-4. Release Tag / bad Release / rollback incidents
-5. Verification checklist and assessment Missions
-6. Internal usability testing before large-scale Mission expansion
+1. Hotfix Branch -> Release PR -> Review / approval decisions
+2. Tag publication and remote tag handling
+3. Forward-fix vs Revert / Rollback decision scenarios
+4. Hotfix propagation back to main
+5. Multiple supported release lines
+6. PR Review / Merge Strategy assessment
+7. Internal usability testing before large-scale Mission expansion
 
 ## License
 

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Git Adventures - Internal Test Reports</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="reports.css">
+</head>
+<body>
+  <main class="report-shell">
+    <header class="report-header">
+      <div><p class="eyebrow">INTERNAL TEST TOOL</p><h1>Usability Report Aggregator</h1><p class="muted">Compare anonymous Beginner / Basic / Experienced session reports without a backend.</p></div>
+      <a class="button secondary" href="index.html">Back to game</a>
+    </header>
+
+    <section class="panel report-controls">
+      <label class="upload-box">
+        <strong>Session JSON files</strong>
+        <span class="muted">Select one or more exported Git Adventures session reports.</span>
+        <input id="reportFiles" type="file" accept="application/json,.json" multiple>
+      </label>
+      <div class="report-actions">
+        <button id="clearReports" class="button secondary" type="button">Clear</button>
+        <button id="exportAggregate" class="button" type="button" disabled>Export aggregate JSON</button>
+      </div>
+      <p id="loadStatus" class="muted">No reports loaded.</p>
+    </section>
+
+    <section id="groupSummary" class="group-grid"></section>
+
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">GROUP COMPARISON</p><h2>Core Metrics</h2></div></div>
+      <div class="table-wrap"><table id="comparisonTable"><thead><tr><th>Metric</th><th>Beginner</th><th>Basic</th><th>Experienced</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading"><div><p class="eyebrow">MISSION HOTSPOTS</p><h2>Mission-level Signals</h2></div></div>
+      <div class="table-wrap"><table id="missionTable"><thead><tr><th>Mission</th><th>Track</th><th>Attempts</th><th>Completion</th><th>Median first command</th><th>Hints / attempt</th><th>Unsafe / attempt</th><th>Assessment avg</th></tr></thead><tbody></tbody></table></div>
+    </section>
+  </main>
+  <script src="report-aggregator.js"></script>
+  <script src="reports-ui.js"></script>
+</body>
+</html>

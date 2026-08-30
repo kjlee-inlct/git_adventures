@@ -6,7 +6,7 @@ Git Adventures는 다음 원칙을 중심으로 설계하는 Scenario 기반 Git
 
 > Git Command 목록을 외우는 대신 Repository State를 직접 변화시키며 Git을 학습.
 
-사용자는 실제 개발 상황과 유사한 Repository를 확인하고 Git Command를 직접 입력한 뒤 Working Tree, Staging Area, Commit History, Remote Tracking, Stash, Conflict, 진행 중 Operation State 변화를 즉시 확인합니다.
+사용자는 실제 개발 상황과 유사한 Repository를 확인하고 Git Command를 직접 입력한 뒤 Working Tree, Staging Area, Commit History, Remote Tracking, Stash, Conflict, Release Tag, 진행 중 Operation State 변화를 즉시 확인합니다.
 
 ## 현재 단계
 
@@ -21,7 +21,7 @@ Git Adventures는 다음 원칙을 중심으로 설계하는 Scenario 기반 Git
 
 ## 현재 Playable Curriculum
 
-현재 Prototype에는 **30개 Mission**이 있으며 5개 Track으로 구성됩니다.
+현재 Prototype에는 **35개 Mission**이 있으며 5개 Track으로 구성됩니다.
 
 ```text
 Foundations (4)
@@ -46,10 +46,14 @@ Collaboration (9)
   Multi-file Rebase / Merge Conflict
   의도적인 rebase --skip
 
-Release & Incident (3)
+Release & Incident (8)
   선택적 Cherry-pick / Backport
-  Cherry-pick Conflict -> Release 구조에 맞게 조정 -> Continue
-  잘못 선택한 Backport -> 정확한 Release State로 Abort
+  Cherry-pick Conflict / Abort
+  Dependency 순서를 고려한 Backport
+  Hotfix Branch 격리
+  Annotated Release Tag
+  Bad Release Revert
+  Recovery 후 새 Patch Tag
 ```
 
 장기 목표는 약 **185~273개 Core Mission** + Scenario Variation + Assessment 규모입니다.
@@ -69,6 +73,7 @@ Repository State
  |      +--- merge
  |      +--- cherry-pick
  +--- Commit History
+ +--- Release Tags
  +--- Remote / Tracking
  |      +--- Tracking Branch
  |      +--- Known / Actual Remote HEAD
@@ -97,36 +102,42 @@ Conflict Set
    +--- Skip -> 현재 Commit Intent가 명확히 불필요해진 경우에만 사용
 ```
 
-Rebase와 Merge는 서로 다른 History 결과를 만들며, Abort와 Skip 역시 Escape Command가 아니라 History Decision으로 다룹니다.
-
 상세: [Conflict Lifecycle](docs/conflict-lifecycle.md), [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md)
 
-## Release / Backport Model
+## Release / Incident Model
 
-Release 작업은 **가장 최신 Branch 전체를 합치는 것**이 아니라 필요한 Change Intent와 Risk를 기준으로 판단합니다.
+Release 작업은 **Change Intent, Dependency, Release Identity, Recovery**를 기준으로 학습합니다.
 
 ```text
-Release에 검증된 Fix 하나만 필요
-        |
-        v
-정확한 Commit Intent 선택
-        |
-        v
-Cherry-pick / Backport
-        |
-   +----+----+
-   |         |
- Clean     Conflict
-   |         |
-   |     Release 구조에 맞게 구현 조정
-   |     Fix Intent는 유지
-   |         |
-   +----> Continue
+검증된 Fix
+   |
+Dependency 확인
+   |
+Selective Backport
+   |
+Hotfix Branch
+   |
+Verification
+   |
+Annotated Tag
+   |
+Production
+   |
+   +--- 정상
+   |
+   +--- Regression -> Revert -> Recovery 검증 -> 새 Patch Tag
 ```
 
-선택한 Commit 자체가 Release Scope 밖이라면 Conflict를 해결하는 대신 `git cherry-pick --abort`가 올바른 결정일 수 있습니다.
+핵심 Rule:
 
-상세: [Release and Backport Learning Model](docs/release-and-backport.md)
+- 의존하는 Fix보다 선행 Dependency Commit을 먼저 Backport.
+- 긴급 변경도 Hotfix Branch로 격리하여 Review 가능한 Scope 유지.
+- 실제 Verification을 통과한 정확한 Commit에 Release Tag 생성.
+- 이미 Published된 Release Tag를 수정된 Commit으로 이동하지 않음.
+- Shared Release History의 Bad Change는 필요 시 명시적 Revert로 복구.
+- 검증된 Recovery는 새로운 Patch Version으로 Publish.
+
+상세: [Release and Backport Learning Model](docs/release-and-backport.md), [Release Incident Lifecycle](docs/release-incident-lifecycle.md)
 
 ## Force-with-Lease Policy
 
@@ -165,7 +176,7 @@ Alternate / Invariant Tests
 Simulator Command Coverage
 ```
 
-**30개 Mission 전체**에 Golden Test를 적용합니다. Invariant Test는 Rebase/Merge/Cherry-pick Abort의 정확한 State 복원, Multi-file Conflict 전체 해결 조건, Blocked Switch의 WIP 보존, 의도적인 Rebase Skip 의미, Stash Conflict 시 Entry 보존, Remote Divergence, 예상하지 못한 Remote 변경 시 Force-with-Lease Reject를 검증합니다.
+**35개 Mission 전체**에 Golden Test를 적용합니다. Invariant Test는 Operation Abort 복원, Multi-file Conflict 전체 해결 조건, Blocked Switch WIP 보존, Dependency 순서 Backport, Published Tag 불변성, Bad Release Revert의 Audit History 보존, Recovery용 새 Patch Tag 생성을 검증합니다.
 
 ## Local 실행
 
@@ -191,6 +202,7 @@ python -m http.server 8000
 - [Conflict Lifecycle](docs/conflict-lifecycle.md)
 - [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md)
 - [Release and Backport Learning Model](docs/release-and-backport.md)
+- [Release Incident Lifecycle](docs/release-incident-lifecycle.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -212,12 +224,13 @@ https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 
 ## 다음 구현 깊이
 
-1. Backport Dependency Chain 및 Multi-commit 적용 순서
-2. Hotfix Branch + Release PR Workflow
-3. PR Review / Merge Strategy 판단
-4. Release Tag / Bad Release / Rollback Incident
-5. Verification Checklist 및 Assessment Mission
-6. 대규모 Mission 확장 전 사내 Usability Test
+1. Hotfix Branch -> Release PR -> Review / Approval 판단
+2. Tag Publication / Remote Tag 처리
+3. Forward-fix vs Revert / Rollback Decision Scenario
+4. Hotfix 변경을 main으로 다시 전파하는 Workflow
+5. 여러 Supported Release Line 관리
+6. PR Review / Merge Strategy Assessment
+7. 대규모 Mission 확장 전 사내 Usability Test
 
 ## License
 

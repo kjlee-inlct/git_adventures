@@ -4,7 +4,7 @@
 
 Run the first Git Adventures calibration cycle consistently across Beginner, Basic, and Experienced testers.
 
-The objective is not to prove that the current product is good. The objective is to discover where the learning model, interaction design, scenario wording, or scoring assumptions fail.
+The objective is not to prove that the current product is good. The objective is to discover where the learning model, interaction design, scenario wording, technical assumptions, or scoring model fail.
 
 ## 1. Entry points
 
@@ -19,7 +19,7 @@ Report Aggregator
   /reports.html
 ```
 
-The Facilitator Console contains the current group presets, observation targets, stop/redesign signals, and a simple checklist.
+The Facilitator Console contains the current group presets, observation targets, stop/redesign signals, checklist, and links to all operating documents.
 
 ## 2. Group presets
 
@@ -69,16 +69,17 @@ Primary question:
 
 > Do advanced scenarios feel technically credible and require real history / policy judgment rather than command trivia?
 
-Experienced-user objections are especially important when they identify safe equivalent solutions or technical inaccuracies.
+Experienced-user objections are especially important when they identify safe equivalent solutions, misleading simplifications, or technical inaccuracies.
 
 ## 3. Before the session
 
 Facilitator checklist:
 
 - assign only the coarse tester group: Beginner / Basic / Experienced
-- do not record name, email, employee id, or account identity in Git Adventures
+- do not record name, email, employee id, or account identity in Git Adventures artifacts
 - open `/facilitator.html`
 - review the group hypothesis and stop signals
+- prepare the [Internal Test Session Sheet](test-session-sheet.md)
 - open the first preset Mission
 - confirm the Test Group is preselected in the recorder
 - start the Session recorder
@@ -101,6 +102,8 @@ Record or later inspect:
 - detours and repeated wrong actions
 - verbal explanations that reveal their mental model
 
+Write factual observations in the Session Sheet before writing interpretations.
+
 ### Do not rescue normal difficulty
 
 Do not:
@@ -121,13 +124,11 @@ Intervention is appropriate when:
 - the scenario contains an obvious contradiction that makes the intended task impossible
 - the tester explicitly wants to stop
 
-Record the intervention separately in facilitator notes; do not put personal identity into the Session JSON.
+Record the intervention in the Session Sheet. Do not put personal identity into Session JSON or notes.
 
 ## 5. Stop / redesign signals
 
 A single failure does not automatically trigger redesign, but repeated signals should stop content expansion.
-
-Examples:
 
 ### Beginner
 
@@ -152,35 +153,40 @@ Examples:
 
 End and export the anonymous Session JSON first.
 
-Then ask a short qualitative interview:
+Then use the [Internal Usability Interview Note Template](interview-note-template.md).
 
-1. What did the Repository State panel mean to you?
-2. Which Mission required the most thinking?
-3. Which Mission felt unfair or ambiguous?
-4. Did any Mission feel like guessing the author's command?
-5. Was there a safe solution you expected to work but the game rejected?
-6. What would you want to practice next?
+Core interview topics:
 
-For Experienced testers also ask:
+1. Repository State mental model
+2. hardest decision and evidence used
+3. unfair / ambiguous Mission
+4. rejected safe alternative
+5. missing Scenario evidence / policy
+6. unsafe / recovery reasoning
+7. Assessment fairness where applicable
+8. technical credibility for Experienced testers
+9. desired future practice
+10. voluntary return intent
 
-7. Which scenario felt technically least credible?
-8. Which policy decision had more than one defensible answer?
+Do not teach the expected answer during the interview. Record objections for later review.
 
 ## 7. Aggregation
 
 After several sessions:
 
 1. open `/reports.html`
-2. load all anonymous Session JSON files
+2. load all usable anonymous Session JSON files
 3. verify rejected-report warnings
 4. compare Beginner / Basic / Experienced summaries
 5. inspect Mission Hotspots
 6. inspect raw Command Traces for suspicious Missions
-7. combine quantitative patterns with interview notes
+7. combine quantitative patterns with Session Sheets and interview notes
 
 Prioritize:
 
 ```text
+Technical correctness risk
+   |
 Unsafe patterns
    |
 Low completion
@@ -229,8 +235,79 @@ The first cycle is complete when:
 
 - each group has multiple usable anonymous reports
 - the highest-risk Mission hotspots have been reviewed
-- at least one qualitative interview exists per session
+- one Session Sheet and one qualitative interview note exist for each usable session
 - major technical-credibility objections are resolved or documented
+- safe alternate-solution objections have explicit decisions
 - the team has decided what **not** to change as well as what to change
 
 Only then should the next large Mission expansion or Rubric recalibration begin.
+
+## 11. Required Operating Artifacts
+
+Use the following artifacts consistently.
+
+```text
+Test Plan
+  docs/internal-test-plan.md
+
+Runbook
+  docs/first-internal-test-cycle.md
+
+Per-session factual record
+  docs/test-session-sheet.md
+
+Post-session reasoning interview
+  docs/interview-note-template.md
+
+Machine-recorded anonymous behavior
+  Session JSON export
+
+Cross-session metrics
+  /reports.html
+
+Product-change decision
+  docs/result-review-decision-framework.md
+```
+
+Role separation:
+
+```text
+Test Plan       -> Why / what to validate
+Runbook         -> How to execute the cycle
+Session Sheet   -> What happened
+Interview       -> Why the tester acted that way
+Aggregator      -> What repeats across sessions
+Decision Review -> What to change / not change
+```
+
+Do not merge these roles into one free-form note.
+
+## 12. Review Meeting Handoff
+
+When the first batch is ready, use the [Result Review Decision Framework](result-review-decision-framework.md).
+
+The Review meeting must start with:
+
+1. technical-correctness objections,
+2. excluded / caveated sessions,
+3. unsafe hotspots,
+4. low-completion hotspots,
+5. rejected safe alternatives,
+6. repeated mental-model failures,
+7. Assessment-axis patterns,
+8. engagement / polish observations.
+
+Every meaningful issue should end in one explicit decision:
+
+```text
+FIX NOW
+CHANGE MISSION ONLY
+CHANGE UI / LEARNING MODEL
+ADD ALTERNATE SOLUTION
+CHANGE RUBRIC
+OBSERVE MORE
+KEEP AS-IS
+ESCALATE TECHNICAL REVIEW
+```
+
+Do not turn every interview comment into backlog work.

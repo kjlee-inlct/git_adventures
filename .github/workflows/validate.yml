@@ -27,6 +27,7 @@ jobs:
           node --check app.js
           node --check content/missions.js
           node --check content/missions-daily.js
+          node --check content/missions-collaboration.js
           node --check tests/test-helpers.mjs
           node --check tests/golden.mjs
           node --check tests/alternate-solutions.mjs

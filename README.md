@@ -21,7 +21,7 @@ The learner receives a realistic repository situation, inspects Local / Remote s
 
 ## Playable curriculum
 
-The current prototype contains **26 Missions** across four Tracks.
+The current prototype contains **30 Missions** across five Tracks.
 
 ```text
 Foundations (4)
@@ -38,13 +38,18 @@ Recovery Lab (6)
   rebase abort
   merge abort
 
-Collaboration (8)
+Collaboration (9)
   Ahead / Behind Divergence
   policy-driven Rebase and Merge
   Rebase / Merge Conflict lifecycle
   constrained force-with-lease rewrite
-  multi-file Rebase Conflict
+  multi-file Rebase / Merge Conflict
   deliberate rebase --skip
+
+Release & Incident (3)
+  selective Cherry-pick / Backport
+  Cherry-pick Conflict -> adapt -> continue
+  wrong Backport -> abort to exact release state
 ```
 
 Long-term curriculum target: approximately **185-273 core Missions**, plus variations and assessments.
@@ -62,6 +67,7 @@ Repository State
  |      +--- null
  |      +--- rebase
  |      +--- merge
+ |      +--- cherry-pick
  +--- Commit History
  +--- Remote / Tracking
  |      +--- tracking branch
@@ -94,6 +100,33 @@ Conflict Set
 Rebase and Merge intentionally produce different History outcomes. Abort paths and deliberate Skip are treated as History decisions, not escape shortcuts.
 
 See [Conflict Lifecycle](docs/conflict-lifecycle.md) and [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md).
+
+## Release / Backport model
+
+Release work is taught around **change intent and risk**, not "merge everything newest."
+
+```text
+Release needs one verified fix
+        |
+        v
+Select exact Commit intent
+        |
+        v
+Cherry-pick / Backport
+        |
+   +----+----+
+   |         |
+ clean    conflict
+   |         |
+   |     adapt implementation
+   |     preserve fix intent
+   |         |
+   +----> continue
+```
+
+If the selected Commit does not belong in the release, the correct action may be `git cherry-pick --abort` rather than resolving the conflict.
+
+See [Release and Backport Learning Model](docs/release-and-backport.md).
 
 ## Force-with-lease policy
 
@@ -130,7 +163,7 @@ Alternate / Invariant Tests
 Simulator Command Coverage
 ```
 
-Golden tests cover all **26 Missions**. Invariants verify exact Rebase/Merge Abort restoration, multi-file Conflict completeness, blocked-switch WIP preservation, deliberate Rebase Skip semantics, Stash retention on conflict, Remote divergence behavior, and force-with-lease rejection when Remote changes unexpectedly.
+Golden tests cover all **30 Missions**. Invariants verify exact Rebase/Merge/Cherry-pick Abort restoration, multi-file Conflict completeness, blocked-switch WIP preservation, deliberate Rebase Skip semantics, Stash retention on conflict, Remote divergence behavior, and force-with-lease rejection when Remote changes unexpectedly.
 
 ## Run locally
 
@@ -155,6 +188,7 @@ Open `http://localhost:8000`.
 - [Collaboration and Divergence Expansion](docs/collaboration-expansion.md)
 - [Conflict Lifecycle](docs/conflict-lifecycle.md)
 - [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md)
+- [Release and Backport Learning Model](docs/release-and-backport.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -176,11 +210,11 @@ Current design screens:
 
 ## Next depth
 
-1. Multi-file Merge Conflict and partially resolved Abort
-2. `rebase --skip` with multiple replayed commits
-3. Cherry-pick / Backport across Release Branches
-4. PR Review and Merge strategy decisions
-5. Release / Hotfix incident Track
+1. Backport dependency chains and multi-commit ordering
+2. Hotfix Branch + Release PR workflow
+3. PR Review / Merge Strategy decisions
+4. Release Tag / bad Release / rollback incidents
+5. Verification checklist and assessment Missions
 6. Internal usability testing before large-scale Mission expansion
 
 ## License

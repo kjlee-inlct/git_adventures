@@ -6,7 +6,7 @@ Describe exactly how to turn the first real internal calibration data into the f
 
 This workflow starts **after** the first 3-5 usable sessions per tester group have been run.
 
-The input is not one score or one interview comment. The input bundle is:
+The input bundle is:
 
 ```text
 Anonymous Session JSON
@@ -21,9 +21,20 @@ Technical review when required
         |
         v
 First Review Record
+        |
+        v
+Scoped Product Change
+        |
+        v
+Retest / Closure
 ```
 
-The output is one explicit product decision with a clearly limited change scope.
+Use these supporting documents:
+
+- [Review Record Template](review-record-template.md)
+- [Internal Test Evidence Handling](internal-evidence-handling.md)
+- [Review Record to Change Traceability](review-record-to-change-traceability.md)
+- [Result Review Decision Framework](result-review-decision-framework.md)
 
 ---
 
@@ -49,6 +60,7 @@ Before review, verify:
 - Facilitator interventions and invalid/caveated sessions are identified.
 - Session files do not contain direct identity data.
 - `reports.html` accepts the intended JSON files without schema/privacy rejection.
+- Evidence is stored in the internally approved location described by [Internal Test Evidence Handling](internal-evidence-handling.md).
 
 A technically confirmed product defect may still be fixed immediately before this sample target; see the Result Review Decision Framework.
 
@@ -77,29 +89,15 @@ internal-test-cycle-01/
 
 Do not use tester names as filenames.
 
-Example:
-
-```text
-sessions/Beginner/session-2db7....json
-session-sheets/session-2db7....md
-interview-notes/session-2db7....md
-```
-
-The repository contains templates and rules; actual internal test evidence should be stored only in the internally approved location.
+The repository contains templates/rules and synthetic fixtures only. Actual internal test evidence should be stored only in the internally approved location.
 
 ---
 
 ## 3. Build the Aggregate View
 
-Open:
+Open `/reports.html` and load all usable Session JSON files from the same test cycle.
 
-```text
-/reports.html
-```
-
-Load all usable Session JSON files from the same test cycle.
-
-First check:
+Check:
 
 - accepted report count,
 - rejected report warnings,
@@ -131,23 +129,7 @@ Review in this order:
 9. Engagement / polish observations
 ```
 
-Write each candidate as a falsifiable statement.
-
-Good:
-
-> Mission 17 causes Basic users to interpret a retained Stash Entry after conflict as duplicate data and three testers try to remove it before verifying the resolved result.
-
-Bad:
-
-> Stash UX is bad.
-
-Good:
-
-> Experienced users in Missions 41 and 43 give technically sound explanations but lose Evidence points because the Rubric requires explicit inspection they considered unnecessary.
-
-Bad:
-
-> Evidence score is too strict.
+Write each candidate as a falsifiable statement rather than a broad judgment.
 
 ---
 
@@ -155,60 +137,42 @@ Bad:
 
 For each candidate, check four evidence layers.
 
-### Layer A - Session JSON
+### A - Session JSON
 
-Look for:
+- exact Command Trace
+- `atMs` timing
+- Hint usage
+- Wrong / Detour / Unsafe counts
+- Guided / Assessment scores
+- final Repository summary
 
-- exact Command Trace,
-- `atMs` timing,
-- Hint usage,
-- Wrong / Detour / Unsafe counts,
-- Guided scores,
-- Assessment axes,
-- final Repository summary.
+### B - Session Sheet
 
-### Layer B - Session Sheet
+- hesitation point
+- State-panel interpretation
+- visible confusion
+- Facilitator intervention
+- session validity
 
-Look for factual observation:
+### C - Interview Note
 
-- hesitation point,
-- State-panel interpretation,
-- visible confusion,
-- Facilitator intervention,
-- whether the session remained valid.
+- why the learner chose the command
+- what evidence they believed mattered
+- ambiguity
+- rejected safe alternatives
+- technical credibility objections
 
-### Layer C - Interview Note
+### D - Technical Review
 
-Look for the learner's reasoning:
-
-- why they chose the command,
-- what evidence they believed mattered,
-- whether wording felt ambiguous,
-- whether a rejected alternate seemed safe,
-- whether an Experienced tester disputes Git semantics.
-
-### Layer D - Technical Review
-
-Required when the candidate concerns:
-
-- Git semantics,
-- destructive History behavior,
-- alternate commands,
-- Team Policy assumptions,
-- Release/Tag behavior,
-- Assessment answer defensibility.
+Required for Git semantics, History safety, alternate commands, Team Policy assumptions, Release/Tag behavior, or Assessment answer defensibility.
 
 Do not resolve technical objections by majority vote.
 
 ---
 
-## 6. Decide Whether the Evidence Is Strong Enough
+## 6. Match Evidence Scope to Change Scope
 
-Use scope proportionality.
-
-### Mission-local change evidence
-
-A Mission-local change can be justified when:
+### Mission-local change
 
 ```text
 pattern repeats in the same Mission
@@ -216,9 +180,7 @@ AND
 trace / observation / interview explain the same failure
 ```
 
-### Global UI / Learning Model evidence
-
-Require broader repetition:
+### Global UI / Learning Model
 
 ```text
 same misunderstanding across >= 2 Missions
@@ -228,9 +190,7 @@ AND
 qualitative reasoning supports the same mental-model failure
 ```
 
-### Global Assessment Rubric evidence
-
-Require the strongest calibration evidence:
+### Global Assessment Rubric
 
 ```text
 multiple Assessment Missions
@@ -242,55 +202,21 @@ AND
 Mission ambiguity / scoring-event bug ruled out
 ```
 
-If evidence does not meet the needed scope, choose `OBSERVE MORE` rather than widening the change.
+If the evidence is weaker than the proposed change scope, choose `OBSERVE MORE`.
 
 ---
 
 ## 7. Write the First Review Record
 
-Use the template from `result-review-decision-framework.md`.
+Copy [Review Record Template](review-record-template.md) and create one record per important repeated pattern or independently confirmed critical defect.
 
-The first Review Record should contain:
+Recommended ID:
 
 ```text
-Review ID:
-Date:
-Mission(s):
-Tester Group(s):
-Evidence Tags:
-
-Observed Pattern:
-
-Session JSON Evidence:
-
-Aggregator Evidence:
-
-Facilitator / Interview Evidence:
-
-Technical Review:
-
-Decision:
-[ ] FIX NOW
-[ ] CHANGE MISSION ONLY
-[ ] CHANGE UI / LEARNING MODEL
-[ ] ADD ALTERNATE SOLUTION
-[ ] CHANGE RUBRIC
-[ ] OBSERVE MORE
-[ ] KEEP AS-IS
-[ ] ESCALATE TECHNICAL REVIEW
-
-Why:
-
-Next Action:
-
-Evidence Needed After Change:
-
-Do Not Change:
+CYCLE01-RR-001
 ```
 
-### Evidence Tags
-
-Recommended tags:
+Evidence Tags may include:
 
 ```text
 TECHNICAL_CORRECTNESS
@@ -307,11 +233,13 @@ ENGAGEMENT
 TEST_INVALIDATION
 ```
 
+Do not omit `Do Not Change`.
+
 ---
 
 ## 8. Example First Review Record
 
-Example only; do not treat this as an observed result before real data exists.
+Example only; do not treat this as observed evidence before real sessions exist.
 
 ```text
 Review ID: CYCLE01-RR-001
@@ -323,31 +251,14 @@ Observed Pattern:
 Three Basic sessions interpret the retained Stash Entry after a conflicted
 stash pop as something that should immediately be deleted.
 
-Session JSON Evidence:
-- repeated stash drop / unrelated cleanup attempts after conflict
-- high Wrong count before resolution verification
-
-Aggregator Evidence:
-- Mission 17 appears in the Basic hotspot set
-- Unsafe / Wrong pattern is higher than adjacent Recovery Missions
-
-Facilitator / Interview Evidence:
-- testers describe the retained Stash as "duplicated old data"
-- they do not understand that the failed pop preserved the recovery copy
-
-Technical Review:
-Current simulator behavior matches the intended Git safety concept.
-
 Decision:
 [X] CHANGE MISSION ONLY
 
 Why:
-The Git behavior is correct. The learning evidence does not make the retained
-recovery copy salient enough.
+Git behavior is correct; learning evidence does not make the retained recovery copy salient enough.
 
 Next Action:
-Improve conflict-state explanation and debrief wording without revealing the
-next command.
+Improve conflict-state explanation and debrief wording without revealing the next command.
 
 Evidence Needed After Change:
 - lower premature stash-drop attempts
@@ -362,11 +273,9 @@ Do Not Change:
 
 ---
 
-## 9. Create a Small Decision Set, Not a Comment Backlog
+## 9. Keep the Decision Set Small
 
-The first review meeting should usually end with a small number of records.
-
-Recommended categories:
+The first review meeting should normally end with a small number of evidence-backed records:
 
 ```text
 Critical Fixes
@@ -376,15 +285,13 @@ Observe-more hypotheses
 Explicit Keep-as-is decisions
 ```
 
-Do not create one Review Record for every subjective comment.
-
-Prefer patterns with enough evidence to support a decision.
+Do not convert every interview comment into implementation work.
 
 ---
 
-## 10. Implement the Decision with a Re-test Hypothesis
+## 10. Implement with Traceability
 
-Before changing code/content, write:
+Before changing code/content, state:
 
 ```text
 What will change?
@@ -393,36 +300,15 @@ What should improve in the next session?
 What must remain unchanged?
 ```
 
-Examples:
+Then follow [Review Record to Change Traceability](review-record-to-change-traceability.md).
 
-### Mission wording change
-
-Expected next-cycle effect:
-
-- lower Hint dependence,
-- no loss of Safety,
-- no increase in exact-command guessing.
-
-### Alternate command support
-
-Expected:
-
-- fewer Wrong Attempts from the specific safe path,
-- same final learning invariant.
-
-### UI state-label change
-
-Expected:
-
-- lower repeated state interpretation error across affected Missions.
-
-Never define success only as "average score goes up."
+Implementation should reference the Review ID in the commit / PR / issue or equivalent internal change record.
 
 ---
 
-## 11. Close or Carry the Review Record
+## 11. Retest and Close
 
-After the next test pass, mark the Review Record as one of:
+After the next test pass, close/carry the Review Record as:
 
 ```text
 VALIDATED
@@ -433,7 +319,9 @@ OBSERVE_MORE
 SUPERSEDED
 ```
 
-Keep the original evidence and decision rationale. Do not rewrite history to make the first hypothesis appear correct.
+Implementation without retest remains `IMPLEMENTED`, not `CLOSED`.
+
+Keep the original evidence and decision rationale.
 
 ---
 
@@ -452,8 +340,8 @@ Test Session Sheet
 Interview Note Template
   -> learner reasoning
 
-Local Session JSON
-  -> machine-recorded behavior
+Internal Test Evidence Handling
+  -> where/how evidence is stored
 
 Report Aggregation
   -> repeated descriptive patterns
@@ -461,8 +349,14 @@ Report Aggregation
 THIS DOCUMENT
   -> construct the first Review Record
 
+Review Record Template
+  -> standard record format
+
 Result Review Decision Framework
   -> decide what to change / not change
+
+Review Record to Change Traceability
+  -> implementation and retest linkage
 ```
 
-The first calibration loop is complete when real session evidence produces explicit Review Records and those records drive limited, testable product changes.
+The first calibration loop is complete when real evidence produces explicit Review Records and those records drive limited, traceable, retested product changes.

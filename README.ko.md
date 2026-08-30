@@ -34,13 +34,6 @@ Assessment           4
 
 1~40번은 Guided Learning / Practice이며, 41~44번은 이미 학습한 도구를 상황에 맞게 선택하는 첫 Assessment Track입니다.
 
-현재 Assessment는 다음 판단을 평가합니다.
-
-- Published Regression에서 Shared History를 삭제하지 않고 Auditable Revert 선택
-- Support Policy와 영향 범위를 바탕으로 Fix를 적용할 Release Line 선택
-- Review / Approval / History Policy를 바탕으로 Release Integration Strategy 선택
-- Story를 믿는 대신 Repository State를 직접 확인한 뒤 Incident Closure 판단
-
 ## Assessment 설계
 
 Assessment Mission은 `assessment: true`를 사용하며 일반 Mission의 마지막 **Command Shape Hint를 의도적으로 차단**합니다.
@@ -59,8 +52,6 @@ Git Action
 Outcome Verification
 ```
 
-### Assessment Scoring
-
 Assessment Debrief는 다음 4개 축을 사용합니다.
 
 ```text
@@ -70,47 +61,53 @@ Evidence    20
 Efficiency  10
 ```
 
-PASS는 총점과 Safety Floor를 모두 만족해야 합니다.
-
-```text
-total >= passScore
-AND
-safety >= criticalSafetyFloor
-```
-
-필요한 `status`, `log`, `diff` Inspection은 Efficiency Penalty가 아닙니다. 필요한 Evidence를 생략하면 Evidence가 낮아지고, 불필요한 Mutation이나 위험한 시도만 Efficiency / Safety를 낮춥니다.
+PASS는 총점과 Safety Floor를 모두 만족해야 하며 필요한 Inspection은 Efficiency Penalty가 아닙니다.
 
 상세: [Assessment Track](docs/assessment-track.md), [Assessment Scoring Rubric](docs/assessment-scoring.md)
 
 ## 사내 Usability Session Recorder
 
-Browser에 선택적으로 사용할 수 있는 **Local-only 사내 Test Recorder**를 추가했습니다.
+Browser에 선택적으로 사용할 수 있는 **Local-only 사내 Test Recorder**가 있습니다.
 
 ```text
 Test Group 선택
       |
 Session 시작
       |
-평소처럼 Mission 진행
+Mission 진행
       |
 Session 종료
       |
-익명 JSON 내보내기
+익명 JSON Export
 ```
 
-Test Group:
-
-- Beginner
-- Basic
-- Experienced
+Test Group: Beginner / Basic / Experienced.
 
 Report에는 Mission 소요 시간, 상대 시간 기반 Command Trace, Hint / Inspection / Detour / Unsafe 횟수, Guided Score, Assessment 4축 Score, 최종 Repository 요약이 저장됩니다.
 
-이 Recorder는 이름, 이메일, Employee ID, Account ID를 요청하지 않습니다. 기존 Progress와 별도의 Local Storage Key를 사용하며, Versioned JSON을 Export하여 그룹별 행동 차이를 비교할 수 있습니다.
-
-이 데이터는 Product / Rubric Calibration을 위한 것이며 직원 순위나 인증 지표로 사용하지 않습니다.
+이 Recorder는 이름, 이메일, Employee ID, Account ID를 요청하지 않습니다.
 
 상세: [Local Usability Session Report](docs/usability-session-report.md), [Internal Test Plan](docs/internal-test-plan.md)
+
+## Local Report Aggregation
+
+Game 상단의 **Reports** 버튼 또는 `http://localhost:8000/reports.html`로 이동합니다.
+
+여러 Session JSON을 한 번에 불러오면 Backend 없이 Beginner / Basic / Experienced 그룹을 자동 비교합니다.
+
+집계 항목:
+
+- Completion Rate
+- Average / Median / P75 Time to First Command
+- Mission Duration
+- Hint / Inspection / Unsafe / Detour / Wrong Rate
+- Assessment Total / Pass Rate
+- Judgment / Safety / Evidence / Efficiency Average / Median
+- Mission 단위 Hotspot Ranking
+
+지원하지 않는 Schema, 잘못된 Tester Group, `privacy.piiCollected != false` Report는 집계에서 제외합니다.
+
+상세: [Local Usability Report Aggregation](docs/report-aggregation.md)
 
 ## Repository State Model
 
@@ -149,81 +146,22 @@ Team Policy
 
 Approval 자체를 가짜 Git Command로 만들지 않습니다. Git은 Review Evidence를 제공하고 Approval은 Scenario Policy Gate로 표현합니다.
 
-## Release / Incident Lifecycle
-
-```text
-Verified Fix
-   |
-Dependency Check
-   |
-Selective Backport / Hotfix Branch
-   |
-Scope Review Evidence
-   |
-Approval Gate
-   |
-Release Integration
-   |
-Verification
-   |
-Local Tag
-   |
-Tag Publication
-   |
-Production
-   |
-   +--- Healthy
-   |
-   +--- Regression -> Revert -> Verify -> New Patch Tag
-   |
-Final Recovery를 main에 재반영
-   |
-Incident Closure Verification
-```
-
 ## Validation Gate
-
-이제 Curriculum, Assessment Scoring, Local Test Report Contract를 각각 검증합니다.
 
 ```text
 Guided Curriculum (40)
-  JavaScript Syntax
-       |
-  Content Contract
-       |
-  Golden Mission Tests
-       |
-  Alternate / Repository Invariants
-       |
-  Release Governance Invariants
-       |
-  Simulator Command Coverage
+  Syntax -> Content -> Golden -> Repository Invariants
+  -> Release Governance -> Command Coverage
 
 Assessment Curriculum (4)
-  Assessment Schema
-       |
-  Minimal Hint / Command Leak 방지
-       |
-  Expected Decision Command
-       |
-  Final State Verification
-       |
-  Scoring Rubric Contract
-       |
-  Unsafe / Evidence-loss Scoring Test
+  Schema -> Command Leak 방지 -> Decision -> Final State
+  -> Scoring Contract -> Unsafe / Evidence Test
 
 Internal Usability Data
-  Session Report Schema
-       |
-  Tester Group Contract
-       |
-  PII Non-Collection Contract
-       |
-  Command Classification
-       |
-  Guided / Assessment Score 보존
-       |
-  JSON Summary Validation
+  Session Report Contract
+  -> PII Non-Collection
+  -> Report Aggregation Contract
+  -> Group / Mission Metric Validation
 ```
 
 ## Local 실행
@@ -232,22 +170,22 @@ Internal Usability Data
 python -m http.server 8000
 ```
 
-`http://localhost:8000` 접속.
+Game: `http://localhost:8000/`
+
+Reports: `http://localhost:8000/reports.html`
 
 ## 주요 Product 문서
 
 - [Product Vision](docs/product-vision.md)
 - [Game Design](docs/game-design.md)
 - [Curriculum Roadmap](docs/curriculum-roadmap.md)
-- [Conflict Lifecycle](docs/conflict-lifecycle.md)
-- [Release and Backport Learning Model](docs/release-and-backport.md)
-- [Release Incident Lifecycle](docs/release-incident-lifecycle.md)
-- [Release Governance and Incident Closure](docs/release-governance.md)
 - [Assessment Track](docs/assessment-track.md)
 - [Assessment Scoring Rubric](docs/assessment-scoring.md)
 - [Local Usability Session Report](docs/usability-session-report.md)
-- [Command Coverage](docs/command-coverage.md)
+- [Local Usability Report Aggregation](docs/report-aggregation.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
+- [Release Governance and Incident Closure](docs/release-governance.md)
+- [Command Coverage](docs/command-coverage.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
 - [Service Architecture](docs/service-architecture.md)
 - [Product Roadmap](docs/product-roadmap.md)
@@ -259,11 +197,11 @@ https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 ## 다음 구현 깊이
 
 1. Beginner / Basic / Experienced 첫 사내 Test Session 실행
-2. First Command 시간, Hint, Unsafe, Inspection, Assessment Pattern 비교
-3. 실제 행동 데이터를 바탕으로 Rubric Weight / Safety Floor Calibration
+2. Export JSON을 `reports.html`에서 비교
+3. 반복되는 Group / Mission Pattern을 확인한 뒤 Rubric Weight 조정
 4. Forward-fix vs Revert vs Rollback Assessment 확장
 5. 동시에 지원하는 여러 Release Line 판단 추가
-6. 여러 선택지가 유효해 보이는 PR Review / Merge Strategy Assessment 개선
+6. PR Review / Merge Strategy Assessment 개선
 
 ## License
 

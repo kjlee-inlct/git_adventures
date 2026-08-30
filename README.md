@@ -123,11 +123,34 @@ Open:
 http://localhost:8000
 ```
 
-## Validation
+## Validation gates
 
-GitHub Actions validates JavaScript syntax and the Mission Content contract on every PR update.
+Mission growth is protected by automated tests before the curriculum expands.
 
-The current Vertical Slice passes the validation workflow.
+```text
+Content Contract
+      |
+      v
+Golden Mission Test
+      |
+      v
+Alternate Solution Test
+      |
+      v
+Simulator Command Coverage
+```
+
+GitHub Actions currently validates:
+
+- JavaScript syntax
+- Mission identity, numbering, bilingual content, difficulty, and Repository State shape
+- representative direct solution -> expected final Repository State for all 8 Missions
+- alternate safe paths converging to the same target state
+- unstage preserving Working Tree data
+- learner-facing command references matching Simulator coverage
+- dangerous command recognition
+
+See [Simulator Command Coverage](docs/command-coverage.md) and [Vertical Slice](docs/vertical-slice.md).
 
 ## Product documentation
 
@@ -139,6 +162,7 @@ The current Vertical Slice passes the validation workflow.
 - [Experience Design](docs/experience-design.md)
 - [Design Direction](docs/design-direction.md)
 - [Learning Feedback System](docs/learning-feedback-system.md)
+- [Simulator Command Coverage](docs/command-coverage.md)
 - [Vertical Slice](docs/vertical-slice.md)
 - [Content Guideline](docs/content-guideline.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
@@ -182,11 +206,11 @@ See [References and Product Research](docs/references.md).
 
 1. Internal test the eight-Mission Vertical Slice
 2. Tune Hint / Mastery / Safety from observed behavior
-3. Add target-state Golden and alternate-path regression tests
-4. Improve simulator command coverage
-5. Expand Foundations to 20-30 high-quality Missions only after the first slice validates
-6. Add Daily Workflow and Recovery depth
-7. Validate Track Map and Debrief engagement
+3. Expand Simulator command coverage for Daily Workflow
+4. Add consequence-focused Recovery scenarios
+5. Require Golden fixtures for every new Mission
+6. Expand Foundations to 20-30 high-quality Missions only after the first slice validates
+7. Add Daily Workflow and Recovery depth
 8. Decide account, analytics, and later packaging from real usage evidence
 
 ## License

@@ -238,6 +238,7 @@ The first cycle is complete when:
 - one Session Sheet and one qualitative interview note exist for each usable session
 - major technical-credibility objections are resolved or documented
 - safe alternate-solution objections have explicit decisions
+- at least one evidence-backed Review Record has been created
 - the team has decided what **not** to change as well as what to change
 
 Only then should the next large Mission expansion or Rubric recalibration begin.
@@ -265,6 +266,9 @@ Machine-recorded anonymous behavior
 Cross-session metrics
   /reports.html
 
+First Review Record construction
+  docs/first-review-record-workflow.md
+
 Product-change decision
   docs/result-review-decision-framework.md
 ```
@@ -277,6 +281,7 @@ Runbook         -> How to execute the cycle
 Session Sheet   -> What happened
 Interview       -> Why the tester acted that way
 Aggregator      -> What repeats across sessions
+First Review    -> How to construct the first evidence bundle
 Decision Review -> What to change / not change
 ```
 
@@ -284,7 +289,9 @@ Do not merge these roles into one free-form note.
 
 ## 12. Review Meeting Handoff
 
-When the first batch is ready, use the [Result Review Decision Framework](result-review-decision-framework.md).
+When the first batch is ready, first use the [First Review Record Workflow](first-review-record-workflow.md) to construct a traceable evidence bundle and the first Review Record.
+
+Then apply the [Result Review Decision Framework](result-review-decision-framework.md).
 
 The Review meeting must start with:
 
@@ -311,3 +318,23 @@ ESCALATE TECHNICAL REVIEW
 ```
 
 Do not turn every interview comment into backlog work.
+
+## 13. Deployment Note for the First Cycle
+
+The first cycle does not require a backend or Docker Compose.
+
+Use the simplest internal hosting that satisfies company network policy:
+
+```text
+Development / one PC
+  python -m http.server 8000
+
+Shared internal server
+  Nginx / Caddy static hosting
+  OR
+  one static-web container
+```
+
+Testers only need a browser and the internal URL.
+
+See [Internal Deployment Options](internal-deployment-options.md) for the exact Compose adoption trigger.

@@ -4,6 +4,7 @@ import fs from 'node:fs';
 const read = path => fs.readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 
 const requiredDocs = [
+  'AGENTS.md',
   'docs/internal-test-operations-index.md',
   'docs/internal-test-plan.md',
   'docs/first-internal-test-cycle.md',
@@ -25,6 +26,20 @@ const requiredDocs = [
 for (const path of requiredDocs) {
   assert.ok(fs.existsSync(new URL(`../${path}`, import.meta.url)), `Missing operations document: ${path}`);
 }
+
+const agents = read('AGENTS.md');
+for (const invariant of [
+  'Learn Git by changing repository state',
+  'Do not merge the pull request unless the user explicitly asks',
+  'Docker Compose is not required today',
+  'criticalSafetyFloor',
+  'docs/internal-test-operations-index.md',
+  'Do Not Change'
+]) {
+  assert.ok(agents.includes(invariant), `AGENTS.md missing invariant: ${invariant}`);
+}
+assert.match(agents,/진행.*continue implementation.*not merge/is,'AGENTS.md must preserve the autonomous 진행 != merge rule');
+assert.match(agents,/44 Missions \/ 6 Tracks/i,'AGENTS.md must document the current curriculum baseline');
 
 const index = read('docs/internal-test-operations-index.md');
 for (const link of [

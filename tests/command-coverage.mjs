@@ -6,7 +6,7 @@ const coverage=[
 ['git status','inspect'],['git diff','inspect'],['git diff --staged','inspect'],['git log --oneline','inspect'],['git stash list','inspect'],
 ['git add <file>','mutate'],['git add .','mutate-detour'],['git restore --staged <file>','mutate-recovery'],
 ['git switch -c <branch>','mission-step'],['git switch <branch>','mission-step'],['git commit -m "..."','mission-step'],['git revert <sha>','mission-step'],
-['git fetch origin','remote-inspect'],['git pull','remote-integrate'],['git pull --rebase','remote-rebase'],['git pull --no-rebase','remote-merge'],
+['git fetch origin','remote-inspect'],['git pull','remote-integrate'],['git pull --rebase','remote-rebase'],['git rebase <upstream>','remote-rebase'],['git pull --no-rebase','remote-merge'],['git merge <upstream>','remote-merge'],
 ['git push','remote-publish'],['git push -u origin <branch>','remote-publish'],
 ['git stash push -m "..."','workspace-preserve'],['git stash pop','workspace-restore'],['git stash drop','workspace-cleanup'],
 ['git reset --hard','blocked-danger'],['git clean -fd','blocked-danger'],['git push --force','blocked-danger']

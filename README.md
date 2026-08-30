@@ -21,15 +21,16 @@ The learner receives a realistic repository situation, inspects Local / Remote s
 
 ## Playable curriculum
 
-The current prototype contains **23 Missions** across four Tracks.
+The current prototype contains **26 Missions** across four Tracks.
 
 ```text
 Foundations (4)
   status -> diff -> selective staging -> atomic commit
 
-Daily Workflow (7)
+Daily Workflow (8)
   branch isolation / atomic commit / fetch / pull / push / stash
-  non-fast-forward Push Reject -> Fetch before integration decision
+  Push Reject -> Fetch before integration decision
+  blocked Branch switch -> preserve WIP -> switch safely
 
 Recovery Lab (6)
   safe unstage / revert shared history / stash recovery
@@ -37,12 +38,13 @@ Recovery Lab (6)
   rebase abort
   merge abort
 
-Collaboration (6)
+Collaboration (8)
   Ahead / Behind Divergence
   policy-driven Rebase and Merge
-  Rebase Conflict -> resolve -> continue
-  Merge Conflict -> resolve -> merge commit
+  Rebase / Merge Conflict lifecycle
   constrained force-with-lease rewrite
+  multi-file Rebase Conflict
+  deliberate rebase --skip
 ```
 
 Long-term curriculum target: approximately **185-273 core Missions**, plus variations and assessments.
@@ -67,6 +69,8 @@ Repository State
  |      +--- ahead / behind
  |      +--- fetch / rejection state
  +--- Stash Stack
+ +--- Guardrail State
+        +--- blocked Branch switch
 ```
 
 The game rewards inspection and safe reasoning rather than exact command-string guessing.
@@ -78,16 +82,18 @@ Conflicts are modeled as temporary operation state, not generic failure screens.
 ```text
 Operation
    |
-Conflict
+Conflict Set
    |
-   +--- inspect -> resolve -> stage -> continue / commit
+   +--- inspect -> resolve every required path -> stage -> continue / commit
    |
    +--- abort -> exact pre-operation baseline
+   |
+   +--- skip -> only when the current commit intent is explicitly obsolete
 ```
 
-Rebase and Merge intentionally produce different History outcomes. Abort paths are first-class safety decisions.
+Rebase and Merge intentionally produce different History outcomes. Abort paths and deliberate Skip are treated as History decisions, not escape shortcuts.
 
-See [Conflict Lifecycle](docs/conflict-lifecycle.md).
+See [Conflict Lifecycle](docs/conflict-lifecycle.md) and [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md).
 
 ## Force-with-lease policy
 
@@ -124,9 +130,7 @@ Alternate / Invariant Tests
 Simulator Command Coverage
 ```
 
-Golden tests cover all **23 Missions**. Invariants verify exact Rebase/Merge Abort restoration, conflict resolution state transitions, Stash retention on conflict, Remote divergence behavior, and force-with-lease rejection when the Remote changes unexpectedly.
-
-See [Simulator Command Coverage](docs/command-coverage.md).
+Golden tests cover all **26 Missions**. Invariants verify exact Rebase/Merge Abort restoration, multi-file Conflict completeness, blocked-switch WIP preservation, deliberate Rebase Skip semantics, Stash retention on conflict, Remote divergence behavior, and force-with-lease rejection when Remote changes unexpectedly.
 
 ## Run locally
 
@@ -150,6 +154,7 @@ Open `http://localhost:8000`.
 - [Daily Workflow Expansion](docs/daily-workflow-expansion.md)
 - [Collaboration and Divergence Expansion](docs/collaboration-expansion.md)
 - [Conflict Lifecycle](docs/conflict-lifecycle.md)
+- [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -171,13 +176,12 @@ Current design screens:
 
 ## Next depth
 
-1. Branch switch blocked by overlapping Working Tree changes
-2. Multiple-file Rebase / Merge Conflict
-3. `rebase --skip` and partially resolved Abort
-4. Cherry-pick / Backport across Release Branches
-5. PR Review and Merge strategy decisions
-6. Release / Hotfix incident Track
-7. Internal usability testing before large-scale Mission expansion
+1. Multi-file Merge Conflict and partially resolved Abort
+2. `rebase --skip` with multiple replayed commits
+3. Cherry-pick / Backport across Release Branches
+4. PR Review and Merge strategy decisions
+5. Release / Hotfix incident Track
+6. Internal usability testing before large-scale Mission expansion
 
 ## License
 

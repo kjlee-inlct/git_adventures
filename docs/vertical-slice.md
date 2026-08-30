@@ -37,6 +37,10 @@ This slice should answer:
 4. Does a multi-step Mission feel like solving work rather than passing a quiz?
 5. Does an accidental broad staging action naturally teach Recovery?
 6. Do experienced Git users consider the Recovery scenarios credible enough to continue?
+7. Do progressive Hints help without immediately revealing the answer?
+8. Are Mastery and Safety understood as learning feedback rather than game decoration?
+9. Does the Mission Debrief reinforce Why?
+10. Does Track Map clarify the learner's skill path?
 
 ## 3. Mission Matrix
 
@@ -92,7 +96,64 @@ git restore --staged debug.log
 
 If the resulting Repository State matches the intended target, the Mission can complete even though the learner did not follow the shortest path.
 
-## 5. Multi-step Mission
+## 5. Learning Feedback
+
+### Progressive Hints
+
+Each Mission exposes three Hint depths:
+
+```text
+1. Direction
+2. Concept-specific authored hint
+3. Command shape
+```
+
+Hint use reduces Mastery but never blocks completion.
+
+### Mastery
+
+Mastery represents independent problem solving.
+
+Inspection Commands do not reduce Mastery.
+
+Prototype deductions:
+
+```text
+Hint              -10
+Unnecessary Detour -7
+Wrong Attempt      -4
+Dangerous Command  -5
+```
+
+### Safety
+
+Safety represents protection of work and Shared History.
+
+Prototype blocks high-risk commands in ordinary Missions:
+
+```bash
+git reset --hard
+git clean -fd
+git push --force
+```
+
+Dedicated Recovery Labs can teach these later through isolated consequence simulation.
+
+### Debrief
+
+Mission completion shows:
+
+```text
+Why
+Mastery
+Safety
+Hint Count
+Detour Count
+```
+
+The purpose is reflective learning, not competitive ranking.
+
+## 6. Multi-step Mission
 
 Mission 6 represents the first full puzzle sequence.
 
@@ -112,7 +173,7 @@ Commit One Change Intent
 Unrelated File Remains Local
 ```
 
-Required sequence:
+Required direct sequence:
 
 ```bash
 git add src/transfer.py tests/test_transfer.py
@@ -122,17 +183,13 @@ git commit -m "Add firmware block transfer"
 
 The important learning outcome is not the exact syntax order of filenames. Both file orders are accepted.
 
-## 6. State-based Success
+## 7. State-based Success
 
 For one-step state-changing Missions, success may be determined by the resulting state in addition to accepted direct commands.
 
-This enables safe alternate paths.
-
-Example:
+Example target:
 
 ```text
-Target
-
 Working Tree
   debug.log
 
@@ -153,11 +210,9 @@ git add .
 git restore --staged debug.log
 ```
 
-The second path is less efficient but educationally valid.
+The second path is less efficient but educationally valid and produces lower feedback scores.
 
-## 7. Content Architecture Validation
-
-Mission definitions live outside the Engine:
+## 8. Content Architecture Validation
 
 ```text
 content/missions.js
@@ -169,10 +224,8 @@ Mission Engine
 Repository State Simulator
         |
         v
-UI
+UI / Learning Feedback
 ```
-
-The current `.js` content module avoids a build requirement during internal testing.
 
 Long-term migration target:
 
@@ -184,7 +237,7 @@ Translation resources
 Schema validation
 ```
 
-## 8. Automated Validation
+## 9. Automated Validation
 
 Current CI validates:
 
@@ -202,27 +255,25 @@ Current CI validates:
 Future validation:
 
 - Action schema
-- target-state golden tests
+- target-state Golden tests
 - accepted command -> expected state tests
 - alternate solution tests
 - regression scenarios
 - translation completeness
 
-## 9. Internal Test Order
-
-Recommended first sessions:
+## 10. Internal Test Order
 
 ### Beginner
 
 Missions 1 -> 4 -> 7
 
-Observe mental model and Recovery safety.
+Observe mental model, Hint use, and Recovery safety.
 
 ### Basic Git User
 
 Missions 3 -> 6 -> 7 -> 8
 
-Observe staging habits and shared-history decisions.
+Observe staging habits, Mastery/Safety interpretation, and Shared-History decisions.
 
 ### Experienced Developer
 
@@ -232,7 +283,7 @@ Primary question:
 
 > Does this feel like the beginning of a serious Git training product, or only a beginner command game?
 
-## 10. Gate to Expand Content
+## 11. Gate to Expand Content
 
 Do not expand Foundations to 20-30 Missions until the slice demonstrates:
 
@@ -242,4 +293,8 @@ Do not expand Foundations to 20-30 Missions until the slice demonstrates:
 - multi-step Mission 6 feels fair
 - Recovery Mission 7 clearly distinguishes unstage from discard
 - experienced users consider Mission 8 technically credible
+- Hint 1 and Hint 2 provide value before Hint 3
+- users can explain why Mastery/Safety changed
+- Debrief reinforces the learning concept
+- Track Map clarifies progression without feeling like a generic dashboard
 - no strong 'AI-generated dashboard/template' visual feedback

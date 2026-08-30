@@ -1,10 +1,30 @@
 # Service Architecture
 
-## 1. Architecture goal
+## 1. Architecture Goal
 
-Keep the learning engine independent from authentication, billing, analytics, and organization features.
+Keep the learning engine independent from authentication, billing, analytics, organization features, deployment choice, and future product packaging.
 
-## 2. Target architecture
+The current internal-test version should remain simple while preserving clear extension boundaries.
+
+## 2. Current Internal-Test Architecture
+
+```text
+Internal Web Server
+      |
+      v
+Browser Client
+      |
+      +--- UI
+      +--- Mission Engine
+      +--- Git State Simulator
+      +--- i18n
+      +--- Local Progress
+      +--- Static Mission Content
+```
+
+No backend is required for the first product-validation phase.
+
+## 3. Future Service Architecture
 
 ```text
 Web Client
@@ -14,131 +34,189 @@ Web Client
  +--- Git State Simulator
  +--- Content Renderer
  +--- i18n
- +--- Local Progress Adapter
+ +--- Progress Adapter
+ +--- Access Policy Adapter
  |
  v
 Platform API
  |
- +--- Auth Service
- +--- Progress Service
- +--- Entitlement Service
- +--- Team Service
- +--- Assessment Service
- +--- Analytics Events
+ +--- Authentication
+ +--- Progress Sync
+ +--- Team / Organization
+ +--- Assessment
+ +--- Analytics
+ +--- Content Delivery
+ +--- Access Policy
  |
- +--- Content API / CDN
- |
- +--- Billing Adapter
-         |
-         +--- Stripe / Paddle / Lemon Squeezy / Other
+ +--- Optional Billing Adapter
 ```
 
-## 3. Content-first design
+Billing is optional and remains outside the learning engine.
 
-Mission content should be data.
+## 4. Content-First Design
 
-Recommended future structure:
+Mission content must be data.
+
+Recommended structure:
 
 ```text
 content/
 |--- schema/
-|--- en/
+|--- missions/
+|    |--- orientation/
 |    |--- foundations/
+|    |--- workflow/
 |    |--- recovery/
 |    |--- collaboration/
+|    |--- history/
+|    |--- release/
 |
-|--- ko/
-     |--- foundations/
-     |--- recovery/
-     |--- collaboration/
+|--- locales/
+     |--- en/
+     |--- ko/
 ```
 
-Prefer language-neutral mission mechanics with translated copy separated where practical.
+Prefer language-neutral mechanics with translated copy separated from state transitions.
 
-## 4. Mission schema concept
+## 5. Mission Schema Concept
 
 ```json
 {
-  "id": "foundations.status.001",
+  "id": "foundations.stage.003",
+  "version": 1,
   "track": "foundations",
-  "tier": "free",
-  "difficulty": 1,
+  "chapter": "selective-stage",
+  "difficulty": 2,
+  "accessGroup": "core",
+  "masteryTags": ["stage.selective"],
   "initialState": {},
   "objective": {},
-  "acceptedSolutions": [],
+  "constraints": [],
+  "acceptedPaths": [],
+  "unsafePaths": [],
   "targetState": {},
-  "explanation": {},
+  "feedback": {},
+  "hints": [],
   "scoring": {}
 }
 ```
 
-The engine should validate resulting Git state rather than match one exact command whenever multiple safe solutions exist.
+During internal testing, Access Policy allows every implemented `accessGroup`.
 
-## 5. Git simulation layers
+The engine validates resulting Git state rather than matching one exact command whenever multiple safe solutions exist.
 
-Phase 1:
-- deterministic browser state machine
-- curated commands only
+## 6. Git Simulation Layers
 
-Phase 2:
-- richer parser and state transition engine
-- multiple accepted command forms
+### Phase 1 - Deterministic State Machine
 
-Phase 3 options:
-- WASM/libgit2-like sandbox
-- isolated server-side ephemeral repositories
+- Browser-only
+- curated command grammar
+- deterministic transitions
+- fastest product iteration
 
-Security and operating cost should determine whether real Git execution is necessary. Most beginner missions can remain deterministic simulations.
+### Phase 2 - Rich Simulation Engine
 
-## 6. Progress model
+- expanded parser
+- options and alternate command forms
+- more realistic Commit Graph
+- Conflict simulation
+- Remote state
 
-Guest:
+### Phase 3 - Real Git Execution Where Valuable
+
+Possible options:
+
+- WASM Git implementation
+- isolated ephemeral server repositories
+- containerized assessment environment
+
+Real Git execution should be introduced only where simulation becomes a learning limitation.
+
+## 7. Engine Boundaries
+
+```text
+Mission Content
+      |
+      v
+Mission Engine
+      |
+      +--- Git Command Parser
+      +--- State Transition Engine
+      +--- State Validator
+      +--- Feedback Resolver
+      +--- Score Resolver
+```
+
+The UI renders state but should not contain Git rules.
+
+## 8. Progress Model
+
+Initial:
 
 ```text
 Local Storage / IndexedDB
 ```
 
-Account:
+Future:
 
 ```text
 Local Progress
-   |
-   v
-Progress Sync Adapter
-   |
-   v
-Cloud Progress
+    |
+    v
+Progress Adapter
+    |
+    +--- Local Only
+    +--- Cloud Sync
 ```
 
-Never require an account to begin learning.
+Progress data should be portable and versioned.
 
-## 7. Entitlement model
+Never silently discard learner progress during schema migration.
 
-Content metadata defines required entitlement.
+## 9. Access Policy Model
+
+Mission content describes neutral groups:
 
 ```text
-free
-pro
-team
+core
+advanced-practice
+assessment
+organization
+special-pack
 ```
 
-Game engine asks an entitlement interface, not a billing provider.
+Access Policy decides availability.
 
-## 8. Multi-user scale
+Internal test:
 
-Static content and client simulation should be CDN-cacheable. Backend traffic should focus on authenticated value:
+```text
+* -> allow
+```
 
-- progress sync
-- assignments
-- assessments
+Future product packaging can map groups to user or organization entitlements without changing Mission content.
+
+## 10. Multi-User Scale
+
+If the service expands publicly:
+
+- static Mission content should be cacheable
+- simulation remains client-side where practical
+- backend requests focus on value requiring persistence or coordination
+
+Potential backend traffic:
+
+- account
+- cloud progress
+- assignment
+- assessment results
 - analytics
-- billing
+- organization policy
 
-This keeps free-user infrastructure cost low.
+This architecture can support many anonymous learners without requiring a server-side Git process for every Mission.
 
-## 9. Team extensibility
+## 11. Team Extensibility
 
-Organization domain:
+Future Organization model:
 
 ```text
 Organization
@@ -151,13 +229,54 @@ Organization
  +--- Reports
 ```
 
-Policy Profiles can generate or configure missions for company-specific branch, commit, PR, merge, and release rules.
+Policy Profile examples:
 
-## 10. Reliability
+- Branch naming
+- PR requirement
+- Merge Method
+- Commit Message Rule
+- Protected Branch behavior
+- Release / Tag policy
 
-- version mission content
-- preserve progress during content migration
-- never silently delete learner progress
-- content schema validation in CI
-- golden tests for accepted solution -> target state
-- regression tests for previously broken scenarios
+These policies can configure or generate organization-specific Missions later.
+
+## 12. Analytics Boundary
+
+Analytics must not be embedded throughout Mission code.
+
+Use domain events:
+
+```text
+mission.started
+command.executed
+hint.requested
+mission.completed
+unsafe_command.attempted
+track.entered
+session.completed
+```
+
+Initial internal test may record nothing or use an approved internal analytics path.
+
+## 13. Reliability and Content QA
+
+Required as content grows:
+
+- Mission JSON Schema validation
+- unique ID validation
+- Locale key validation
+- accepted-path simulation tests
+- target-state Golden tests
+- unsafe-path regression tests
+- progress migration tests
+- broken-link / content-index validation
+
+## 14. Architecture Rule
+
+```text
+Product Rule changes
+        !=
+Game Engine rewrite
+```
+
+Future login, analytics, team features, or monetization should attach through adapters and policy layers rather than alter the core learning engine.

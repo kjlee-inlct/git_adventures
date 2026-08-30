@@ -66,6 +66,8 @@
     for (const group of reporter.TESTER_GROUPS) {
       const option = document.createElement("option"); option.value=group; option.textContent=group; select.appendChild(option);
     }
+    const presetGroup = localStorage.getItem("gitAdventuresFacilitatorGroup");
+    if (!session && reporter.TESTER_GROUPS.includes(presetGroup)) select.value = presetGroup;
 
     const toggle = document.createElement("button");
     toggle.id = "sessionToggleButton"; toggle.type="button"; toggle.className="button secondary";

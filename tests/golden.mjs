@@ -41,7 +41,7 @@ const expected = {
     head: '8bf210c Add firmware block transfer'
   },
   'recovery.unstage.001': {
-    branch: 'main',
+    branch: 'docs/setup-guide',
     working: ['debug.log'],
     staged: ['README.md'],
     head: 'a13f0d2 Add project overview'

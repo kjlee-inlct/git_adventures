@@ -22,57 +22,66 @@ Git Adventures는 다음 한 가지 원칙을 중심으로 설계하는 Scenario
 
 현재 최우선 순위는 많은 기능 구현보다 **Product 기획과 Game Design 품질 확보**.
 
-## Product 목표
-
-```text
-Git Beginner
-   |
-   v
-Git State 이해
-   |
-   v
-Daily Workflow 수행
-   |
-   v
-실수 복구
-   |
-   v
-안전한 Collaboration
-   |
-   v
-History 관리
-   |
-   v
-Release / Incident 대응
-   |
-   v
-Git Mastery
-```
-
-`commit`, `pull`, `push`를 이미 사용하는 개발자에게도 계속 학습 가치가 있는 수준을 목표로 합니다.
-
-## Core Game Loop
+## Core Learning Loop
 
 ```text
 Scenario
    |
-   v
 Repository State 확인
    |
-   v
 Git Command 선택 / 입력
    |
-   v
 State Transition 확인
    |
-   v
 Why 이해
    |
-   v
+필요 시 실수 복구
+   |
 더 복잡한 Scenario 수행
 ```
 
-잘못된 Command라도 복구 가능한 상황이면 단순 `FAIL` 처리보다 새로운 Recovery Problem으로 연결하는 방향을 우선합니다.
+유효하지만 좋지 않은 선택은 단순 Fail 대신 실제 Repository Consequence를 만들 수 있습니다.
+
+## 첫 Playable Vertical Slice
+
+현재 8개 Mission이 세 단계에 걸쳐 구성되어 있습니다.
+
+```text
+Foundations
+  1. Repository Status 확인
+  2. Unstaged Diff 읽기
+  3. Selective Staging
+  4. Atomic Commit
+
+Daily Workflow
+  5. Feature Branch 격리
+  6. 복잡한 Workspace에서 Atomic Commit 구성
+
+Recovery Lab
+  7. 작업 삭제 없이 Unstage
+  8. Shared History를 Revert로 안전하게 복구
+```
+
+`git status`, `git diff`, `git diff --staged`, `git log --oneline` 같은 Inspection Command는 점수 Penalty 없이 사용할 수 있습니다.
+
+`git add .`처럼 State를 불필요하게 넓히는 선택도 실제 State 변화로 반영하고, 사용자가 이후 Recovery로 목표 State에 도달하면 Mission을 완료할 수 있습니다.
+
+## Learning Feedback
+
+현재 Prototype은 네 가지 학습 Signal을 제공합니다.
+
+```text
+Mastery = 도움 없이 문제를 해결한 정도 / 불필요한 Detour
+Safety  = 작업과 Shared History를 보호한 정도
+Hints   = 단계별 도움 사용량
+Debrief = Mission 완료 후 Why + 결과 설명
+```
+
+Inspection Command는 비효율로 간주하지 않습니다.
+
+일반 Mission에서는 `reset --hard`, `clean -fd`, `push --force` 같은 파괴 가능 Command를 차단하고 Safety에 반영합니다. 추후 전용 Recovery Lab에서는 명시적인 Consequence Simulation과 함께 학습 가능하도록 확장합니다.
+
+상세: [Learning Feedback System](docs/learning-feedback-system.md)
 
 ## Curriculum 계획
 
@@ -89,19 +98,20 @@ Why 이해
 
 장기적으로 약 **185~273개 Core Mission** + Scenario Variation + Assessment 규모를 목표로 설계.
 
-사내 Test 단계에서는 구현된 Track 전체를 공개. 향후 일부 기능을 유료로 전환하더라도 Mission Content 자체를 재작성하지 않도록 구조 분리.
+사내 Test 단계에서는 구현된 Track 전체를 공개하며, 향후 유료 Packaging을 적용하더라도 Mission Content 자체를 재작성하지 않도록 구조를 분리합니다.
 
 ## 현재 MVP
-
-현재 Browser Prototype 기능:
 
 - 한국어 / English 전환
 - Terminal 형태 Command 입력
 - Repository State Visualization
 - Working Tree / Staging / Commit History Feedback
-- Mission Progression
-- XP 및 Local Progress
-- 별도 Build Tool / Backend 없이 실행 가능
+- Track Map
+- 3단계 Progressive Hint
+- Mastery / Safety Feedback
+- Mission Debrief
+- Local Progress
+- 별도 Backend / Build Framework 없이 실행 가능
 
 Local 실행:
 
@@ -117,35 +127,21 @@ http://localhost:8000
 
 ## Product 기획 문서
 
-구현 확장 전 Product 기획을 Repository 내부 문서로 우선 고정.
-
 - [Product Vision](docs/product-vision.md)
 - [Game Design](docs/game-design.md)
 - [Curriculum Roadmap](docs/curriculum-roadmap.md)
 - [Level Design](docs/level-design.md)
-- [Experience Design](docs/experience-design.md)
-- [Visual Design Direction](docs/design-direction.md)
 - [Mission Schema](docs/mission-schema.md)
-- [Product Phase Gates](docs/product-phase-gates.md)
+- [Experience Design](docs/experience-design.md)
+- [Design Direction](docs/design-direction.md)
+- [Learning Feedback System](docs/learning-feedback-system.md)
+- [Vertical Slice](docs/vertical-slice.md)
 - [Content Guideline](docs/content-guideline.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
 - [Service Architecture](docs/service-architecture.md)
+- [Product Roadmap](docs/product-roadmap.md)
 - [References and Product Research](docs/references.md)
-
-## Figma Product Design
-
-Core Product Screen:
-
-https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
-
-현재 Design Set:
-
-- Track Map
-- Core Mission
-- Recovery Incident
-
-Figma는 단순 Mockup이 아니라 Visual Grammar와 Learning Hierarchy 기준으로 사용. 실제 구현에서는 화면 크기는 조정 가능하지만 Product Logic은 동일하게 유지.
 
 ## Design Principle
 
@@ -160,63 +156,36 @@ Figma는 단순 Mockup이 아니라 Visual Grammar와 Learning Hierarchy 기준�
 9. Content = Data, Curriculum을 Engine Code에 Hardcoding 금지
 10. 현재 Paywall 없이 Future Commercial Scale 대응 구조 확보
 
-## Visual Direction
+## Figma
 
-UI 목표:
+Core Experience Design:
 
-```text
-Developer Tool
-+
-Puzzle Game
-+
-Repository Map
-+
-Editorial Typography
-```
+https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 
-Generic SaaS Dashboard, 의미 없는 Glass Card, Random Gradient, Git State 학습과 무관한 Animation 등 AI 생성형 UI에서 자주 보이는 Pattern 지양.
+현재 Screen:
+
+- Track Map
+- Core Mission
+- Recovery Incident
 
 ## Product Research
 
-VIM Adventures, VIM Master 및 해당 도구에 대한 Community Feedback에서 학습 Interaction, Progression, Game UX, Pricing 반응 등을 참고.
+VIM Adventures, VIM Master, Community Discussion, Git Workflow 자료를 학습 Interaction과 Product Risk 참고자료로 활용합니다.
 
-단, 구현 Code, Scenario, Visual Identity, Git Learning Model은 독립적으로 설계.
+단, 구현 Code, Scenario, Visual Identity, Git Learning Model은 독립적으로 설계합니다.
 
 상세: [References and Product Research](docs/references.md)
 
-## 향후 유료화
-
-지금 유료 기능을 제한하는 것이 목적이 아님.
-
-현재 사내 Test:
-
-```text
-구현된 Content -> 전체 Access
-```
-
-향후 실제 사용 결과에 따라 다음 영역을 Product Package로 구분 가능:
-
-- Advanced Individual Practice
-- Assessment
-- Cloud Progress
-- Specialized Scenario Pack
-- Team Onboarding / Analytics
-- Company-specific Git Policy Mission
-
-Subscription / One-time Purchase / Team License 등 Pricing Model은 현재 결정하지 않고 실제 사용 Pattern을 확인한 뒤 결정.
-
 ## Immediate Roadmap
 
-1. Product Vision / Core Game Loop 검증
-2. Figma 기반 Repository Board / Mission / Recovery Visual Grammar 검증
-3. Versioned Mission Schema 기반 고품질 Prototype Mission 5~10개 제작
-4. Beginner / Basic / Experienced Git User 대상 사내 Usability Test
-5. Content 수량 확장 전 Learning / UX Problem 수정
-6. Foundations 20~30개 Mission 확장
-7. Daily Workflow / Recovery Vertical Slice 추가
-8. Content 자동 Validation 및 Golden Scenario Test 추가
-9. Accessibility / Bilingual Behavior Review
-10. 실제 사용 결과 기반 다음 Service Architecture 결정
+1. 8개 Mission Vertical Slice 사내 Test
+2. 실제 사용자 행동 기반 Hint / Mastery / Safety 조정
+3. Target-state Golden Test 및 Alternate-path Regression Test 추가
+4. Simulator Command Coverage 확장
+5. 첫 Slice 검증 후 Foundations를 20~30개 고품질 Mission으로 확장
+6. Daily Workflow / Recovery 깊이 확장
+7. Track Map / Debrief 실제 사용성 검증
+8. 실제 사용 결과 기반 Account / Analytics / 향후 Packaging 결정
 
 ## License
 

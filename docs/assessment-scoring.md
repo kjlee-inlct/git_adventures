@@ -13,7 +13,7 @@ Evidence   20
 Efficiency 10
 ```
 
-These are default weights. Individual Assessment Missions may override weights when the learning objective requires it. For example, Incident Closure raises Evidence to 45 because verification is the primary skill being assessed.
+These are default weights. Individual Assessment Missions may override weights when the learning objective requires it. For example, Incident Closure raises Evidence because verification is the primary skill being assessed.
 
 ## 1. Judgment
 
@@ -83,7 +83,7 @@ passScore           = 75
 criticalSafetyFloor = 60
 ```
 
-Safety-critical scenarios may raise the floor. The Published Regression Assessment currently uses a Safety floor of 70.
+Safety-critical scenarios may raise the floor. The Published Regression Assessment currently uses a higher Safety floor.
 
 These values are product hypotheses and must be tuned with internal usability data rather than treated as universal Git competency standards.
 
@@ -121,14 +121,111 @@ CI checks:
 - useful inspection does not reduce Efficiency
 - Browser Debrief uses the shared Scoring Engine rather than a duplicated formula
 
-## 8. Future Calibration
+## 8. Calibration Inputs
 
-Before using Assessment scores for hiring, certification, or employee evaluation, Git Adventures must collect enough internal usability evidence to validate:
+Assessment calibration uses multiple evidence types:
 
-- whether the scenario itself is unambiguous
-- whether alternate safe solutions deserve equal or partial credit
-- whether weights correlate with real Git competence
-- whether language/localization changes difficulty
-- whether Safety floors are appropriately calibrated
+```text
+Session JSON
+   +
+Group Aggregation
+   +
+Command Trace
+   +
+Facilitator Observation
+   +
+Post-session Interview
+   +
+Technical Review
+```
+
+Do not calibrate from aggregate score alone.
+
+Example:
+
+> Experienced testers repeatedly score low Evidence while interviews show correct, safe inference from already-visible state.
+
+This creates a hypothesis that Evidence requirements may be over-constrained. It does **not** prove that global Evidence weight should be reduced.
+
+First check:
+
+1. whether only one Assessment is affected,
+2. whether Scenario evidence is redundant or unclear,
+3. whether scoring-event classification is correct,
+4. whether a safe alternate decision path is missing.
+
+## 9. Rubric Change Control
+
+Global Rubric weights / thresholds require stronger evidence than Mission-local changes.
+
+Do not change global scoring because:
+
+- one tester receives a low total,
+- one Experienced user does not run an explicit inspection,
+- one Assessment has ambiguous wording,
+- average score looks lower than expected.
+
+Consider a global change only when:
+
+```text
+Pattern repeats across multiple Assessment Missions
+AND
+multiple testers show the same mismatch
+AND
+interviews support the same engineering interpretation
+AND
+Mission-local ambiguity / scoring bugs are ruled out
+```
+
+A Mission-local problem should first be fixed through:
+
+- Scenario evidence,
+- accepted safe alternatives,
+- Mission-specific required inspections,
+- Mission-specific weights / Safety floor.
+
+Use the [Result Review Decision Framework](result-review-decision-framework.md) before any global Rubric change.
+
+## 10. Safety-Floor Change Control
+
+Safety floors have a separate burden of proof.
+
+Before lowering a Safety floor, verify that the behavior being penalized is actually safe under the stated Scenario.
+
+Before raising a Safety floor, verify that the currently accepted behavior creates a real risk to:
+
+- shared History,
+- unexpected Remote work,
+- Release identity,
+- local work that cannot be reconstructed.
+
+Do not use the Safety floor merely to make an Assessment harder.
+
+## 11. Change Validation
+
+After changing a Rubric, define the expected evidence before retesting.
+
+A valid calibration change should improve agreement between score and interview-supported engineering judgment **without** making unsafe behavior easier to pass.
+
+Check:
+
+- ideal path remains valid,
+- safe alternatives receive appropriate credit,
+- unsafe path still crosses the intended Safety penalty / floor,
+- required Evidence still corresponds to facts genuinely needed by the decision,
+- language variants remain comparable enough for internal use.
+
+Never validate a Rubric change only because average Assessment score increased.
+
+## 12. Future Calibration Boundary
+
+Before using Assessment scores for hiring, certification, or employee evaluation, Git Adventures would need substantially stronger evidence that is outside the current MVP scope, including:
+
+- scenario unambiguity,
+- alternate-safe-solution coverage,
+- reliability across repeated equivalent scenarios,
+- localization effects,
+- external validity against real Git work,
+- fairness and privacy review.
 
 The current score is a training feedback instrument, not a validated psychometric measure.

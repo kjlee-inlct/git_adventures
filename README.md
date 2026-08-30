@@ -124,11 +124,28 @@ Planning is intentionally kept in the repository before implementation expands.
 - [Curriculum Roadmap](docs/curriculum-roadmap.md)
 - [Level Design](docs/level-design.md)
 - [Experience Design](docs/experience-design.md)
+- [Visual Design Direction](docs/design-direction.md)
+- [Mission Schema](docs/mission-schema.md)
+- [Product Phase Gates](docs/product-phase-gates.md)
 - [Content Guideline](docs/content-guideline.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
 - [Service Architecture](docs/service-architecture.md)
 - [References and Product Research](docs/references.md)
+
+## Figma product design
+
+Core product screens are maintained in Figma:
+
+https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
+
+Current design set:
+
+- Track Map
+- Core Mission
+- Recovery Incident
+
+The Figma screens define the visual grammar and learning hierarchy. The implementation may adapt dimensions while preserving the same product logic.
 
 ## Design principles
 
@@ -158,8 +175,6 @@ Editorial Typography
 ```
 
 Avoid generic SaaS dashboard patterns, decorative glass cards, random gradients, or animations that do not teach Git state.
-
-Figma will be used to validate the core Mission screen and Repository Board before major UI expansion.
 
 ## Product research
 
@@ -191,15 +206,15 @@ Pricing and payment model will be decided from real product usage, not assumed i
 ## Immediate roadmap
 
 1. Validate Product Vision and Game Loop
-2. Design Repository Board and Mission screen in Figma
-3. Define versioned Mission schema
-4. Build 5-10 high-quality prototype Missions
-5. Internal usability test
-6. Refine learning and UX problems
-7. Expand Foundations to 20-30 Missions
-8. Add Daily Workflow and Recovery vertical slices
-9. Add automated content validation
-10. Decide next service architecture only after usage evidence
+2. Validate Repository Board / Mission / Recovery visual grammar in Figma
+3. Build 5-10 high-quality prototype Missions using the versioned Mission Schema
+4. Run internal usability sessions with beginner / basic / experienced Git users
+5. Refine learning and UX problems before expanding content volume
+6. Expand Foundations to 20-30 Missions
+7. Add Daily Workflow and Recovery vertical slices
+8. Add automated content validation and Golden scenario tests
+9. Review accessibility and bilingual behavior
+10. Decide next service architecture from actual usage evidence
 
 ## License
 

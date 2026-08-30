@@ -22,4 +22,13 @@ const {missions}=loadContent();const byId=Object.fromEntries(missions.map(m=>[m.
 {
  const rebase=simulateDirectMission(byId['collaboration.rebase.001']).state,merge=simulateDirectMission(byId['collaboration.merge-policy.001']).state;assert.match(rebase.commits[0],/^a31bc77 /,'Rebase must rewrite local commit identity');assert.match(merge.commits[0],/^7bd1010 Merge /,'Merge policy must create merge commit');assert.notEqual(rebase.commits[0],merge.commits[0],'Merge and rebase must create visibly different history');
 }
+{
+ const m=byId['recovery.rebase-abort.001'],initial=normalizeState(clone(m.initial)),state=normalizeState(clone(m.initial));applyAction(state,{type:'startRebaseConflict',file:'config/calibration.json',base:'bb82002 Update factory calibration'});assert.equal(state.operation?.type,'rebase');assert.equal(state.conflicts.length,1);applyAction(state,{type:'abortOperation',operation:'rebase'});assert.equal(fingerprint(state),fingerprint(initial),'Rebase abort must restore exact pre-operation state');
+}
+{
+ const m=byId['recovery.merge-abort.001'],initial=normalizeState(clone(m.initial)),state=normalizeState(clone(m.initial));applyAction(state,{type:'startMergeConflict',file:'src/power_state.py',remoteCommit:'20bc901 Update power transitions'});assert.equal(state.operation?.type,'merge');assert.equal(state.conflicts.length,1);applyAction(state,{type:'abortOperation',operation:'merge'});assert.equal(fingerprint(state),fingerprint(initial),'Merge abort must restore exact pre-operation state');
+}
+{
+ const m=byId['collaboration.force-with-lease.001'],state=normalizeState(clone(m.initial));state.remote.actualHead='unexpected999';const before=state.remote.actualHead;applyAction(state,{type:'forcePushWithLease'});assert.equal(state.remote.actualHead,before,'Lease mismatch must not overwrite unexpected remote work');assert.equal(state.remote.rejected,'lease-mismatch','Lease mismatch must be explicit');
+}
 console.log('Alternate solution and repository invariant tests passed.');

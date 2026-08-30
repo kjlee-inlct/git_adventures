@@ -26,11 +26,13 @@ jobs:
         run: |
           node --check app.js
           node --check engine-conflicts.js
+          node --check engine-release.js
           node --check content/missions.js
           node --check content/missions-daily.js
           node --check content/missions-collaboration.js
           node --check content/missions-conflicts.js
           node --check content/missions-advanced.js
+          node --check content/missions-release.js
           node --check tests/test-helpers.mjs
           node --check tests/golden.mjs
           node --check tests/alternate-solutions.mjs

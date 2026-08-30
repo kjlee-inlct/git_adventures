@@ -63,7 +63,32 @@ Outcome Verification
 
 즉 Assessment는 Command 암기 시험이 아닙니다. 최소 Hint는 Evidence / Policy 방향만 제시하고 정답 Command는 노출하지 않습니다.
 
-상세: [Assessment Track](docs/assessment-track.md)
+### Assessment Scoring
+
+Assessment Debrief는 다음 4개 축을 사용합니다.
+
+```text
+Judgment    40
+Safety      30
+Evidence    20
+Efficiency  10
+```
+
+위 값은 Default Weight이며 Mission의 학습 목표에 따라 조정할 수 있습니다. 예를 들어 Incident Closure는 Verification 자체가 핵심 Skill이므로 Evidence Weight를 더 높게 설정합니다.
+
+PASS 조건은 단순 총점 하나가 아닙니다.
+
+```text
+total >= passScore
+AND
+safety >= criticalSafetyFloor
+```
+
+따라서 Shared History를 위험하게 Rewrite한 뒤 나중에 정답 State에 도달해도 Safety Floor를 넘지 못하면 PASS하지 않습니다.
+
+또한 필요한 `status`, `log`, `diff` 같은 Inspection은 Efficiency Penalty가 아닙니다. 필요한 Evidence를 생략하면 Evidence Score가 낮아지고, 불필요한 Mutation이나 위험한 시도만 Efficiency / Safety를 낮춥니다.
+
+상세: [Assessment Track](docs/assessment-track.md), [Assessment Scoring Rubric](docs/assessment-scoring.md)
 
 ## Repository State Model
 
@@ -150,7 +175,7 @@ Incident Closure Verification
 
 ## Validation Gate
 
-이제 Guided Curriculum과 Assessment를 분리하여 검증합니다.
+이제 Guided Curriculum과 Assessment를 분리하여 검증하고 Assessment Scoring Contract도 별도 검증합니다.
 
 ```text
 Guided Curriculum (40)
@@ -174,9 +199,13 @@ Assessment Curriculum (4)
   Expected Decision Command
        |
   Final State Verification
+       |
+  Scoring Rubric Contract
+       |
+  Unsafe / Evidence-loss Scoring Test
 ```
 
-기존 40개 Regression Gate를 그대로 유지하면서 Assessment는 더 엄격한 평가 규칙을 독립적으로 발전시킬 수 있습니다.
+기존 40개 Regression Gate를 그대로 유지하면서 Assessment와 Scoring은 더 엄격한 평가 규칙을 독립적으로 발전시킬 수 있습니다.
 
 ## Local 실행
 
@@ -196,6 +225,7 @@ python -m http.server 8000
 - [Release Incident Lifecycle](docs/release-incident-lifecycle.md)
 - [Release Governance and Incident Closure](docs/release-governance.md)
 - [Assessment Track](docs/assessment-track.md)
+- [Assessment Scoring Rubric](docs/assessment-scoring.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -212,7 +242,7 @@ https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 2. 동시에 지원하는 여러 Release Line 판단
 3. 여러 선택지가 유효해 보이는 PR Review / Merge Strategy Assessment
 4. Remote Branch 정리 / Release Cleanup Policy
-5. Scored Assessment Rubric / Mastery Threshold
+5. 사내 Usability Session을 통한 Rubric Weight / Safety Floor Calibration
 6. 대규모 Mission 확장 전 사내 Usability Test
 
 ## License

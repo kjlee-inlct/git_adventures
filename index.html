@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Git Adventures - learn Git by solving interactive repository missions.">
+  <title>Git Adventures</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">INTERACTIVE GIT TRAINING</p>
+        <h1>Git Adventures</h1>
+      </div>
+      <div class="topbar-actions">
+        <button id="languageButton" class="button secondary" type="button">한국어</button>
+        <button id="resetButton" class="button secondary" type="button">Reset</button>
+      </div>
+    </header>
+
+    <section class="hero panel">
+      <div>
+        <p id="heroKicker" class="eyebrow">MISSION-BASED LEARNING</p>
+        <h2 id="heroTitle">Learn Git by changing a repository, not by memorizing commands.</h2>
+        <p id="heroDescription" class="muted">Each mission gives you a repository state and a goal. Type the Git command that moves the repository toward the goal.</p>
+      </div>
+      <div class="progress-wrap" aria-label="Course progress">
+        <div class="progress-label"><span id="progressText">Mission 1 / 7</span><span id="xpText">0 XP</span></div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+      </div>
+    </section>
+
+    <section class="workspace-grid">
+      <aside class="panel mission-panel">
+        <p id="missionNumber" class="eyebrow">MISSION 01</p>
+        <h2 id="missionTitle"></h2>
+        <p id="missionStory" class="muted"></p>
+
+        <div class="objective-box">
+          <strong id="objectiveLabel">Objective</strong>
+          <p id="missionObjective"></p>
+        </div>
+
+        <div class="hint-box">
+          <strong id="hintLabel">Hint</strong>
+          <p id="missionHint"></p>
+        </div>
+
+        <div class="mission-nav">
+          <button id="previousButton" class="button secondary" type="button">Previous</button>
+          <button id="nextButton" class="button" type="button" disabled>Next mission</button>
+        </div>
+      </aside>
+
+      <section class="panel terminal-panel">
+        <div class="terminal-header">
+          <span></span><span></span><span></span>
+          <strong id="terminalTitle">practice-repo — terminal</strong>
+        </div>
+        <div id="terminalOutput" class="terminal-output" role="log" aria-live="polite"></div>
+        <form id="commandForm" class="command-form">
+          <label for="commandInput" class="prompt">$</label>
+          <input id="commandInput" autocomplete="off" spellcheck="false" placeholder="git status" aria-label="Git command">
+          <button class="button run" type="submit">Run</button>
+        </form>
+      </section>
+
+      <aside class="panel state-panel">
+        <div class="state-header">
+          <div>
+            <p id="stateLabel" class="eyebrow">REPOSITORY STATE</p>
+            <h2 id="branchName">main</h2>
+          </div>
+          <span id="stateBadge" class="badge">clean</span>
+        </div>
+
+        <div class="state-section">
+          <h3 id="workingTreeLabel">Working Tree</h3>
+          <div id="workingTree" class="file-list"></div>
+        </div>
+
+        <div class="state-section">
+          <h3 id="stagingLabel">Staging Area</h3>
+          <div id="stagingArea" class="file-list"></div>
+        </div>
+
+        <div class="state-section">
+          <h3 id="historyLabel">Commit History</h3>
+          <div id="commitGraph" class="commit-graph"></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel lesson-panel">
+      <div>
+        <p id="conceptLabel" class="eyebrow">WHY THIS MATTERS</p>
+        <h2 id="conceptTitle"></h2>
+        <p id="conceptBody" class="muted"></p>
+      </div>
+      <div id="commandReference" class="command-reference"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

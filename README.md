@@ -1,59 +1,187 @@
-# Luna Chat Coder
+# Git Adventures
 
-[한국어 README](README.ko.md)
+[한국어](README.ko.md)
 
-**Version 0.1.3**
+Git Adventures is a mission-based Git learning service inspired by the idea that tools are learned faster through repeated, contextual actions than through command memorization.
 
-Use ordinary ChatGPT Web conversations for real GitHub repository work—without running a local coding agent, opening a tunnel, or giving the chat access to your computer.
+The learner receives a repository state, a realistic development problem, and a target state. They type Git commands and immediately see how the Working Tree, Staging Area, Branch, and Commit History change.
 
-ChatGPT already has a sandbox that can run code. The catch is that network restrictions can stop repository work when the chat needs source, dependencies, or a reliable way to publish a larger change. Luna teaches the model to keep the development loop in that built-in sandbox and use connected GitHub access only for the missing pieces.
+## Product direction
 
-## What you get
-
-- **A useful built-in workspace.** Editing, building, testing, and debugging stay in the chat sandbox whenever it can do the job.
-- **Fewer dead ends.** If the normal path cannot complete a step reliably, Luna can use GitHub for that step instead of giving up or moving the whole workflow elsewhere.
-- **Safer recovery.** If the chat or sandbox disappears, Luna resumes from exact GitHub state rather than trying to recreate code from conversation history.
-- **Reliable handoff.** Luna checks the state it worked on and the result it publishes before reporting completion.
-
-The point is simple: give the chat a repository and a development task, not a new piece of infrastructure to operate.
-
-## Quick start
-
-For the ChatGPT Web setup documented here:
-
-1. Choose **Use this template → Create a new repository**.
-2. In ChatGPT, install/connect the **GitHub Plugin** from <https://chatgpt.com/plugins>.
-3. On GitHub, install the **ChatGPT Codex Connector** from <https://github.com/apps/chatgpt-codex-connector> and grant it access to the new repository. If the App is already installed for selected repositories, add the new repository to that list.
-4. In a normal ChatGPT conversation, send the repository URL and the development task.
-
-That is the normal workflow. A repository created from this template already contains Luna, and you should not need to mention Luna by name or manage its internal recovery steps yourself.
-
-Organization policy may require an administrator to approve the Plugin or GitHub App.
-
-## How it works
-
-Luna reads the repository's own instructions and requirements, recovers the exact source it should work from, and uses the chat sandbox for the normal edit/test loop.
-
-When direct sandbox access is not enough, Luna can use the connected GitHub path for the missing step. If that path still cannot complete the step reliably, a bounded GitHub Actions run can handle it, then return the work to the sandbox when possible. GitHub Actions is not the default coding environment.
-
-## Add Luna to an existing repository
-
-Copy the complete skill directory:
+Git Adventures is designed as a service, not a one-off tutorial.
 
 ```text
-.agents/skills/luna-chat-coder/
+Free Core
+   |
+   +--- Git mental model
+   +--- status / diff / add / commit
+   +--- branch / switch / log / push
+   +--- safe recovery basics
+   |
+   v
+Pro Learning
+   |
+   +--- Merge / Rebase / Conflict
+   +--- Cherry-pick / Reflog / Bisect
+   +--- realistic incident scenarios
+   +--- guided assessments
+   |
+   v
+Team / Business
+   |
+   +--- Team progress
+   +--- Assigned learning paths
+   +--- Internal Git policy missions
+   +--- Assessment / certification
+   +--- Admin analytics
 ```
 
-Then merge the short Luna entry-point instruction from [`AGENTS.md`](AGENTS.md) into the repository's existing agent instructions. Keep the project's own engineering guidance; Luna works around it rather than replacing it.
+The current repository contains the browser-only MVP for the Free Core experience and the product architecture for future account, payment, progress, and team capabilities.
 
-For the documented ChatGPT Web path, connect the GitHub Plugin and grant the ChatGPT Codex Connector access to the repository before asking the chat to work on it.
+## Current MVP
 
-## Documentation
+- Korean / English language switch
+- Interactive terminal-style command input
+- Repository state visualization
+- Working Tree / Staging Area / Commit History visualization
+- Mission progression and XP
+- Local progress persistence
+- 7 Free Core missions
+- No build step or backend required
 
-Runtime behavior lives in [`SKILL.md`](.agents/skills/luna-chat-coder/SKILL.md). Operational details are in [`actions-missions.md`](.agents/skills/luna-chat-coder/references/actions-missions.md) and [`recovery.md`](.agents/skills/luna-chat-coder/references/recovery.md). [`design-rationale.md`](.agents/skills/luna-chat-coder/references/design-rationale.md) is maintainer memory for changing Luna itself; normal skill use does not depend on it.
+Run locally:
 
-Luna follows the Agent Skills structure. ChatGPT Web is the path documented and tested here; another host can use the same skill when it provides equivalent sandbox and GitHub capabilities.
+```bash
+python -m http.server 8000
+```
+
+Then open:
+
+```text
+http://localhost:8000
+```
+
+Opening `index.html` directly also works in most modern browsers.
+
+## Learning model
+
+The core loop is intentionally short:
+
+```text
+Scenario
+   |
+   v
+Inspect repository state
+   |
+   v
+Choose Git command
+   |
+   v
+Observe state transition
+   |
+   v
+Receive explanation
+   |
+   v
+Repeat in harder context
+```
+
+The service should reward correct reasoning, not blind command repetition.
+
+## Content tracks
+
+| Track | Target | Commercial tier |
+|---|---|---|
+| Foundations | First-time Git users | Free |
+| Daily Workflow | Individual developers | Free / Pro |
+| Recovery Lab | Developers handling mistakes | Pro |
+| Collaboration | PR, Merge, Rebase, Conflict | Pro |
+| Advanced Git | Bisect, Reflog, Cherry-pick, Tag | Pro |
+| Release & Hotfix | Production workflows | Pro |
+| Team Policy | Company-specific Git rules | Business |
+| Assessment | Skills validation | Pro / Business |
+
+See [Level Design](docs/level-design.md) for the full progression model.
+
+## Service architecture
+
+The MVP is static, but the domain model separates content from future platform services.
+
+```text
+Browser Game
+   |
+   +--- Mission Engine
+   +--- Git State Simulator
+   +--- i18n Content
+   +--- Local Progress
+
+Future Platform API
+   |
+   +--- Authentication
+   +--- Cloud Progress
+   +--- Entitlements
+   +--- Payments
+   +--- Team / Organization
+   +--- Analytics
+   +--- Content Delivery
+```
+
+See [Service Architecture](docs/service-architecture.md).
+
+## Monetization principles
+
+The Free tier must remain useful enough to teach the fundamental Git workflow. Payment should unlock depth, realistic practice, assessment, and organizational value rather than artificially blocking basic Git knowledge.
+
+Potential tiers:
+
+- Free: Foundations and selected Daily Workflow missions
+- Pro: full individual curriculum, advanced scenarios, assessments, cloud progress
+- Team: assignments, team dashboards, private learning paths, policy-specific missions
+
+See [Product and Monetization](docs/product-monetization.md).
+
+## Project structure
+
+```text
+.
+|--- index.html
+|--- styles.css
+|--- app.js
+|--- README.md
+|--- README.ko.md
+|--- docs/
+     |--- level-design.md
+     |--- product-monetization.md
+     |--- service-architecture.md
+     |--- content-guideline.md
+```
+
+## Design principles
+
+- Learn by repository state transition
+- Explain Why before adding command complexity
+- Use realistic engineering situations
+- Keep early missions short
+- Introduce destructive commands only inside safe recovery scenarios
+- Separate Git behavior from company policy
+- Support Korean and English from the content model
+- Keep Free Core genuinely useful
+- Design content as data so new missions do not require UI rewrites
+
+## Status
+
+Current phase: Free Core MVP and scalable product foundation.
+
+Next implementation priorities:
+
+1. Move missions from JavaScript constants to versioned content files
+2. Add mission prerequisites and Track map
+3. Add scenario scoring and command alternatives
+4. Add account / cloud progress backend
+5. Add entitlement layer before payment integration
+6. Add Pro content and Team domain model
+7. Add hosted deployment and analytics
 
 ## License
 
-MIT. See [`LICENSE`](LICENSE).
+MIT. See [LICENSE](LICENSE).

@@ -1,59 +1,200 @@
-# Luna Chat Coder
+# Git Adventures
 
-[English README](README.md)
+[English](README.md)
 
-**Version 0.1.3**
+Git Adventures는 Git Command를 암기하는 대신 **Repository 상태를 직접 변화시키며 학습하는 Mission 기반 Git 학습 서비스**입니다.
 
-평소 쓰는 ChatGPT 웹 채팅으로 실제 GitHub 리포지토리 작업을 해보세요. 별도의 로컬 코딩 에이전트를 띄우거나, 터널을 열거나, 내 컴퓨터를 채팅에 연결할 필요가 없습니다.
+사용자는 실제 개발 상황에 가까운 Scenario, 현재 Repository 상태, 목표 상태를 받고 Git Command를 직접 입력합니다. 입력 결과에 따라 Working Tree, Staging Area, Branch, Commit History가 어떻게 바뀌는지 즉시 확인합니다.
 
-ChatGPT에는 이미 코드를 실행할 수 있는 샌드박스가 있습니다. 다만 네트워크 접근이 제한될 수 있어서 소스를 가져오고, 의존성을 준비하고, 큰 변경을 안정적으로 게시하는 단계에서 작업이 쉽게 막힙니다. Luna는 이 내장 샌드박스에서 개발 작업을 이어가고, 부족한 부분만 연결된 GitHub를 통해 보완하도록 모델에게 알려줍니다.
+## Product 방향
 
-## 무엇이 좋아지나요?
-
-- **내장 샌드박스를 제대로 활용합니다.** 편집, 빌드, 테스트, 디버깅은 가능한 한 채팅 안의 샌드박스에서 이어갑니다.
-- **환경 문제에 덜 막힙니다.** 평소 경로로 어떤 단계를 안정적으로 끝낼 수 없을 때는 필요한 부분만 GitHub를 이용해 처리하고, 전체 작업을 다른 환경으로 옮기지 않습니다.
-- **중간에 끊겨도 다시 이어가기 쉽습니다.** Chat이나 sandbox가 사라져도 대화 내용을 바탕으로 코드를 다시 만드는 대신 정확한 GitHub 상태에서 복구합니다.
-- **게시 결과를 확인합니다.** 어떤 상태에서 작업했는지와 실제로 게시된 결과를 확인한 뒤 완료를 보고합니다.
-
-목표는 단순합니다. 새 인프라를 운영하는 대신, 채팅에 리포지토리와 개발 작업만 알려주는 것입니다.
-
-## 빠른 시작
-
-이 리포지토리가 문서화하는 ChatGPT Web 환경에서는 다음과 같이 설정합니다.
-
-1. **Use this template → Create a new repository**를 선택합니다.
-2. ChatGPT의 <https://chatgpt.com/plugins>에서 **GitHub Plugin**을 설치하고 연결합니다.
-3. GitHub에서 <https://github.com/apps/chatgpt-codex-connector>의 **ChatGPT Codex Connector**를 설치하고 새 리포지토리에 접근 권한을 부여합니다. 이미 일부 리포지토리만 허용하도록 설치했다면 새 리포지토리를 그 목록에 추가합니다.
-4. 일반 ChatGPT 대화에서 리포지토리 URL과 원하는 개발 작업을 보냅니다.
-
-평소 사용법은 여기까지입니다. 이 template으로 만든 리포지토리에는 Luna가 이미 들어 있고, Luna 이름을 따로 언급하거나 내부 우회 절차를 직접 운영할 필요가 없어야 합니다.
-
-Organization 정책에 따라 Plugin이나 GitHub App 사용에 관리자 승인이 필요할 수 있습니다.
-
-## 어떻게 동작하나요?
-
-Luna는 리포지토리 자체의 지침과 요구사항을 읽고, 작업해야 할 정확한 소스를 복구한 뒤, 평소 편집과 테스트는 chat sandbox에서 진행합니다.
-
-샌드박스의 직접 접근만으로 부족한 단계는 먼저 연결된 GitHub 경로를 이용합니다. 그 경로로도 해당 단계를 안정적으로 끝내기 어렵다면 제한된 GitHub Actions 실행으로 처리한 뒤, 가능하면 다시 샌드박스에서 작업을 이어갑니다. GitHub Actions는 기본 개발환경으로 사용하지 않습니다.
-
-## 기존 리포지토리에 추가
-
-다음 skill directory 전체를 복사합니다.
+Git Adventures는 단발성 Tutorial이 아니라 다수 사용자가 지속적으로 이용할 수 있는 서비스 구조를 목표로 합니다.
 
 ```text
-.agents/skills/luna-chat-coder/
+Free Core
+   |
+   +--- Git Mental Model
+   +--- status / diff / add / commit
+   +--- branch / switch / log / push
+   +--- 기본 Safe Recovery
+   |
+   v
+Pro Learning
+   |
+   +--- Merge / Rebase / Conflict
+   +--- Cherry-pick / Reflog / Bisect
+   +--- 실무 Incident Scenario
+   +--- Guided Assessment
+   |
+   v
+Team / Business
+   |
+   +--- Team Progress
+   +--- Assigned Learning Path
+   +--- 사내 Git Policy Mission
+   +--- Assessment / Certification
+   +--- Admin Analytics
 ```
 
-그 다음 [`AGENTS.md`](AGENTS.md)의 짧은 Luna entry-point instruction을 대상 리포지토리의 기존 agent instruction에 합칩니다. 프로젝트 자체의 engineering guidance는 그대로 두십시오. Luna는 그것을 대체하지 않고 주변에서 작업을 이어가기 쉽게 돕습니다.
+현재 Repository에는 Free Core 경험을 위한 Browser-only MVP와 향후 Account, Payment, Progress, Team 기능 확장을 위한 Product Architecture를 포함합니다.
 
-이 리포지토리가 문서화하는 ChatGPT Web 환경에서는 작업을 요청하기 전에 GitHub Plugin을 연결하고 ChatGPT Codex Connector에 해당 리포지토리 접근 권한을 부여합니다.
+## 현재 MVP
 
-## 문서
+- 한국어 / English Language Switch
+- Terminal 형태 Git Command 입력
+- Repository State Visualization
+- Working Tree / Staging Area / Commit History 시각화
+- Mission Progress 및 XP
+- Local Progress 저장
+- 7개 Free Core Mission
+- 별도 Build Tool / Backend 불필요
 
-일반 작업에서 쓰는 동작은 [`SKILL.md`](.agents/skills/luna-chat-coder/SKILL.md)에 정의되어 있습니다. 필요할 때 사용하는 세부 절차는 [`actions-missions.md`](.agents/skills/luna-chat-coder/references/actions-missions.md)와 [`recovery.md`](.agents/skills/luna-chat-coder/references/recovery.md)에 있습니다. [`design-rationale.md`](.agents/skills/luna-chat-coder/references/design-rationale.md)는 Luna 자체를 변경할 때 참고하는 maintainer memory이며, 일반 skill 동작은 이 문서를 읽지 않아도 완결됩니다.
+Local 실행:
 
-Luna는 Agent Skills 구조를 따릅니다. 이 리포지토리가 문서화하고 검증하는 환경은 ChatGPT Web이며, 다른 host도 동등한 sandbox와 GitHub 기능을 실제로 제공한다면 같은 skill을 사용할 수 있습니다.
+```bash
+python -m http.server 8000
+```
 
-## 라이선스
+접속:
 
-MIT. [`LICENSE`](LICENSE)를 참고하십시오.
+```text
+http://localhost:8000
+```
+
+대부분의 최신 Browser에서는 `index.html` 직접 실행도 가능.
+
+## Learning Model
+
+핵심 학습 Loop:
+
+```text
+Scenario
+   |
+   v
+Repository State 확인
+   |
+   v
+Git Command 선택
+   |
+   v
+State Transition 확인
+   |
+   v
+Why / How 설명
+   |
+   v
+더 어려운 Context에서 반복
+```
+
+단순 Command 반복보다 **상태를 읽고 판단하는 능력** 학습을 우선합니다.
+
+## Content Track
+
+| Track | 대상 | Commercial Tier |
+|---|---|---|
+| Foundations | Git 최초 사용자 | Free |
+| Daily Workflow | 일반 개발자 | Free / Pro |
+| Recovery Lab | Git 실수 복구 필요 개발자 | Pro |
+| Collaboration | PR, Merge, Rebase, Conflict | Pro |
+| Advanced Git | Bisect, Reflog, Cherry-pick, Tag | Pro |
+| Release & Hotfix | Production Workflow | Pro |
+| Team Policy | 사내 Git 운영 규칙 | Business |
+| Assessment | Skill Validation | Pro / Business |
+
+상세 Level 구성: [Level Design](docs/level-design.md)
+
+## Service Architecture
+
+현재 MVP는 Static Application이지만 Domain Model은 향후 Platform Service와 분리합니다.
+
+```text
+Browser Game
+   |
+   +--- Mission Engine
+   +--- Git State Simulator
+   +--- i18n Content
+   +--- Local Progress
+
+Future Platform API
+   |
+   +--- Authentication
+   +--- Cloud Progress
+   +--- Entitlements
+   +--- Payments
+   +--- Team / Organization
+   +--- Analytics
+   +--- Content Delivery
+```
+
+상세: [Service Architecture](docs/service-architecture.md)
+
+## Monetization 원칙
+
+Free Tier만으로 Git의 핵심 Workflow를 충분히 학습할 수 있어야 합니다. 결제는 기본 지식을 인위적으로 차단하기보다 **깊이 있는 Scenario, 실무 연습, 평가, Team 관리 기능**에서 가치를 제공합니다.
+
+예상 Tier:
+
+- Free: Foundations + Daily Workflow 핵심 Mission
+- Pro: 전체 개인 Curriculum, Advanced Scenario, Assessment, Cloud Progress
+- Team: Assignment, Team Dashboard, Private Learning Path, Policy-specific Mission
+
+상세: [Product and Monetization](docs/product-monetization.md)
+
+## 참고자료에서 반영한 핵심
+
+VIM Master의 Content Platform Architecture처럼 Mission을 Application Code와 분리하는 방향을 채택합니다. HN Feedback에서는 초기 Login 강제와 이른 Paywall에 대한 반감, Advanced Level 부족, 더 많은 Level 요구가 반복적으로 확인됩니다.
+
+따라서 Git Adventures 기준:
+
+- 첫 학습 Session 대상 Login 강제 없음
+- Free Core 완료 전 Paywall 노출 최소화
+- Free Core 자체 완결성 보장
+- Advanced / Recovery / Collaboration을 장기 Retention 핵심으로 설계
+- Account는 Cloud Sync, Device 이동, Pro/Team 기능에서 자연스럽게 요청
+
+## Project 구조
+
+```text
+.
+|--- index.html
+|--- styles.css
+|--- app.js
+|--- README.md
+|--- README.ko.md
+|--- docs/
+     |--- level-design.md
+     |--- product-monetization.md
+     |--- service-architecture.md
+     |--- content-guideline.md
+```
+
+## Design Principles
+
+- Repository State Transition 기반 학습
+- Command 복잡도보다 Why 선행
+- 실제 Engineering Scenario 활용
+- 초기 Mission Short Feedback Loop 유지
+- Destructive Command는 Safe Recovery Context에서만 도입
+- Git 기능과 Company Policy 구분
+- 한국어 / English를 동일 Content Model에서 지원
+- Free Core의 실질적 학습 가치 보장
+- Mission 추가 시 UI Code 수정이 필요 없는 Data-driven Architecture 목표
+- Guest-first Experience 및 Login Friction 최소화
+
+## Status
+
+현재 단계: Free Core MVP + 확장 가능한 Product Foundation.
+
+다음 구현 우선순위:
+
+1. Mission을 JavaScript Constant에서 Versioned Content File로 분리
+2. Mission Prerequisite 및 Track Map 추가
+3. Command Alternative / Partial Credit / Scenario Scoring 추가
+4. Account / Cloud Progress Backend 추가
+5. Payment 이전 Entitlement Layer 추가
+6. Pro Content 및 Team Domain Model 추가
+7. Hosted Deployment + Product Analytics 추가
+
+## License
+
+MIT. [LICENSE](LICENSE) 참고.

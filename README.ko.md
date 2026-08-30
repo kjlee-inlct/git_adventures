@@ -116,7 +116,7 @@ Alternate / Invariant Tests
 Simulator Command Coverage
 ```
 
-18개 Mission 전체에 Golden Test를 적용합니다. Invariant Test는 Remote 정보 갱신, Stash WIP 보존, Stash Conflict 발생 시 Entry 유지, Rebase의 Commit Identity Rewrite, Merge와 Rebase의 서로 다른 History 결과를 검증합니다.
+18개 Mission 전체에 Golden Test를 적용합니다. Invariant Test는 Remote 정보 갱신, Stash WIP 보존, Stash Conflict 발생 시 Entry 유지, Rebase의 Commit Identity Rewrite, Merge와 Rebase의 서로 다른 History 결과를 검증합니다. 현재 Validation Workflow는 모든 단계를 통과합니다.
 
 ## Local 실행
 

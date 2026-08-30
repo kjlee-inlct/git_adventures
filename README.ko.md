@@ -21,7 +21,7 @@ Git Adventures는 다음 원칙을 중심으로 설계하는 Scenario 기반 Git
 
 ## 현재 Playable Curriculum
 
-현재 Prototype에는 **26개 Mission**이 있으며 4개 Track으로 구성됩니다.
+현재 Prototype에는 **30개 Mission**이 있으며 5개 Track으로 구성됩니다.
 
 ```text
 Foundations (4)
@@ -38,13 +38,18 @@ Recovery Lab (6)
   Rebase Abort
   Merge Abort
 
-Collaboration (8)
+Collaboration (9)
   Ahead / Behind Divergence
   Policy 기반 Rebase / Merge
   Rebase / Merge Conflict Lifecycle
   제한된 Force-with-Lease Rewrite
-  Multi-file Rebase Conflict
+  Multi-file Rebase / Merge Conflict
   의도적인 rebase --skip
+
+Release & Incident (3)
+  선택적 Cherry-pick / Backport
+  Cherry-pick Conflict -> Release 구조에 맞게 조정 -> Continue
+  잘못 선택한 Backport -> 정확한 Release State로 Abort
 ```
 
 장기 목표는 약 **185~273개 Core Mission** + Scenario Variation + Assessment 규모입니다.
@@ -62,6 +67,7 @@ Repository State
  |      +--- null
  |      +--- rebase
  |      +--- merge
+ |      +--- cherry-pick
  +--- Commit History
  +--- Remote / Tracking
  |      +--- Tracking Branch
@@ -94,6 +100,33 @@ Conflict Set
 Rebase와 Merge는 서로 다른 History 결과를 만들며, Abort와 Skip 역시 Escape Command가 아니라 History Decision으로 다룹니다.
 
 상세: [Conflict Lifecycle](docs/conflict-lifecycle.md), [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md)
+
+## Release / Backport Model
+
+Release 작업은 **가장 최신 Branch 전체를 합치는 것**이 아니라 필요한 Change Intent와 Risk를 기준으로 판단합니다.
+
+```text
+Release에 검증된 Fix 하나만 필요
+        |
+        v
+정확한 Commit Intent 선택
+        |
+        v
+Cherry-pick / Backport
+        |
+   +----+----+
+   |         |
+ Clean     Conflict
+   |         |
+   |     Release 구조에 맞게 구현 조정
+   |     Fix Intent는 유지
+   |         |
+   +----> Continue
+```
+
+선택한 Commit 자체가 Release Scope 밖이라면 Conflict를 해결하는 대신 `git cherry-pick --abort`가 올바른 결정일 수 있습니다.
+
+상세: [Release and Backport Learning Model](docs/release-and-backport.md)
 
 ## Force-with-Lease Policy
 
@@ -132,7 +165,7 @@ Alternate / Invariant Tests
 Simulator Command Coverage
 ```
 
-**26개 Mission 전체**에 Golden Test를 적용합니다. Invariant Test는 Rebase/Merge Abort의 정확한 State 복원, Multi-file Conflict 전체 해결 조건, Blocked Switch의 WIP 보존, 의도적인 Rebase Skip 의미, Stash Conflict 시 Entry 보존, Remote Divergence, 예상하지 못한 Remote 변경 시 Force-with-Lease Reject를 검증합니다.
+**30개 Mission 전체**에 Golden Test를 적용합니다. Invariant Test는 Rebase/Merge/Cherry-pick Abort의 정확한 State 복원, Multi-file Conflict 전체 해결 조건, Blocked Switch의 WIP 보존, 의도적인 Rebase Skip 의미, Stash Conflict 시 Entry 보존, Remote Divergence, 예상하지 못한 Remote 변경 시 Force-with-Lease Reject를 검증합니다.
 
 ## Local 실행
 
@@ -157,6 +190,7 @@ python -m http.server 8000
 - [Collaboration and Divergence Expansion](docs/collaboration-expansion.md)
 - [Conflict Lifecycle](docs/conflict-lifecycle.md)
 - [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md)
+- [Release and Backport Learning Model](docs/release-and-backport.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -178,11 +212,11 @@ https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 
 ## 다음 구현 깊이
 
-1. Multi-file Merge Conflict 및 Partially Resolved Abort
-2. 여러 Commit Replay 중 `rebase --skip`
-3. Release Branch 대상 Cherry-pick / Backport
-4. PR Review / Merge Strategy 판단
-5. Release / Hotfix Incident Track
+1. Backport Dependency Chain 및 Multi-commit 적용 순서
+2. Hotfix Branch + Release PR Workflow
+3. PR Review / Merge Strategy 판단
+4. Release Tag / Bad Release / Rollback Incident
+5. Verification Checklist 및 Assessment Mission
 6. 대규모 Mission 확장 전 사내 Usability Test
 
 ## License

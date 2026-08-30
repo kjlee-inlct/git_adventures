@@ -46,4 +46,13 @@ const {missions}=loadContent();const byId=Object.fromEntries(missions.map(m=>[m.
 {
  const m=byId['release.cherry-pick-abort.001'],initial=normalizeState(clone(m.initial)),state=normalizeState(clone(m.initial));applyAction(state,{type:'startCherryPickConflict',source:'91cc310',file:'src/protocol.py',message:'Add protocol retry'});assert.equal(state.operation?.type,'cherry-pick','Cherry-pick conflict must enter operation state');assert.equal(state.conflicts.length,1,'Cherry-pick conflict must expose unmerged path');applyAction(state,{type:'abortOperation',operation:'cherry-pick'});assert.equal(fingerprint(state),fingerprint(initial),'Cherry-pick abort must restore exact release state');
 }
+{
+ const state=simulateDirectMission(byId['release.backport-order.001']).state;assert.match(state.commits[0],/^14bd202 /,'Dependent fix must be newest backport commit');assert.match(state.commits[1],/^14bd201 /,'Dependency must be applied before dependent fix');
+}
+{
+ const state=simulateDirectMission(byId['release.patch-tag.001']).state;assert.ok(state.tags.includes('v1.4.3@1430f01'),'Published bad-release tag must remain on original release commit');assert.ok(state.tags.includes('v1.4.4@1440a01'),'Recovery must receive a new patch tag');assert.equal(state.tags.filter(tag=>tag.startsWith('v1.4.3@')).length,1,'Published tag identity must not move or duplicate');
+}
+{
+ const state=simulateDirectMission(byId['release.bad-release-revert.001']).state;assert.equal(state.commits[1],'1430f01 Backport serial reconnect fix','Revert must preserve the bad release commit in history for auditability');assert.match(state.commits[0],/^1440a01 Revert /,'Recovery must be represented by a new inverse commit');
+}
 console.log('Alternate solution and repository invariant tests passed.');

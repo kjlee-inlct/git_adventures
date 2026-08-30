@@ -2,52 +2,106 @@
 
 [한국어](README.ko.md)
 
-Git Adventures is a mission-based Git learning service inspired by the idea that tools are learned faster through repeated, contextual actions than through command memorization.
+Git Adventures is a scenario-driven Git learning game built around one idea:
 
-The learner receives a repository state, a realistic development problem, and a target state. They type Git commands and immediately see how the Working Tree, Staging Area, Branch, and Commit History change.
+> Learn Git by changing repository state, not by memorizing a command list.
 
-## Product direction
+A learner receives a realistic repository situation, inspects the state, types real Git commands, and immediately sees how the Working Tree, Staging Area, Commit History, Branches, and Remote state change.
 
-Git Adventures is designed as a service, not a one-off tutorial.
+## Current phase
+
+The project is currently in **internal product design and MVP validation**.
+
+- Internal server deployment
+- Korean / English
+- No payment
+- No required account
+- All implemented content available during testing
+- Product architecture prepared for future large-scale service use
+- Future paid packaging designed as metadata/policy, not hardcoded into Missions
+
+The priority is product and game-design quality before large-scale implementation.
+
+## Product goal
 
 ```text
-Free Core
-   |
-   +--- Git mental model
-   +--- status / diff / add / commit
-   +--- branch / switch / log / push
-   +--- safe recovery basics
+Beginner
    |
    v
-Pro Learning
-   |
-   +--- Merge / Rebase / Conflict
-   +--- Cherry-pick / Reflog / Bisect
-   +--- realistic incident scenarios
-   +--- guided assessments
+Understand Git State
    |
    v
-Team / Business
+Complete Daily Workflow
    |
-   +--- Team progress
-   +--- Assigned learning paths
-   +--- Internal Git policy missions
-   +--- Assessment / certification
-   +--- Admin analytics
+   v
+Recover from Mistakes
+   |
+   v
+Collaborate Safely
+   |
+   v
+Manage History
+   |
+   v
+Handle Release / Incident Scenarios
+   |
+   v
+Git Mastery
 ```
 
-The current repository contains the browser-only MVP for the Free Core experience and the product architecture for future account, payment, progress, and team capabilities.
+The product should remain useful after the learner already knows `commit`, `pull`, and `push`.
+
+## Core game loop
+
+```text
+Scenario
+   |
+   v
+Inspect Repository State
+   |
+   v
+Choose / Type Git Command
+   |
+   v
+Observe State Transition
+   |
+   v
+Understand Why
+   |
+   v
+Solve Harder Scenario
+```
+
+A wrong but recoverable command should often create a new recovery problem instead of a generic fail screen.
+
+## Planned curriculum
+
+| Track | Learning outcome |
+|---|---|
+| Orientation | Git mental model and inspection-first habit |
+| Foundations | First independent Feature Branch workflow |
+| Daily Workflow | Normal multi-file development work |
+| Recovery Lab | Safe recovery from common mistakes |
+| Collaboration | PR, Merge, Rebase, Conflict, shared History |
+| History Management | Reflog, Cherry-pick, Bisect, Rebase, Tags |
+| Release & Incident | Hotfix, Backport, bad Release, rollback decisions |
+| Mastery / Assessment | Combined scenarios with minimal guidance |
+
+Long-term curriculum target: approximately **185-273 core Missions**, plus scenario variations and assessments.
+
+All implemented Tracks remain open during internal testing. Future commercial packaging can be introduced later without redesigning Mission content.
 
 ## Current MVP
 
-- Korean / English language switch
-- Interactive terminal-style command input
-- Repository state visualization
-- Working Tree / Staging Area / Commit History visualization
-- Mission progression and XP
-- Local progress persistence
-- 7 Free Core missions
-- No build step or backend required
+The current browser prototype provides:
+
+- Korean / English switch
+- terminal-style command input
+- repository state visualization
+- Working Tree / Staging / Commit History feedback
+- Mission progression
+- XP and local progress
+- no build step or backend requirement
 
 Run locally:
 
@@ -55,132 +109,97 @@ Run locally:
 python -m http.server 8000
 ```
 
-Then open:
+Open:
 
 ```text
 http://localhost:8000
 ```
 
-Opening `index.html` directly also works in most modern browsers.
+## Product documentation
 
-## Learning model
+Planning is intentionally kept in the repository before implementation expands.
 
-The core loop is intentionally short:
-
-```text
-Scenario
-   |
-   v
-Inspect repository state
-   |
-   v
-Choose Git command
-   |
-   v
-Observe state transition
-   |
-   v
-Receive explanation
-   |
-   v
-Repeat in harder context
-```
-
-The service should reward correct reasoning, not blind command repetition.
-
-## Content tracks
-
-| Track | Target | Commercial tier |
-|---|---|---|
-| Foundations | First-time Git users | Free |
-| Daily Workflow | Individual developers | Free / Pro |
-| Recovery Lab | Developers handling mistakes | Pro |
-| Collaboration | PR, Merge, Rebase, Conflict | Pro |
-| Advanced Git | Bisect, Reflog, Cherry-pick, Tag | Pro |
-| Release & Hotfix | Production workflows | Pro |
-| Team Policy | Company-specific Git rules | Business |
-| Assessment | Skills validation | Pro / Business |
-
-See [Level Design](docs/level-design.md) for the full progression model.
-
-## Service architecture
-
-The MVP is static, but the domain model separates content from future platform services.
-
-```text
-Browser Game
-   |
-   +--- Mission Engine
-   +--- Git State Simulator
-   +--- i18n Content
-   +--- Local Progress
-
-Future Platform API
-   |
-   +--- Authentication
-   +--- Cloud Progress
-   +--- Entitlements
-   +--- Payments
-   +--- Team / Organization
-   +--- Analytics
-   +--- Content Delivery
-```
-
-See [Service Architecture](docs/service-architecture.md).
-
-## Monetization principles
-
-The Free tier must remain useful enough to teach the fundamental Git workflow. Payment should unlock depth, realistic practice, assessment, and organizational value rather than artificially blocking basic Git knowledge.
-
-Potential tiers:
-
-- Free: Foundations and selected Daily Workflow missions
-- Pro: full individual curriculum, advanced scenarios, assessments, cloud progress
-- Team: assignments, team dashboards, private learning paths, policy-specific missions
-
-See [Product and Monetization](docs/product-monetization.md).
-
-## Project structure
-
-```text
-.
-|--- index.html
-|--- styles.css
-|--- app.js
-|--- README.md
-|--- README.ko.md
-|--- docs/
-     |--- level-design.md
-     |--- product-monetization.md
-     |--- service-architecture.md
-     |--- content-guideline.md
-```
+- [Product Vision](docs/product-vision.md)
+- [Game Design](docs/game-design.md)
+- [Curriculum Roadmap](docs/curriculum-roadmap.md)
+- [Level Design](docs/level-design.md)
+- [Experience Design](docs/experience-design.md)
+- [Content Guideline](docs/content-guideline.md)
+- [Internal Test Plan](docs/internal-test-plan.md)
+- [Product Packaging and Future Monetization](docs/product-monetization.md)
+- [Service Architecture](docs/service-architecture.md)
+- [References and Product Research](docs/references.md)
 
 ## Design principles
 
-- Learn by repository state transition
-- Explain Why before adding command complexity
-- Use realistic engineering situations
-- Keep early missions short
-- Introduce destructive commands only inside safe recovery scenarios
-- Separate Git behavior from company policy
-- Support Korean and English from the content model
-- Keep Free Core genuinely useful
-- Design content as data so new missions do not require UI rewrites
+1. Learning clarity before realism
+2. Repository state before command memorization
+3. Safe Git habits before efficiency
+4. Real development scenarios before trivia
+5. Beginner-to-expert continuity
+6. Mistakes become recovery learning when possible
+7. No artificial difficulty from withholding basic tools
+8. Korean and English are first-class content
+9. Content is data; the engine should not hardcode the curriculum
+10. Design for future commercial scale without adding a current paywall
 
-## Status
+## Visual direction
 
-Current phase: Free Core MVP and scalable product foundation.
+The UI should feel like a purpose-built developer puzzle game.
 
-Next implementation priorities:
+```text
+Developer Tool
++
+Puzzle Game
++
+Repository Map
++
+Editorial Typography
+```
 
-1. Move missions from JavaScript constants to versioned content files
-2. Add mission prerequisites and Track map
-3. Add scenario scoring and command alternatives
-4. Add account / cloud progress backend
-5. Add entitlement layer before payment integration
-6. Add Pro content and Team domain model
-7. Add hosted deployment and analytics
+Avoid generic SaaS dashboard patterns, decorative glass cards, random gradients, or animations that do not teach Git state.
+
+Figma will be used to validate the core Mission screen and Repository Board before major UI expansion.
+
+## Product research
+
+The project studies interaction and learning patterns from products such as VIM Adventures and VIM Master, along with community feedback around those tools. The implementation, scenarios, visual identity, and Git-specific learning model remain original.
+
+See [References and Product Research](docs/references.md).
+
+## Future commercialization
+
+Commercial options are planned now only to avoid architectural dead ends.
+
+During internal testing:
+
+```text
+All implemented content -> Accessible
+```
+
+Later, evidence may support packaging around:
+
+- advanced individual practice
+- assessments
+- cloud progress
+- specialized scenario packs
+- team onboarding and analytics
+- company-specific Git policy Missions
+
+Pricing and payment model will be decided from real product usage, not assumed in advance.
+
+## Immediate roadmap
+
+1. Validate Product Vision and Game Loop
+2. Design Repository Board and Mission screen in Figma
+3. Define versioned Mission schema
+4. Build 5-10 high-quality prototype Missions
+5. Internal usability test
+6. Refine learning and UX problems
+7. Expand Foundations to 20-30 Missions
+8. Add Daily Workflow and Recovery vertical slices
+9. Add automated content validation
+10. Decide next service architecture only after usage evidence
 
 ## License
 

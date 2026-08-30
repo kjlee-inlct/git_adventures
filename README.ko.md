@@ -21,7 +21,7 @@ Git Adventures는 다음 원칙을 중심으로 설계하는 Scenario 기반 Git
 
 ## 현재 Playable Curriculum
 
-현재 Prototype에는 **40개 Mission / 5개 Track**이 있습니다.
+Browser Prototype에는 현재 **44개 Mission / 6개 Track**이 있습니다.
 
 ```text
 Foundations          4
@@ -29,11 +29,41 @@ Daily Workflow       8
 Recovery Lab         6
 Collaboration        9
 Release & Incident  13
+Assessment           4
 ```
 
-Release & Incident는 Selective Backport, Dependency Ordering, Hotfix Branch, Cherry-pick Conflict / Abort, Annotated Tag, Bad Release Revert, Patch Recovery, Review Evidence, Approval Gate, Tag Publication, main 재반영, Incident Closure Verification까지 포함합니다.
+1~40번은 Guided Learning / Practice이며, 41~44번은 이미 학습한 도구를 상황에 맞게 선택하는 첫 Assessment Track입니다.
+
+현재 Assessment는 다음 판단을 평가합니다.
+
+- Published Regression에서 Shared History를 삭제하지 않고 Auditable Revert 선택
+- Support Policy와 영향 범위를 바탕으로 Fix를 적용할 Release Line 선택
+- Review / Approval / History Policy를 바탕으로 Release Integration Strategy 선택
+- Story를 믿는 대신 Repository State를 직접 확인한 뒤 Incident Closure 판단
 
 장기 목표는 약 **185~273개 Core Mission** + Scenario Variation + Assessment 규모입니다.
+
+## Assessment 설계
+
+Assessment Mission은 `assessment: true`를 사용하며 일반 Mission의 마지막 **Command Shape Hint를 의도적으로 차단**합니다.
+
+```text
+Scenario Evidence
+      |
+Repository State
+      |
+Team / Release Policy
+      |
+Decision
+      |
+Git Action
+      |
+Outcome Verification
+```
+
+즉 Assessment는 Command 암기 시험이 아닙니다. 최소 Hint는 Evidence / Policy 방향만 제시하고 정답 Command는 노출하지 않습니다.
+
+상세: [Assessment Track](docs/assessment-track.md)
 
 ## Repository State Model
 
@@ -70,7 +100,7 @@ Team Policy
   = Release Integration 전 필요한 Evidence / Approval 기준
 ```
 
-Approval 자체를 가짜 Git Command로 만들지 않습니다. Git은 Review Evidence를 제공하고, Approval은 Scenario Policy Gate로 표현합니다.
+Approval 자체를 가짜 Git Command로 만들지 않습니다. Git은 Review Evidence를 제공하고 Approval은 Scenario Policy Gate로 표현합니다.
 
 상세: [Release Governance and Incident Closure](docs/release-governance.md)
 
@@ -120,21 +150,33 @@ Incident Closure Verification
 
 ## Validation Gate
 
+이제 Guided Curriculum과 Assessment를 분리하여 검증합니다.
+
 ```text
-JavaScript Syntax
-      |
-Content Contract
-      |
-Golden Mission Tests
-      |
-Alternate / Repository Invariants
-      |
-Release Governance Invariants
-      |
-Simulator Command Coverage
+Guided Curriculum (40)
+  JavaScript Syntax
+       |
+  Content Contract
+       |
+  Golden Mission Tests
+       |
+  Alternate / Repository Invariants
+       |
+  Release Governance Invariants
+       |
+  Simulator Command Coverage
+
+Assessment Curriculum (4)
+  Assessment Schema
+       |
+  Minimal Hint / Command Leak 방지
+       |
+  Expected Decision Command
+       |
+  Final State Verification
 ```
 
-**40개 Mission 전체**에 Golden Test를 적용합니다. Governance Invariant는 Approval 없이 Hotfix Merge가 진행되지 않는지, Local Tag가 자동 Publish되지 않는지, 명시적 Tag Publication이 이전 Release Identity를 보존하는지, Incident Recovery가 main까지 수렴하는지 검증합니다.
+기존 40개 Regression Gate를 그대로 유지하면서 Assessment는 더 엄격한 평가 규칙을 독립적으로 발전시킬 수 있습니다.
 
 ## Local 실행
 
@@ -153,6 +195,7 @@ python -m http.server 8000
 - [Release and Backport Learning Model](docs/release-and-backport.md)
 - [Release Incident Lifecycle](docs/release-incident-lifecycle.md)
 - [Release Governance and Incident Closure](docs/release-governance.md)
+- [Assessment Track](docs/assessment-track.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -165,11 +208,11 @@ https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 
 ## 다음 구현 깊이
 
-1. Forward-fix vs Revert / Rollback 판단
-2. 여러 Supported Release Line 관리
-3. PR Review / Merge Strategy Assessment
+1. 더 많은 Evidence를 사용하는 Forward-fix vs Revert vs Rollback Assessment
+2. 동시에 지원하는 여러 Release Line 판단
+3. 여러 선택지가 유효해 보이는 PR Review / Merge Strategy Assessment
 4. Remote Branch 정리 / Release Cleanup Policy
-5. Release Verification Checklist + Scored Assessment
+5. Scored Assessment Rubric / Mastery Threshold
 6. 대규모 Mission 확장 전 사내 Usability Test
 
 ## License

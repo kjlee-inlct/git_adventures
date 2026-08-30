@@ -2,157 +2,102 @@
 
 [English](README.md)
 
-Git Adventures는 다음 한 가지 원칙을 중심으로 설계하는 Scenario 기반 Git 학습 Game입니다.
+Git Adventures는 다음 원칙을 중심으로 설계하는 Scenario 기반 Git 학습 Game입니다.
 
 > Git Command 목록을 외우는 대신 Repository State를 직접 변화시키며 Git을 학습.
 
-사용자는 실제 개발 상황과 유사한 Repository State를 확인하고, 직접 Git Command를 입력한 뒤 Working Tree, Staging Area, Commit History, Branch, Remote State 변화를 즉시 확인합니다.
+사용자는 실제 개발 상황과 유사한 Repository를 확인하고 Git Command를 직접 입력한 뒤 Working Tree, Staging Area, Commit History, Remote Tracking, Stash의 변화를 즉시 확인합니다.
 
 ## 현재 단계
 
-현재 단계는 **사내 Product 기획 및 MVP 검증**.
+**사내 Product 기획 및 MVP 검증 단계**.
 
 - 사내 Server 배포
 - 한국어 / English 지원
-- 결제 기능 없음
-- Account 강제 없음
-- 구현된 학습 Content 전체 공개 기반 Test
-- 향후 다수 사용자 Service 확장 가능한 구조 고려
-- 유료 전환 가능성은 Mission Logic이 아닌 Metadata / Policy Layer로 분리
+- Account / 결제 강제 없음
+- 구현된 Content 전체 공개 기반 Test
+- 향후 다수 사용자 및 Commercial Packaging 확장 가능한 구조
+- Content 수보다 Product / Game Design 품질 우선
 
-현재 최우선 순위는 많은 기능 구현보다 **Product 기획과 Game Design 품질 확보**.
+## 현재 Playable Curriculum
 
-## Core Learning Loop
-
-```text
-Scenario
-   |
-Repository State 확인
-   |
-Git Command 선택 / 입력
-   |
-State Transition 확인
-   |
-Why 이해
-   |
-필요 시 실수 복구
-   |
-더 복잡한 Scenario 수행
-```
-
-유효하지만 좋지 않은 선택은 단순 Fail 대신 실제 Repository Consequence를 만들 수 있습니다.
-
-## 첫 Playable Vertical Slice
-
-현재 8개 Mission이 세 단계에 걸쳐 구성되어 있습니다.
+현재 Prototype에는 **13개 Mission**이 있습니다.
 
 ```text
-Foundations
-  1. Repository Status 확인
-  2. Unstaged Diff 읽기
-  3. Selective Staging
-  4. Atomic Commit
+Foundations (4)
+  status -> diff -> selective staging -> atomic commit
 
-Daily Workflow
-  5. Feature Branch 격리
-  6. 복잡한 Workspace에서 Atomic Commit 구성
+Daily Workflow (6)
+  Feature Branch
+  복잡한 Workspace에서 Atomic Commit
+  Remote State Fetch
+  Clean Upstream Pull
+  push -u 기반 Branch Publish
+  긴급 Branch 전환 전 WIP Stash
 
-Recovery Lab
-  7. 작업 삭제 없이 Unstage
-  8. Shared History를 Revert로 안전하게 복구
+Recovery Lab (3)
+  작업 손실 없는 Unstage
+  Shared History Revert
+  Stash WIP 복원
 ```
 
-`git status`, `git diff`, `git diff --staged`, `git log --oneline` 같은 Inspection Command는 점수 Penalty 없이 사용할 수 있습니다.
+장기 목표는 약 **185~273개 Core Mission** + Scenario Variation + Assessment 규모입니다.
 
-`git add .`처럼 State를 불필요하게 넓히는 선택도 실제 State 변화로 반영하고, 사용자가 이후 Recovery로 목표 State에 도달하면 Mission을 완료할 수 있습니다.
+## Repository State Model
+
+```text
+Repository State
+ |
+ +--- Current Branch
+ +--- Working Tree
+ +--- Staging Area
+ +--- Commit History
+ +--- Remote / Tracking
+ |      +--- Tracking Branch
+ |      +--- Known Remote HEAD
+ |      +--- Actual Remote HEAD
+ |      +--- Ahead / Behind
+ |      +--- Fetch State
+ |
+ +--- Stash Stack
+```
+
+정확한 Command 문자열 맞히기보다 Inspection과 안전한 판단을 학습하도록 설계합니다.
 
 ## Learning Feedback
 
-현재 Prototype은 네 가지 학습 Signal을 제공합니다.
+- 3단계 Progressive Hint: Direction -> Concept -> Command Shape
+- Mastery: 독립적인 문제 해결 / 불필요한 Detour
+- Safety: 작업 및 Shared History 보호 수준
+- Mission Debrief: Why + Mastery + Safety + Hint / Detour
+- Inspection Command는 Mastery Penalty 없음
+- 위험 Command는 일반 Mission에서 차단하고 전용 Recovery Lab에서 Consequence와 함께 학습
+
+## Validation Gate
+
+모든 PR에서 다음 검증 수행:
 
 ```text
-Mastery = 도움 없이 문제를 해결한 정도 / 불필요한 Detour
-Safety  = 작업과 Shared History를 보호한 정도
-Hints   = 단계별 도움 사용량
-Debrief = Mission 완료 후 Why + 결과 설명
+JavaScript Syntax
+      |
+Content Contract
+      |
+Golden Mission Tests
+      |
+Alternate / Invariant Tests
+      |
+Simulator Command Coverage
 ```
 
-Inspection Command는 비효율로 간주하지 않습니다.
+13개 Mission 전체에 Golden Test를 적용합니다. Remote/Stash Invariant Test로 `fetch`가 Local HEAD를 움직이지 않는지, `push -u`가 Tracking을 설정하는지, Stash Push/Pop이 WIP를 보존하는지 검증합니다.
 
-일반 Mission에서는 `reset --hard`, `clean -fd`, `push --force` 같은 파괴 가능 Command를 차단하고 Safety에 반영합니다. 추후 전용 Recovery Lab에서는 명시적인 Consequence Simulation과 함께 학습 가능하도록 확장합니다.
-
-상세: [Learning Feedback System](docs/learning-feedback-system.md)
-
-## Curriculum 계획
-
-| Track | 학습 목표 |
-|---|---|
-| Orientation | Git Mental Model 및 Inspection-first 습관 |
-| Foundations | 독립적인 첫 Feature Branch Workflow |
-| Daily Workflow | 실제 Multi-file 개발 작업 |
-| Recovery Lab | 흔한 Git 실수의 안전한 복구 |
-| Collaboration | PR, Merge, Rebase, Conflict, Shared History |
-| History Management | Reflog, Cherry-pick, Bisect, Rebase, Tag |
-| Release & Incident | Hotfix, Backport, Bad Release, Rollback 판단 |
-| Mastery / Assessment | 최소 Hint 기반 복합 Scenario |
-
-장기적으로 약 **185~273개 Core Mission** + Scenario Variation + Assessment 규모를 목표로 설계.
-
-사내 Test 단계에서는 구현된 Track 전체를 공개하며, 향후 유료 Packaging을 적용하더라도 Mission Content 자체를 재작성하지 않도록 구조를 분리합니다.
-
-## 현재 MVP
-
-- 한국어 / English 전환
-- Terminal 형태 Command 입력
-- Repository State Visualization
-- Working Tree / Staging / Commit History Feedback
-- Track Map
-- 3단계 Progressive Hint
-- Mastery / Safety Feedback
-- Mission Debrief
-- Local Progress
-- 별도 Backend / Build Framework 없이 실행 가능
-
-Local 실행:
+## Local 실행
 
 ```bash
 python -m http.server 8000
 ```
 
-접속:
-
-```text
-http://localhost:8000
-```
-
-## Validation Gate
-
-Mission 수를 늘리기 전에 자동 검증으로 학습 Content와 Simulator 안정성을 보호합니다.
-
-```text
-Content Contract
-      |
-      v
-Golden Mission Test
-      |
-      v
-Alternate Solution Test
-      |
-      v
-Simulator Command Coverage
-```
-
-GitHub Actions 현재 검증 항목:
-
-- JavaScript Syntax
-- Mission ID / Number / 한국어·English Content / Difficulty / Repository State Shape
-- 8개 Mission 대표 해법 -> 기대 Final Repository State
-- 안전한 Alternate Path가 동일 Target State로 수렴하는지 확인
-- Unstage 시 Working Tree Data 보존 확인
-- 학습자에게 노출한 Command와 Simulator Coverage 일치 여부
-- 위험 Command 인식 여부
-
-상세: [Simulator Command Coverage](docs/command-coverage.md), [Vertical Slice](docs/vertical-slice.md)
+`http://localhost:8000` 접속.
 
 ## Product 기획 문서
 
@@ -164,27 +109,14 @@ GitHub Actions 현재 검증 항목:
 - [Experience Design](docs/experience-design.md)
 - [Design Direction](docs/design-direction.md)
 - [Learning Feedback System](docs/learning-feedback-system.md)
-- [Simulator Command Coverage](docs/command-coverage.md)
 - [Vertical Slice](docs/vertical-slice.md)
-- [Content Guideline](docs/content-guideline.md)
+- [Daily Workflow Expansion](docs/daily-workflow-expansion.md)
+- [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
 - [Service Architecture](docs/service-architecture.md)
 - [Product Roadmap](docs/product-roadmap.md)
 - [References and Product Research](docs/references.md)
-
-## Design Principle
-
-1. Realism보다 Learning Clarity 우선
-2. Command Memorization보다 Repository State 이해 우선
-3. Efficiency보다 Safe Git Habit 우선
-4. Trivia보다 실제 개발 Scenario 우선
-5. Beginner에서 Expert까지 연속적인 Progression
-6. 가능한 경우 실수를 Recovery Learning으로 활용
-7. Basic Tool 제한 기반 Fake Difficulty 금지
-8. 한국어 / English를 동일한 1st-class Content로 관리
-9. Content = Data, Curriculum을 Engine Code에 Hardcoding 금지
-10. 현재 Paywall 없이 Future Commercial Scale 대응 구조 확보
 
 ## Figma
 
@@ -192,30 +124,21 @@ Core Experience Design:
 
 https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 
-현재 Screen:
+현재 Design Screen:
 
 - Track Map
 - Core Mission
 - Recovery Incident
 
-## Product Research
+## 다음 구현 깊이
 
-VIM Adventures, VIM Master, Community Discussion, Git Workflow 자료를 학습 Interaction과 Product Risk 참고자료로 활용합니다.
-
-단, 구현 Code, Scenario, Visual Identity, Git Learning Model은 독립적으로 설계합니다.
-
-상세: [References and Product Research](docs/references.md)
-
-## Immediate Roadmap
-
-1. 8개 Mission Vertical Slice 사내 Test
-2. 실제 사용자 행동 기반 Hint / Mastery / Safety 조정
-3. Daily Workflow Simulator Command Coverage 확장
-4. Consequence 중심 Recovery Scenario 추가
-5. 모든 신규 Mission에 Golden Fixture 필수화
-6. 첫 Slice 검증 후 Foundations를 20~30개 고품질 Mission으로 확장
-7. Daily Workflow / Recovery 깊이 확장
-8. 실제 사용 결과 기반 Account / Analytics / 향후 Packaging 결정
+1. `fetch` -> Divergence 확인 -> Merge / Rebase 명시적 선택
+2. Remote 변경으로 인한 Push Reject
+3. Team Policy 기반 `pull --rebase`
+4. Stash Pop Conflict
+5. 겹치는 Local 변경 때문에 Branch Switch가 차단되는 Scenario
+6. Collaboration Track: PR / Conflict / Shared History 판단
+7. Foundations 20~30개 확장 전에 사내 Usability Test
 
 ## License
 

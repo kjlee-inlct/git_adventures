@@ -63,7 +63,30 @@ Outcome Verification
 
 The Assessment Track is therefore not a command-recall quiz. Minimal hints point toward evidence or policy but do not reveal the answer command.
 
-See [Assessment Track](docs/assessment-track.md).
+### Assessment scoring
+
+Assessment Debrief now uses four explainable axes:
+
+```text
+Judgment    40
+Safety      30
+Evidence    20
+Efficiency  10
+```
+
+These are default weights; a Mission can override them when its learning objective requires a different emphasis. Incident Closure, for example, raises Evidence because verification is the main skill being measured.
+
+PASS uses two conditions:
+
+```text
+total >= passScore
+AND
+safety >= criticalSafetyFloor
+```
+
+Useful inspection does not reduce Efficiency. Missing required inspection lowers Evidence, and unsafe Shared-History actions can fail the Safety floor even if the learner later reaches the correct state.
+
+See [Assessment Track](docs/assessment-track.md) and [Assessment Scoring Rubric](docs/assessment-scoring.md).
 
 ## Repository state model
 
@@ -152,7 +175,7 @@ Key rules:
 
 ## Validation gates
 
-Every PR now runs two layers of curriculum validation.
+Every PR now runs two layers of curriculum validation plus a scoring contract.
 
 ```text
 Guided curriculum (40)
@@ -176,9 +199,13 @@ Assessment curriculum (4)
   Expected Decision Command
        |
   Final State Verification
+       |
+  Scoring Rubric Contract
+       |
+  Unsafe / Evidence-loss Scoring Tests
 ```
 
-This keeps the original 40-Mission Regression Gate stable while allowing Assessment logic to become stricter without weakening guided Mission coverage.
+This keeps the original 40-Mission Regression Gate stable while allowing Assessment behavior and scoring to become stricter without weakening guided Mission coverage.
 
 ## Run locally
 
@@ -204,6 +231,7 @@ Open `http://localhost:8000`.
 - [Release Incident Lifecycle](docs/release-incident-lifecycle.md)
 - [Release Governance and Incident Closure](docs/release-governance.md)
 - [Assessment Track](docs/assessment-track.md)
+- [Assessment Scoring Rubric](docs/assessment-scoring.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -221,7 +249,7 @@ https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 2. Multiple simultaneously supported Release Lines
 3. PR Review / Merge Strategy assessment with competing valid-looking options
 4. Remote Branch deletion / Release cleanup policy
-5. Scored Assessment rubric and mastery thresholds
+5. Rubric calibration from internal usability sessions
 6. Internal usability testing before large-scale Mission expansion
 
 ## License

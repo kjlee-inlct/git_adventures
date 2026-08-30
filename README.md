@@ -123,6 +123,12 @@ Open:
 http://localhost:8000
 ```
 
+## Validation
+
+GitHub Actions validates JavaScript syntax and the Mission Content contract on every PR update.
+
+The current Vertical Slice passes the validation workflow.
+
 ## Product documentation
 
 - [Product Vision](docs/product-vision.md)

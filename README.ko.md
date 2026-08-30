@@ -49,7 +49,7 @@ Post-session Interview
       |
 Local Report Aggregator
       |
-Evidence Review
+First Review Record
       |
 Explicit Product Decision
 ```
@@ -82,15 +82,6 @@ Local-only Recorder는 Mission 시간, 상대 시간 Command Trace, Hint / Inspe
 
 Interview는 **Session JSON Export 이후** 진행합니다. 그래야 Interview 설명이 기록된 실제 행동에 영향을 주지 않습니다.
 
-Interview Template은 다음을 확인합니다.
-
-- Mental Model
-- 판단에 사용한 Evidence
-- Scenario Ambiguity
-- Rejected Safe Alternative
-- Technical Credibility
-- Assessment Fairness
-
 ### Report Aggregator
 
 Game Header의 **Reports** 버튼 또는 다음 주소를 사용합니다.
@@ -99,37 +90,27 @@ Game Header의 **Reports** 버튼 또는 다음 주소를 사용합니다.
 
 여러 Session JSON을 Beginner / Basic / Experienced 그룹별로 비교합니다.
 
-주요 지표:
+### First Review Record
 
-- Completion Rate
-- Average / Median / P75 Time to First Command
-- Mission Duration
-- Hint / Inspection / Unsafe / Detour / Wrong Rate
-- Assessment Total / Pass Rate
-- Judgment / Safety / Evidence / Efficiency
-- Mission Hotspot
-
-지원하지 않는 Schema, Tester Group, `privacy.piiCollected != false` Report는 집계에서 제외합니다.
-
-### Review Decision Framework
-
-Metric 하나가 바로 Product Backlog가 되지는 않습니다.
-
-중요 Pattern은 다음 Evidence를 결합합니다.
+각 Group에서 **3~5개의 usable Session**이 모이면 다음 Evidence를 결합해 첫 Review Record를 만듭니다.
 
 ```text
-Session JSON
+Anonymous Session JSON
+   +
+Session Sheet
+   +
+Interview Note
    +
 Aggregator Pattern
-   +
-Session Sheet Observation
-   +
-Interview Reasoning
    +
 필요 시 Technical Review
 ```
 
-그 뒤 다음 중 하나를 명시적으로 선택합니다.
+[First Review Record Workflow](docs/first-review-record-workflow.md)는 실제 첫 데이터 묶음을 어떻게 정리하고, 어떤 Pattern을 Candidate로 만들고, 어느 수준의 Evidence가 Mission-local / Global UI / Global Rubric 변경을 정당화하는지 설명합니다.
+
+### Review Decision Framework
+
+Review Record가 만들어진 뒤 [Result Review Decision Framework](docs/result-review-decision-framework.md)로 다음 중 하나를 명시적으로 선택합니다.
 
 ```text
 FIX NOW
@@ -142,7 +123,39 @@ KEEP AS-IS
 ESCALATE TECHNICAL REVIEW
 ```
 
-Global Rubric 변경은 여러 Assessment Mission과 여러 Tester에서 반복되는 Evidence가 필요합니다. 하나의 애매한 Mission은 먼저 Mission-local 문제로 수정합니다.
+## Docker / 사내 배포
+
+**현재 단계에서는 Docker Compose가 필요하지 않습니다.**
+
+현재 Git Adventures는 Backend API나 Database 없이 동작하는 Static Browser App입니다.
+
+권장 방식:
+
+```text
+개발 / 단일 PC
+  python -m http.server 8000
+
+소규모 사내 공유 Server
+  Nginx / Caddy Static Hosting
+  또는
+  Static Web Container 1개
+```
+
+Nginx/Caddy Container 하나만 사용하는 경우 Compose가 필요하지 않습니다.
+
+다음처럼 여러 Runtime Service가 실제로 필요해질 때 Compose 도입을 검토합니다.
+
+```text
+static-web
+   +
+report/progress API
+   +
+database/storage
+```
+
+또는 Reverse Proxy / TLS / Persistence / Environment Coordination을 한 Stack으로 관리할 실질적 필요가 생길 때 도입합니다.
+
+상세: [Internal Deployment Options](docs/internal-deployment-options.md), [Service Architecture](docs/service-architecture.md)
 
 ## 사내 Test 운영 문서 세트
 
@@ -154,22 +167,9 @@ Global Rubric 변경은 여러 Assessment Mission과 여러 Tester에서 반복�
 | [Interview Note Template](docs/interview-note-template.md) | Tester가 왜 그렇게 판단했는지 |
 | [Local Usability Session Report](docs/usability-session-report.md) | 익명 Machine-recorded 행동 |
 | [Local Usability Report Aggregation](docs/report-aggregation.md) | 여러 Session에서 무엇이 반복되는지 |
+| [First Review Record Workflow](docs/first-review-record-workflow.md) | 실제 첫 Evidence Bundle을 Review Record로 만드는 방법 |
 | [Result Review Decision Framework](docs/result-review-decision-framework.md) | 무엇을 바꾸고 유지할지 |
-
-## Git / GitHub / Team Policy 구분
-
-```text
-Git
-  = Repository Fact + History Operation
-
-GitHub / PR Platform
-  = Review Conversation + CI + Approval Surface
-
-Team Policy
-  = Integration 전 필요한 Evidence / Approval 기준
-```
-
-Approval 자체를 가짜 Git Command로 만들지 않습니다.
+| [Internal Deployment Options](docs/internal-deployment-options.md) | 현재 Hosting 방식과 Compose 도입 조건 |
 
 ## Validation Gate
 
@@ -188,8 +188,6 @@ Internal Usability Data
   -> Test Preset Contract
   -> Operations Documentation Contract
 ```
-
-Documentation Contract는 필수 운영 문서의 존재 / Link, Decision Outcome 집합, 그리고 Session / Interview Template에 직접 신원 입력 Field가 다시 생기지 않는지 검증합니다.
 
 ## Local 실행
 
@@ -216,20 +214,18 @@ Reports: `http://localhost:8000/reports.html`
 - [Interview Note Template](docs/interview-note-template.md)
 - [Local Usability Session Report](docs/usability-session-report.md)
 - [Local Usability Report Aggregation](docs/report-aggregation.md)
+- [First Review Record Workflow](docs/first-review-record-workflow.md)
 - [Result Review Decision Framework](docs/result-review-decision-framework.md)
+- [Internal Deployment Options](docs/internal-deployment-options.md)
 - [Release Governance and Incident Closure](docs/release-governance.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
 - [Service Architecture](docs/service-architecture.md)
 - [Product Roadmap](docs/product-roadmap.md)
 
-## Figma
-
-https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
-
 ## 다음 단계
 
-Group별 **3~5개 첫 사내 Session**을 실행합니다. 각 usable Session마다 Anonymous Session JSON, Session Sheet, Interview Note를 함께 보관합니다. 이후 반복 Pattern을 Aggregation하고 Review Record를 만든 뒤, Evidence가 반복되는 Mission / UI / Technical 문제부터 수정합니다.
+Group별 **3~5개 첫 사내 Session**을 실행합니다. 각 usable Session마다 Anonymous Session JSON, Session Sheet, Interview Note를 함께 보관합니다. 이후 반복 Pattern을 Aggregation하고 [First Review Record Workflow](docs/first-review-record-workflow.md)에 따라 첫 Review Record를 만든 뒤 Evidence가 반복되는 Mission / UI / Technical 문제부터 수정합니다.
 
 Global Rubric Weight는 충분한 반복 Evidence가 생긴 뒤 조정합니다.
 

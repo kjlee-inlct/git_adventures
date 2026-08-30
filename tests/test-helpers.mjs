@@ -3,7 +3,7 @@ import vm from 'node:vm';
 
 export function loadContent(){
   const context={window:{}};vm.createContext(context);
-  for(const file of ['../content/missions.js','../content/missions-daily.js','../content/missions-collaboration.js','../content/missions-conflicts.js','../content/missions-advanced.js']){
+  for(const file of ['../content/missions.js','../content/missions-daily.js','../content/missions-collaboration.js','../content/missions-conflicts.js','../content/missions-advanced.js','../content/missions-release.js']){
     const source=fs.readFileSync(new URL(file,import.meta.url),'utf8');vm.runInContext(source,context,{filename:file});
   }
   return context.window.GIT_ADVENTURES_CONTENT;
@@ -12,7 +12,7 @@ export const clone=value=>JSON.parse(JSON.stringify(value));
 export function normalizeState(state){state.working||=[];state.staged||=[];state.commits||=[];state.stashes||=[];state.conflicts||=[];if(state.operation===undefined)state.operation=null;if(state.blockedSwitch===undefined)state.blockedSwitch=null;state.remote||={name:'origin',tracking:null,knownHead:null,actualHead:null,ahead:0,behind:0,fetched:false,rejected:null};if(state.remote.rejected===undefined)state.remote.rejected=null;return state;}
 function findFile(list,name){return list.find(file=>file.name===name);}
 function moveFiles(state,sourceKey,targetKey,names){for(const name of names){const i=state[sourceKey].findIndex(file=>file.name===name);if(i<0)continue;const[file]=state[sourceKey].splice(i,1);if(!findFile(state[targetKey],name))state[targetKey].push(file);}}
-function operationSnapshot(state,type){return{type,snapshot:{branch:state.branch,working:clone(state.working),staged:clone(state.staged),conflicts:clone(state.conflicts),commits:clone(state.commits),remote:clone(state.remote),blockedSwitch:state.blockedSwitch}};}
+function operationSnapshot(state,type){return{type,snapshot:{branch:state.branch,working:clone(state.working),staged:clone(state.staged),conflicts:clone(state.conflicts),commits:clone(state.commits),remote:clone(state.remote),blockedSwitch:state.blockedSwitch||null}};}
 function addConflict(state,file){state.working=state.working.filter(item=>item.name!==file);state.staged=state.staged.filter(item=>item.name!==file);state.working.push({name:file,status:'unmerged',delta:'both modified'});if(!state.conflicts.includes(file))state.conflicts.push(file);}
 function addConflicts(state,action){for(const file of action.files||(action.file?[action.file]:[]))addConflict(state,file);}
 export function applyAction(state,action){normalizeState(state);switch(action.type){
@@ -41,6 +41,9 @@ export function applyAction(state,action){normalizeState(state);switch(action.ty
   case 'skipRebase':{const snap=state.operation?.snapshot;const tail=snap?.commits?.slice(1)||state.commits.slice(1);state.commits=[action.base,...tail];state.working=[];state.staged=[];state.conflicts=[];state.remote.knownHead=state.remote.actualHead;state.remote.behind=0;state.remote.ahead=0;state.remote.fetched=true;state.operation=null;break;}
   case 'startMergeConflict':state.operation=operationSnapshot(state,'merge');state.operation.remoteCommit=action.remoteCommit;state.conflicts=[];addConflicts(state,action);break;
   case 'continueMerge':{if(state.conflicts.length)break;const snap=state.operation?.snapshot;const local=snap?.commits?.[0]||state.commits[0];const rest=snap?.commits?.slice(1)||state.commits.slice(1);state.commits=[action.mergeCommit,local,action.remoteCommit,...rest];state.staged=[];state.conflicts=[];state.remote.knownHead=state.remote.actualHead;state.remote.behind=0;state.remote.ahead=1;state.remote.fetched=true;state.operation=null;break;}
+  case 'cherryPick':state.commits.unshift(`${action.sha} ${action.message}`);state.remote.ahead=(state.remote.ahead||0)+1;break;
+  case 'startCherryPickConflict':state.operation=operationSnapshot(state,'cherry-pick');state.operation.source=action.source;state.operation.message=action.message;state.conflicts=[];addConflicts(state,action);break;
+  case 'continueCherryPick':{if(state.operation?.type!=='cherry-pick'||state.conflicts.length)break;state.commits.unshift(`${action.sha} ${action.message}`);state.working=[];state.staged=[];state.conflicts=[];state.remote.ahead=(state.remote.ahead||0)+1;state.operation=null;break;}
   case 'abortOperation':{if(state.operation?.type===action.operation){const snap=state.operation.snapshot;state.branch=snap.branch;state.working=clone(snap.working);state.staged=clone(snap.staged);state.conflicts=clone(snap.conflicts);state.commits=clone(snap.commits);state.remote=clone(snap.remote);state.blockedSwitch=snap.blockedSwitch||null;state.operation=null;}break;}
   case 'forcePushWithLease':if(state.remote.knownHead===state.remote.actualHead){state.remote.knownHead=state.commits[0]?.split(' ')[0]||null;state.remote.actualHead=state.remote.knownHead;state.remote.ahead=0;state.remote.behind=0;state.remote.fetched=true;state.remote.rejected=null;}else state.remote.rejected='lease-mismatch';break;
   default:throw new Error(`Unsupported action type in test helper: ${action.type}`);
@@ -56,11 +59,12 @@ export function firstAcceptedCommand(step){const pattern=step.accept?.[0];if(!pa
 ['^git\\s+push$','git push'],['^git\\s+pull\\s+--rebase$','git pull --rebase'],['^git\\s+add\\s+src/power\\.py$','git add src/power.py'],['^git\\s+stash\\s+drop$','git stash drop'],['^git\\s+pull\\s+--no-rebase$','git pull --no-rebase'],
 ['^git\\s+rebase\\s+origin/feature/protocol-retry$','git rebase origin/feature/protocol-retry'],['^git\\s+add\\s+src/protocol\\.py$','git add src/protocol.py'],['^git\\s+rebase\\s+--continue$','git rebase --continue'],
 ['^git\\s+rebase\\s+origin/feature/calibration$','git rebase origin/feature/calibration'],['^git\\s+rebase\\s+--abort$','git rebase --abort'],
-['^git\\s+merge\\s+origin/integration/device$','git merge origin/integration/device'],['^git\\s+add\\s+src/device_alarm\\.py$','git add src/device_alarm.py'],['^git\\s+commit\\s+-m\\s+[\"\']Merge origin/integration/device[\"\']$','git commit -m "Merge origin/integration/device"'],
+['^git\\s+merge\\s+origin/integration/device$','git merge origin/integration/device'],['^git\\s+add\\s+src/device_alarm\\.py$','git add src/device_alarm.py'],['^git\\s+add\\s+tests/test_device_alarm\\.py$','git add tests/test_device_alarm.py'],['^git\\s+commit\\s+-m\\s+[\"\']Merge origin/integration/device[\"\']$','git commit -m "Merge origin/integration/device"'],
 ['^git\\s+merge\\s+origin/integration/power$','git merge origin/integration/power'],['^git\\s+merge\\s+--abort$','git merge --abort'],['^git\\s+push\\s+--force-with-lease$','git push --force-with-lease'],
 ['^git\\s+stash\\s+push\\s+-m\\s+[\"\']WIP device calibration[\"\']$','git stash push -m "WIP device calibration"'],
 ['^git\\s+rebase\\s+origin/feature/firmware-download$','git rebase origin/feature/firmware-download'],['^git\\s+add\\s+src/transfer\\.py$','git add src/transfer.py'],['^git\\s+add\\s+tests/test_transfer\\.py$','git add tests/test_transfer.py'],
-['^git\\s+rebase\\s+origin/feature/default-tuning$','git rebase origin/feature/default-tuning'],['^git\\s+rebase\\s+--skip$','git rebase --skip']
+['^git\\s+rebase\\s+origin/feature/default-tuning$','git rebase origin/feature/default-tuning'],['^git\\s+rebase\\s+--skip$','git rebase --skip'],
+['^git\\s+cherry-pick\\s+c182bb7$','git cherry-pick c182bb7'],['^git\\s+cherry-pick\\s+8bf210c$','git cherry-pick 8bf210c'],['^git\\s+cherry-pick\\s+--continue$','git cherry-pick --continue'],['^git\\s+cherry-pick\\s+91cc310$','git cherry-pick 91cc310'],['^git\\s+cherry-pick\\s+--abort$','git cherry-pick --abort']
 ]);const command=known.get(pattern);if(!command)throw new Error(`No golden command fixture for pattern: ${pattern}`);return command;}
 export function commandMatches(step,command){return step.accept.some(pattern=>new RegExp(pattern).test(command));}
 export function simulateDirectMission(mission){const state=normalizeState(clone(mission.initial)),commands=[];for(const step of mission.steps){const command=firstAcceptedCommand(step);if(!commandMatches(step,command))throw new Error(`${mission.id}: golden command does not match step: ${command}`);commands.push(command);applyActions(state,step.actions);}return{state,commands};}

@@ -27,7 +27,11 @@ const expected={
 'collaboration.force-with-lease.001':{branch:'feature/private-cleanup',working:[],staged:[],head:'cc91003 Cleanup retry state',remote:{ahead:0,behind:0,actualHead:'cc91003',rejected:null},conflictCount:0,operation:null},
 'workflow.switch-blocked.001':{branch:'main',working:[],staged:[],head:'a41c92e Initial device controller',stashCount:1,conflictCount:0,operation:null,blockedSwitch:null},
 'collaboration.rebase-multifile.001':{branch:'feature/firmware-download',working:[],staged:[],head:'d55ea31 Fix firmware checksum retry',remote:{ahead:1,behind:0},conflictCount:0,operation:null},
-'collaboration.rebase-skip.001':{branch:'feature/default-tuning',working:[],staged:[],head:'cd88120 Finalize team defaults',remote:{ahead:0,behind:0},conflictCount:0,operation:null}
+'collaboration.rebase-skip.001':{branch:'feature/default-tuning',working:[],staged:[],head:'cd88120 Finalize team defaults',remote:{ahead:0,behind:0},conflictCount:0,operation:null},
+'collaboration.merge-multifile.001':{branch:'integration/device',working:[],staged:[],head:'63ce310 Merge origin/integration/device',remote:{ahead:1,behind:0},conflictCount:0,operation:null},
+'release.cherry-pick.001':{branch:'release/2.4',working:[],staged:[],head:'24cb711 Fix serial timeout handling',remote:{ahead:1,behind:0},conflictCount:0,operation:null},
+'release.cherry-pick-conflict.001':{branch:'release/2.4',working:[],staged:[],head:'24bc821 Add firmware block transfer',remote:{ahead:1,behind:0},conflictCount:0,operation:null},
+'release.cherry-pick-abort.001':{branch:'release/2.4',working:[],staged:[],head:'240aa10 Release 2.4.3',remote:{ahead:0,behind:0},conflictCount:0,operation:null}
 };
 for(const mission of content.missions){
  const golden=expected[mission.id];assert.ok(golden,`${mission.id}: missing golden expectation`);const {state,commands}=simulateDirectMission(mission);

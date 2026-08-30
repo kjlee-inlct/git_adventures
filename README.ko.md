@@ -124,11 +124,28 @@ http://localhost:8000
 - [Curriculum Roadmap](docs/curriculum-roadmap.md)
 - [Level Design](docs/level-design.md)
 - [Experience Design](docs/experience-design.md)
+- [Visual Design Direction](docs/design-direction.md)
+- [Mission Schema](docs/mission-schema.md)
+- [Product Phase Gates](docs/product-phase-gates.md)
 - [Content Guideline](docs/content-guideline.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
 - [Service Architecture](docs/service-architecture.md)
 - [References and Product Research](docs/references.md)
+
+## Figma Product Design
+
+Core Product Screen:
+
+https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
+
+현재 Design Set:
+
+- Track Map
+- Core Mission
+- Recovery Incident
+
+Figma는 단순 Mockup이 아니라 Visual Grammar와 Learning Hierarchy 기준으로 사용. 실제 구현에서는 화면 크기는 조정 가능하지만 Product Logic은 동일하게 유지.
 
 ## Design Principle
 
@@ -158,8 +175,6 @@ Editorial Typography
 ```
 
 Generic SaaS Dashboard, 의미 없는 Glass Card, Random Gradient, Git State 학습과 무관한 Animation 등 AI 생성형 UI에서 자주 보이는 Pattern 지양.
-
-Major UI 확장 전 Figma 기반으로 Core Mission Screen과 Repository Board를 먼저 검증할 계획.
 
 ## Product Research
 
@@ -193,14 +208,14 @@ Subscription / One-time Purchase / Team License 등 Pricing Model은 현재 결�
 ## Immediate Roadmap
 
 1. Product Vision / Core Game Loop 검증
-2. Figma 기반 Repository Board / Mission Screen 설계
-3. Versioned Mission Schema 정의
-4. 고품질 Prototype Mission 5~10개 제작
-5. 사내 Usability Test
-6. Learning / UX Problem 수정
-7. Foundations 20~30개 Mission 확장
-8. Daily Workflow / Recovery Vertical Slice 추가
-9. Content 자동 Validation 추가
+2. Figma 기반 Repository Board / Mission / Recovery Visual Grammar 검증
+3. Versioned Mission Schema 기반 고품질 Prototype Mission 5~10개 제작
+4. Beginner / Basic / Experienced Git User 대상 사내 Usability Test
+5. Content 수량 확장 전 Learning / UX Problem 수정
+6. Foundations 20~30개 Mission 확장
+7. Daily Workflow / Recovery Vertical Slice 추가
+8. Content 자동 Validation 및 Golden Scenario Test 추가
+9. Accessibility / Bilingual Behavior Review
 10. 실제 사용 결과 기반 다음 Service Architecture 결정
 
 ## License

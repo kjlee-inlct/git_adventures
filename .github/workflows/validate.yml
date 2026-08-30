@@ -28,6 +28,7 @@ jobs:
           node --check engine-conflicts.js
           node --check engine-release.js
           node --check engine-governance.js
+          node --check assessment-scoring.js
           node --check engine-assessment.js
           node --check content/missions.js
           node --check content/missions-daily.js
@@ -43,6 +44,7 @@ jobs:
           node --check tests/alternate-solutions.mjs
           node --check tests/governance-invariants.mjs
           node --check tests/assessment.mjs
+          node --check tests/assessment-scoring.mjs
           node --check tests/command-coverage.mjs
 
       - name: Validate mission content
@@ -59,6 +61,9 @@ jobs:
 
       - name: Run assessment validation
         run: node tests/assessment.mjs
+
+      - name: Run assessment scoring validation
+        run: node tests/assessment-scoring.mjs
 
       - name: Validate simulator command coverage
         run: node tests/command-coverage.mjs

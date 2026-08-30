@@ -6,20 +6,6 @@ Git Adventures is a scenario-driven Git learning game built around one idea:
 
 > Learn Git by changing repository state, not by memorizing a command list.
 
-The learner receives realistic repository situations, inspects Local / Remote state, types Git commands, and observes Working Tree, Staging Area, Commit History, Tracking, Stash, Conflict, Release Tag, publication, and in-progress operation state.
-
-## Current phase
-
-**Internal product design and MVP validation.**
-
-- Internal server deployment
-- Korean / English
-- No required account or payment
-- All implemented content open during testing
-- Product / game-design quality prioritized before content volume
-
-## Playable curriculum
-
 The browser prototype contains **44 Missions across six Tracks**.
 
 ```text
@@ -50,25 +36,29 @@ See [Assessment Track](docs/assessment-track.md) and [Assessment Scoring Rubric]
 
 ## Internal usability workflow
 
-The current internal test loop works without a backend:
+The first calibration cycle can run without a backend:
 
 ```text
 Facilitator Preset
       |
-Local Session Recorder
+Session Sheet + Local Recorder
       |
 Anonymous Session JSON
       |
+Post-session Interview
+      |
 Local Report Aggregator
       |
-Group / Mission Review
+Evidence Review
+      |
+Explicit Product Decision
 ```
 
 ### Facilitator Console
 
 Open `http://localhost:8000/facilitator.html` or use the **Facilitator** button in the game header.
 
-The Console provides hypothesis-driven presets rather than asking every tester to play all 44 Missions.
+Group presets:
 
 ```text
 Beginner      ~25 min   Core Mental Model
@@ -76,9 +66,9 @@ Basic         ~30 min   Workflow / Recovery
 Experienced   ~35 min   History / Release / Assessment
 ```
 
-Each preset includes selected Mission numbers, one primary hypothesis, observation targets, stop / redesign signals, and a before / during / after checklist. Opening a Mission from the Console also preselects the corresponding Test Group in the Session Recorder.
+Each preset includes Mission selection, one primary hypothesis, observation targets, stop / redesign signals, and one-click Mission jumps.
 
-See [First Internal Test Cycle Runbook](docs/first-internal-test-cycle.md).
+The Console also links the full operations document set.
 
 ### Session Recorder
 
@@ -86,7 +76,18 @@ The optional local-only recorder stores Mission timing, relative Command Trace, 
 
 It does not request name, email, employee id, or account id.
 
-See [Local Usability Session Report](docs/usability-session-report.md) and [Internal Test Plan](docs/internal-test-plan.md).
+### Post-session Interview
+
+Interview notes are collected **after** Session JSON export to avoid changing recorded task behavior.
+
+The template focuses on:
+
+- mental model,
+- evidence used for decisions,
+- ambiguity,
+- rejected safe alternatives,
+- technical credibility,
+- Assessment fairness.
 
 ### Report Aggregator
 
@@ -96,7 +97,50 @@ Multiple Session JSON files can be compared by Beginner / Basic / Experienced gr
 
 Reports with unsupported schema, tester group, or `privacy.piiCollected != false` are rejected.
 
-See [Local Usability Report Aggregation](docs/report-aggregation.md).
+### Review Decision Framework
+
+Metrics do not directly create product work.
+
+Each significant pattern should combine:
+
+```text
+Session JSON
+   +
+Aggregator pattern
+   +
+Session Sheet observation
+   +
+Interview reasoning
+   +
+Technical review when needed
+```
+
+Then choose an explicit outcome:
+
+```text
+FIX NOW
+CHANGE MISSION ONLY
+CHANGE UI / LEARNING MODEL
+ADD ALTERNATE SOLUTION
+CHANGE RUBRIC
+OBSERVE MORE
+KEEP AS-IS
+ESCALATE TECHNICAL REVIEW
+```
+
+Global Rubric changes require repeated evidence across multiple Assessment Missions and testers. One ambiguous Mission should be fixed locally first.
+
+## Internal test operations document set
+
+| Artifact | Purpose |
+| --- | --- |
+| [Internal Test Plan](docs/internal-test-plan.md) | Why / what to validate |
+| [First Internal Test Cycle Runbook](docs/first-internal-test-cycle.md) | How to run the cycle |
+| [Internal Test Session Sheet](docs/test-session-sheet.md) | Factual per-session observations |
+| [Interview Note Template](docs/interview-note-template.md) | Why the tester acted that way |
+| [Local Usability Session Report](docs/usability-session-report.md) | Anonymous machine-recorded behavior |
+| [Local Usability Report Aggregation](docs/report-aggregation.md) | What repeats across sessions |
+| [Result Review Decision Framework](docs/result-review-decision-framework.md) | What to change / not change |
 
 ## Git vs GitHub vs Team Policy
 
@@ -128,7 +172,10 @@ Internal usability data
   Session Report Contract -> PII Non-Collection
   -> Report Aggregation Contract -> Group / Mission Metrics
   -> Test Preset Contract
+  -> Operations Documentation Contract
 ```
+
+The Documentation Contract keeps required operations artifacts linked, preserves the Decision Outcome set, and prevents direct identity-input fields from being reintroduced into Session / Interview templates.
 
 ## Run locally
 
@@ -149,10 +196,13 @@ Reports: `http://localhost:8000/reports.html`
 - [Curriculum Roadmap](docs/curriculum-roadmap.md)
 - [Assessment Track](docs/assessment-track.md)
 - [Assessment Scoring Rubric](docs/assessment-scoring.md)
+- [Internal Test Plan](docs/internal-test-plan.md)
+- [First Internal Test Cycle Runbook](docs/first-internal-test-cycle.md)
+- [Internal Test Session Sheet](docs/test-session-sheet.md)
+- [Interview Note Template](docs/interview-note-template.md)
 - [Local Usability Session Report](docs/usability-session-report.md)
 - [Local Usability Report Aggregation](docs/report-aggregation.md)
-- [First Internal Test Cycle Runbook](docs/first-internal-test-cycle.md)
-- [Internal Test Plan](docs/internal-test-plan.md)
+- [Result Review Decision Framework](docs/result-review-decision-framework.md)
 - [Release Governance and Incident Closure](docs/release-governance.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -165,7 +215,7 @@ https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 
 ## Next milestone
 
-Run the first **3-5 sessions per tester group** using the Facilitator presets. Aggregate the anonymous reports and qualitative interview notes, then fix repeated Mission / UI problems before changing global Rubric weights or expanding content further.
+Run the first **3-5 sessions per tester group** using the Facilitator presets. For each usable session, keep the anonymous Session JSON, Session Sheet, and Interview Note. Aggregate repeated patterns, create Review Records, and fix evidence-backed Mission / UI / technical problems before changing global Rubric weights or expanding content further.
 
 ## License
 

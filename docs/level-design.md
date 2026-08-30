@@ -1,10 +1,19 @@
 # Level Design
 
-## 1. Goal
+## 1. Design Goal
 
-Design a curriculum that can serve first-time Git users, experienced developers, paid individual learners, and company training programs without turning every command into a disconnected level.
+Build a curriculum that remains useful from first Git contact through real production recovery.
 
-## 2. Progression model
+The unit of learning is not a command.
+
+```text
+Command != Level
+Decision in Context = Mission
+```
+
+A Mission presents a repository state and a development problem. The learner decides what to inspect, what to change, and what risk is acceptable.
+
+## 2. Content Hierarchy
 
 ```text
 Track
@@ -16,179 +25,375 @@ Track
               +--- Scenario
               +--- Repository State
               +--- Objective
-              +--- Accepted Solutions
+              +--- Constraints
+              +--- Accepted Paths
+              +--- Unsafe Paths
               +--- Feedback
-              +--- Explanation
+              +--- Hint Ladder
+              +--- Mastery Tags
 ```
 
-A mission teaches a decision in context. Commands are tools used to solve the scenario.
+This hierarchy must be represented as content data so adding Missions does not require UI code changes.
 
-## 3. Recommended curriculum
+## 3. Track Structure
 
-### Track A - Foundations / Free
+### Track 0 - Orientation
 
-Goal: first successful independent Git workflow.
+Purpose:
 
-1. Repository / Working Tree mental model
-2. `status`
-3. `diff`
-4. selective `add`
-5. `commit`
-6. readable commit messages
-7. `log`
-8. Branch concept
-9. `switch -c`
-10. first `push -u`
-11. `pull` vs `fetch`
-12. complete feature-branch mini project
+- establish Git mental model
+- make repository state visually understandable
+- teach inspection-first behavior
 
-Target: 20-30 missions.
+Target: 5-8 Missions.
 
-### Track B - Daily Workflow / Free + Pro
+### Track 1 - Foundations
 
-1. multiple file changes
-2. split unrelated changes
-3. amend before push
-4. stash temporary work
-5. remote branch tracking
-6. sync with latest main
-7. delete merged local branch
-8. interpret common status output
-9. choose merge vs rebase from policy
-10. PR preparation scenarios
+Purpose:
 
-Target: 20-30 missions.
+- inspect changes
+- stage intentionally
+- Commit logically
+- create and switch Branches
+- understand Local vs Remote
+- complete first Feature Branch workflow
 
-Free boundary should include enough of this track to make the learner productive without payment.
+Target: 25-35 Missions.
 
-### Track C - Recovery Lab / Pro
+### Track 2 - Daily Workflow
 
-1. accidental `git add .`
-2. wrong branch before commit
-3. wrong branch after commit
-4. missing file in last commit
-5. bad local commit
-6. bad shared commit
-7. `revert` vs `reset`
-8. lost commit with `reflog`
-9. detached HEAD recovery
-10. merge abort / rebase abort
-11. deleted tracked file recovery
-12. safe force-with-lease scenario
+Purpose:
 
-Target: 25-40 missions.
+- handle realistic multi-file work
+- split unrelated changes
+- use amend / stash safely
+- manage Remote tracking
+- update Branches
+- prepare PR-ready history
 
-### Track D - Collaboration / Pro
+Target: 30-45 Missions.
 
-1. PR scope review
-2. conflict interpretation
-3. conflict resolution
-4. merge commit
-5. squash merge
-6. rebase merge
-7. stale branch update
-8. shared-history rules
-9. review-request changes
-10. parallel developer scenarios
+### Track 3 - Recovery Lab
 
-Target: 25-40 missions.
+Purpose:
 
-### Track E - Advanced Git / Pro
+- remove fear of Git mistakes
+- distinguish Local vs shared History
+- recover before reaching for destructive commands
 
-1. interactive rebase concepts
-2. cherry-pick
-3. bisect
-4. reflog deep dive
-5. tags
-6. release branches
-7. hotfix propagation
-8. partial staging
-9. history archaeology
-10. multi-remote workflow
+Target: 35-50 Missions.
 
-Target: 30-50 missions.
+### Track 4 - Collaboration
 
-### Track F - Release & Incident / Pro
+Purpose:
 
-Scenario-driven production exercises:
+- work with PRs, conflicts, Branch divergence, shared History, review changes, and merge policy
 
-- bad release commit
-- urgent hotfix
-- release tag validation
-- revert chain
-- backport fix
-- branch divergence
-- failed deployment recovery
+Target: 30-45 Missions.
 
-Target: 20-30 missions.
+### Track 5 - History Management
 
-### Track G - Team Policy / Business
+Purpose:
 
-Organization-specific missions generated from configurable policy:
+- cherry-pick
+- reflog
+- bisect
+- interactive rebase concepts
+- Tags
+- multi-Remote
+- History investigation
 
-- branch naming
-- required PR flow
-- merge method
-- commit message requirements
-- protected branch behavior
-- release rules
-- prohibited commands
+Target: 35-50 Missions.
 
-## 4. Difficulty dimensions
+### Track 6 - Release & Incident
 
-Difficulty should increase using context, not obscure syntax alone.
+Purpose:
 
-- number of changed files
-- number of branches
-- local vs shared history
-- ambiguous valid commands
-- conflict state
+- apply Git under release pressure
+- bad release recovery
+- Hotfix
+- Backport
+- Tag validation
+- rollback / forward-fix decision
+
+Target: 25-40 Missions.
+
+### Track 7 - Mastery / Assessment
+
+Purpose:
+
+- validate reasoning without step-by-step hints
+- combine multiple mastery tags in one scenario
+
+Scenario-based rather than fixed command sequence.
+
+See [Curriculum Roadmap](curriculum-roadmap.md) for detailed chapter planning.
+
+## 4. Difficulty Dimensions
+
+Difficulty grows through context, not by artificially locking useful commands.
+
+### Repository Complexity
+
+- changed File count
+- staged + unstaged combinations
+- untracked Files
+- Branch count
+- Remote state
+
+### History Risk
+
+- Working Tree only
+- Local Commit
+- unpublished Branch
+- shared Remote History
+- protected / Release Branch
+
+### Decision Ambiguity
+
+- one obvious safe action
+- multiple safe alternatives
+- safe but suboptimal choice
+- policy-dependent choice
+- missing information requiring inspection
+
+### Recovery Cost
+
+- trivial reversible state
+- Commit rewrite
+- Branch divergence
+- Conflict
+- shared History
+- production Release
+
+## 5. Difficulty Scale
+
+### Difficulty 1 - Guided State
+
+- one concept
+- one File
+- explicit objective
+- rich hints
+
+### Difficulty 2 - Selective Action
+
+- multiple Files
+- one irrelevant change
+- learner chooses target
+
+### Difficulty 3 - Workflow
+
+- multiple commands required
+- Branch and Remote concepts combined
+
+### Difficulty 4 - Recovery
+
+- incorrect state already exists
+- learner must preserve work before repair
+
+### Difficulty 5 - Shared History
+
+- Remote collaboration
+- unsafe History Rewrite possible
+
+### Difficulty 6 - Conflict / Ambiguity
+
+- multiple possible strategies
+- trade-offs explained after completion
+
+### Difficulty 7 - Incident
+
 - incomplete information
-- required history preservation
-- time / command-count challenge
+- Release pressure
+- safety prioritized
 
-## 5. Mission types
+### Difficulty 8 - Mastery
 
-- Guided: hint-rich first exposure
-- Standard: objective + state only
-- Choice: choose safest workflow
-- Recovery: repair a broken repository
-- Debug: identify cause from history
-- Challenge: command-count or time goal
-- Assessment: no hints, scored result
+- minimal guidance
+- optional efficiency scoring
+- combined concepts
 
-## 6. Scoring
+## 6. Mission Types
 
-Possible score inputs:
+### Guided
+
+First exposure to a concept.
+
+### Standard
+
+Objective and state only.
+
+### Choice
+
+Select the safest strategy among alternatives.
+
+### Recovery
+
+Repair a broken repository state.
+
+### Git Detective
+
+Infer what happened from History and state evidence.
+
+### Workflow Review
+
+Review another developer's proposed command sequence.
+
+### Incident
+
+Production / Release scenario with incomplete context.
+
+### Challenge
+
+Optional speed, command-count, or no-hint target.
+
+### Assessment
+
+No hints and scored mastery evaluation.
+
+## 7. Failure States
+
+A wrong command should usually create a consequence rather than terminate the Mission.
+
+Example:
+
+```text
+Objective:
+Commit only README.md
+
+State:
+README.md modified
+debug.log untracked
+```
+
+Learner runs:
+
+```bash
+git add .
+```
+
+Instead of:
+
+```text
+FAIL
+```
+
+Transition to:
+
+```text
+Both Files are now staged.
+The Commit scope is incorrect.
+Repair the Staging Area without losing README.md changes.
+```
+
+This converts mistakes into Recovery practice.
+
+## 8. Hint Design
+
+Four-step ladder:
+
+1. Concept direction
+2. Relevant repository area
+3. Command family
+4. Exact command
+
+Using hints reduces optional mastery score but never blocks progression.
+
+## 9. Scoring
 
 ```text
 Completion
 + Safety
-+ Command Efficiency
++ State Understanding
 + History Quality
 + Hint Independence
++ Optional Efficiency
 = Mission Score
 ```
 
-Never punish a correct safe command only because a shorter command exists in beginner tracks. Efficiency scoring belongs in advanced practice.
+Weight changes by Track.
 
-## 7. Free / Paid boundary
+Beginner:
 
-Free:
+```text
+Safety > Understanding > Completion > Efficiency
+```
 
-- complete Foundations track
-- meaningful subset of Daily Workflow
-- several recovery basics
-- guest progress stored locally
+Challenge:
 
-Paid:
+```text
+Safety + Correctness required
+Efficiency becomes differentiator
+```
 
-- advanced recovery
-- collaboration labs
-- incident simulations
-- assessments
-- detailed analytics
-- cloud progress / multi-device
-- certification and team features
+## 10. Mastery Tags
 
-The free tier must deliver a complete basic skill outcome instead of ending at the moment the learner becomes engaged.
+Example taxonomy:
+
+```text
+state.status
+state.diff
+stage.selective
+stage.unstage
+commit.create
+commit.scope
+commit.message
+branch.create
+branch.switch
+remote.fetch
+remote.pull
+remote.push
+history.shared
+history.rewrite
+recovery.restore
+recovery.reflog
+conflict.resolve
+release.tag
+release.hotfix
+```
+
+Mission completion updates mastery per tag.
+
+Future Practice Arena can select weak tags automatically.
+
+## 11. Access Metadata
+
+During internal testing, all implemented content is accessible.
+
+Missions may still include neutral future packaging metadata:
+
+```json
+{
+  "accessGroup": "advanced-practice"
+}
+```
+
+The internal policy maps all groups to accessible.
+
+This avoids redesign later if product packaging changes.
+
+## 12. Anti-Patterns
+
+Avoid:
+
+- one command per Level
+- large first Level with excessive repetition
+- mentioning unavailable tools long before unlock
+- withholding basic commands to manufacture difficulty
+- accepting only one exact command when alternatives are valid
+- generic "wrong" feedback
+- difficulty based only on obscure syntax
+- beginner curriculum with no intermediate continuation
+
+## 13. Content Scale
+
+Long-term planned volume:
+
+```text
+185-273 Core Missions
++ scenario variations
++ weekly / incident packs
++ assessments
+```
+
+The architecture should assume hundreds of Missions from the beginning.

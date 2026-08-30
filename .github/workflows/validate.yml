@@ -54,6 +54,7 @@ jobs:
           node --check tests/session-report.mjs
           node --check tests/report-aggregator.mjs
           node --check tests/test-presets.mjs
+          node --check tests/operations-docs.mjs
           node --check tests/command-coverage.mjs
 
       - name: Validate mission content
@@ -82,6 +83,9 @@ jobs:
 
       - name: Validate internal test presets
         run: node tests/test-presets.mjs
+
+      - name: Validate internal test operations docs
+        run: node tests/operations-docs.mjs
 
       - name: Validate simulator command coverage
         run: node tests/command-coverage.mjs

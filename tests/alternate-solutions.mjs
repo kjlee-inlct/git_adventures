@@ -31,4 +31,13 @@ const {missions}=loadContent();const byId=Object.fromEntries(missions.map(m=>[m.
 {
  const m=byId['collaboration.force-with-lease.001'],state=normalizeState(clone(m.initial));state.remote.actualHead='unexpected999';const before=state.remote.actualHead;applyAction(state,{type:'forcePushWithLease'});assert.equal(state.remote.actualHead,before,'Lease mismatch must not overwrite unexpected remote work');assert.equal(state.remote.rejected,'lease-mismatch','Lease mismatch must be explicit');
 }
+{
+ const m=byId['workflow.switch-blocked.001'],state=normalizeState(clone(m.initial)),before=fingerprint(state);applyAction(state,{type:'switchBlocked',target:'main',file:'src/device.py'});assert.equal(state.branch,m.initial.branch,'Blocked switch must not change branch');assert.deepEqual(state.working,m.initial.working,'Blocked switch must preserve WIP');assert.notEqual(fingerprint(state),before,'Blocked switch should record the guardrail event');applyAction(state,{type:'stashPush',message:'WIP device calibration'});applyAction(state,{type:'clearBlockedSwitch'});assert.equal(state.working.length,0,'Stash must clean Working Tree before switch');
+}
+{
+ const m=byId['collaboration.rebase-multifile.001'],state=normalizeState(clone(m.initial));applyAction(state,{type:'startRebaseConflict',files:['src/transfer.py','tests/test_transfer.py'],base:'9cd991a Teammate update'});assert.deepEqual([...state.conflicts].sort(),['src/transfer.py','tests/test_transfer.py'].sort(),'Both conflict paths must be tracked');applyAction(state,{type:'resolveConflict',file:'src/transfer.py'});const head=state.commits[0];applyAction(state,{type:'continueRebase',base:'9cd991a Teammate update',rewritten:'d55ea31 Fix firmware checksum retry'});assert.equal(state.commits[0],head,'Rebase must not continue while any conflict remains');assert.equal(state.operation?.type,'rebase','Rebase operation must remain active until all conflicts resolve');
+}
+{
+ const m=byId['collaboration.rebase-skip.001'],state=normalizeState(clone(m.initial));const dropped=state.commits[0];applyAction(state,{type:'startRebaseConflict',file:'config/defaults.json',base:'cd88120 Finalize team defaults'});applyAction(state,{type:'skipRebase',base:'cd88120 Finalize team defaults'});assert.equal(state.operation,null,'Skip must end the current rebase operation');assert.equal(state.conflicts.length,0,'Skip must clear current conflict state');assert.ok(!state.commits.some(commit=>commit===dropped),'Skipped commit must not remain in rebased history');assert.match(state.commits[0],/^cd88120 /,'Upstream base must become the resulting HEAD after skipping the only local commit');
+}
 console.log('Alternate solution and repository invariant tests passed.');

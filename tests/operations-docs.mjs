@@ -46,15 +46,15 @@ const tasks = read('Task.md');
 for (const invariant of [
   '44 Missions / 6 Tracks',
   'First Internal Test Cycle - MUST DO NEXT',
-  'Beginner      3-5 usable sessions',
-  'Basic         3-5 usable sessions',
-  'Experienced   3-5 usable sessions',
   'Docker Compose 현재 비필수',
   'Implementation != Closure',
   'Internal Test Server 배포',
   '첫 Review Record 작성'
 ]) {
   assert.ok(tasks.includes(invariant), `Task.md missing current-plan invariant: ${invariant}`);
+}
+for (const group of ['Beginner','Basic','Experienced']) {
+  assert.match(tasks,new RegExp(`## 8\\.[234] ${group} Group[\\s\\S]*?Target: 3-5 usable sessions\\.`,'i'),`Task.md must preserve 3-5 usable session target for ${group}`);
 }
 assert.match(tasks,/\[x\].*Root `AGENTS\.md`/i,'Task.md must track AGENTS.md as completed');
 assert.match(tasks,/\[ \].*Internal Test Server 배포/i,'Task.md must keep internal deployment as pending');

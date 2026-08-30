@@ -2,52 +2,106 @@
 
 [English](README.md)
 
-Git Adventures는 Git Command를 암기하는 대신 **Repository 상태를 직접 변화시키며 학습하는 Mission 기반 Git 학습 서비스**입니다.
+Git Adventures는 다음 한 가지 원칙을 중심으로 설계하는 Scenario 기반 Git 학습 Game입니다.
 
-사용자는 실제 개발 상황에 가까운 Scenario, 현재 Repository 상태, 목표 상태를 받고 Git Command를 직접 입력합니다. 입력 결과에 따라 Working Tree, Staging Area, Branch, Commit History가 어떻게 바뀌는지 즉시 확인합니다.
+> Git Command 목록을 외우는 대신 Repository State를 직접 변화시키며 Git을 학습.
 
-## Product 방향
+사용자는 실제 개발 상황과 유사한 Repository State를 확인하고, 직접 Git Command를 입력한 뒤 Working Tree, Staging Area, Commit History, Branch, Remote State 변화를 즉시 확인합니다.
 
-Git Adventures는 단발성 Tutorial이 아니라 다수 사용자가 지속적으로 이용할 수 있는 서비스 구조를 목표로 합니다.
+## 현재 단계
+
+현재 단계는 **사내 Product 기획 및 MVP 검증**.
+
+- 사내 Server 배포
+- 한국어 / English 지원
+- 결제 기능 없음
+- Account 강제 없음
+- 구현된 학습 Content 전체 공개 기반 Test
+- 향후 다수 사용자 Service 확장 가능한 구조 고려
+- 유료 전환 가능성은 Mission Logic이 아닌 Metadata / Policy Layer로 분리
+
+현재 최우선 순위는 많은 기능 구현보다 **Product 기획과 Game Design 품질 확보**.
+
+## Product 목표
 
 ```text
-Free Core
-   |
-   +--- Git Mental Model
-   +--- status / diff / add / commit
-   +--- branch / switch / log / push
-   +--- 기본 Safe Recovery
+Git Beginner
    |
    v
-Pro Learning
-   |
-   +--- Merge / Rebase / Conflict
-   +--- Cherry-pick / Reflog / Bisect
-   +--- 실무 Incident Scenario
-   +--- Guided Assessment
+Git State 이해
    |
    v
-Team / Business
+Daily Workflow 수행
    |
-   +--- Team Progress
-   +--- Assigned Learning Path
-   +--- 사내 Git Policy Mission
-   +--- Assessment / Certification
-   +--- Admin Analytics
+   v
+실수 복구
+   |
+   v
+안전한 Collaboration
+   |
+   v
+History 관리
+   |
+   v
+Release / Incident 대응
+   |
+   v
+Git Mastery
 ```
 
-현재 Repository에는 Free Core 경험을 위한 Browser-only MVP와 향후 Account, Payment, Progress, Team 기능 확장을 위한 Product Architecture를 포함합니다.
+`commit`, `pull`, `push`를 이미 사용하는 개발자에게도 계속 학습 가치가 있는 수준을 목표로 합니다.
+
+## Core Game Loop
+
+```text
+Scenario
+   |
+   v
+Repository State 확인
+   |
+   v
+Git Command 선택 / 입력
+   |
+   v
+State Transition 확인
+   |
+   v
+Why 이해
+   |
+   v
+더 복잡한 Scenario 수행
+```
+
+잘못된 Command라도 복구 가능한 상황이면 단순 `FAIL` 처리보다 새로운 Recovery Problem으로 연결하는 방향을 우선합니다.
+
+## Curriculum 계획
+
+| Track | 학습 목표 |
+|---|---|
+| Orientation | Git Mental Model 및 Inspection-first 습관 |
+| Foundations | 독립적인 첫 Feature Branch Workflow |
+| Daily Workflow | 실제 Multi-file 개발 작업 |
+| Recovery Lab | 흔한 Git 실수의 안전한 복구 |
+| Collaboration | PR, Merge, Rebase, Conflict, Shared History |
+| History Management | Reflog, Cherry-pick, Bisect, Rebase, Tag |
+| Release & Incident | Hotfix, Backport, Bad Release, Rollback 판단 |
+| Mastery / Assessment | 최소 Hint 기반 복합 Scenario |
+
+장기적으로 약 **185~273개 Core Mission** + Scenario Variation + Assessment 규모를 목표로 설계.
+
+사내 Test 단계에서는 구현된 Track 전체를 공개. 향후 일부 기능을 유료로 전환하더라도 Mission Content 자체를 재작성하지 않도록 구조 분리.
 
 ## 현재 MVP
 
-- 한국어 / English Language Switch
-- Terminal 형태 Git Command 입력
+현재 Browser Prototype 기능:
+
+- 한국어 / English 전환
+- Terminal 형태 Command 입력
 - Repository State Visualization
-- Working Tree / Staging Area / Commit History 시각화
-- Mission Progress 및 XP
-- Local Progress 저장
-- 7개 Free Core Mission
-- 별도 Build Tool / Backend 불필요
+- Working Tree / Staging / Commit History Feedback
+- Mission Progression
+- XP 및 Local Progress
+- 별도 Build Tool / Backend 없이 실행 가능
 
 Local 실행:
 
@@ -61,139 +115,93 @@ python -m http.server 8000
 http://localhost:8000
 ```
 
-대부분의 최신 Browser에서는 `index.html` 직접 실행도 가능.
+## Product 기획 문서
 
-## Learning Model
+구현 확장 전 Product 기획을 Repository 내부 문서로 우선 고정.
 
-핵심 학습 Loop:
+- [Product Vision](docs/product-vision.md)
+- [Game Design](docs/game-design.md)
+- [Curriculum Roadmap](docs/curriculum-roadmap.md)
+- [Level Design](docs/level-design.md)
+- [Experience Design](docs/experience-design.md)
+- [Content Guideline](docs/content-guideline.md)
+- [Internal Test Plan](docs/internal-test-plan.md)
+- [Product Packaging and Future Monetization](docs/product-monetization.md)
+- [Service Architecture](docs/service-architecture.md)
+- [References and Product Research](docs/references.md)
 
-```text
-Scenario
-   |
-   v
-Repository State 확인
-   |
-   v
-Git Command 선택
-   |
-   v
-State Transition 확인
-   |
-   v
-Why / How 설명
-   |
-   v
-더 어려운 Context에서 반복
-```
+## Design Principle
 
-단순 Command 반복보다 **상태를 읽고 판단하는 능력** 학습을 우선합니다.
+1. Realism보다 Learning Clarity 우선
+2. Command Memorization보다 Repository State 이해 우선
+3. Efficiency보다 Safe Git Habit 우선
+4. Trivia보다 실제 개발 Scenario 우선
+5. Beginner에서 Expert까지 연속적인 Progression
+6. 가능한 경우 실수를 Recovery Learning으로 활용
+7. Basic Tool 제한 기반 Fake Difficulty 금지
+8. 한국어 / English를 동일한 1st-class Content로 관리
+9. Content = Data, Curriculum을 Engine Code에 Hardcoding 금지
+10. 현재 Paywall 없이 Future Commercial Scale 대응 구조 확보
 
-## Content Track
+## Visual Direction
 
-| Track | 대상 | Commercial Tier |
-|---|---|---|
-| Foundations | Git 최초 사용자 | Free |
-| Daily Workflow | 일반 개발자 | Free / Pro |
-| Recovery Lab | Git 실수 복구 필요 개발자 | Pro |
-| Collaboration | PR, Merge, Rebase, Conflict | Pro |
-| Advanced Git | Bisect, Reflog, Cherry-pick, Tag | Pro |
-| Release & Hotfix | Production Workflow | Pro |
-| Team Policy | 사내 Git 운영 규칙 | Business |
-| Assessment | Skill Validation | Pro / Business |
-
-상세 Level 구성: [Level Design](docs/level-design.md)
-
-## Service Architecture
-
-현재 MVP는 Static Application이지만 Domain Model은 향후 Platform Service와 분리합니다.
+UI 목표:
 
 ```text
-Browser Game
-   |
-   +--- Mission Engine
-   +--- Git State Simulator
-   +--- i18n Content
-   +--- Local Progress
-
-Future Platform API
-   |
-   +--- Authentication
-   +--- Cloud Progress
-   +--- Entitlements
-   +--- Payments
-   +--- Team / Organization
-   +--- Analytics
-   +--- Content Delivery
+Developer Tool
++
+Puzzle Game
++
+Repository Map
++
+Editorial Typography
 ```
 
-상세: [Service Architecture](docs/service-architecture.md)
+Generic SaaS Dashboard, 의미 없는 Glass Card, Random Gradient, Git State 학습과 무관한 Animation 등 AI 생성형 UI에서 자주 보이는 Pattern 지양.
 
-## Monetization 원칙
+Major UI 확장 전 Figma 기반으로 Core Mission Screen과 Repository Board를 먼저 검증할 계획.
 
-Free Tier만으로 Git의 핵심 Workflow를 충분히 학습할 수 있어야 합니다. 결제는 기본 지식을 인위적으로 차단하기보다 **깊이 있는 Scenario, 실무 연습, 평가, Team 관리 기능**에서 가치를 제공합니다.
+## Product Research
 
-예상 Tier:
+VIM Adventures, VIM Master 및 해당 도구에 대한 Community Feedback에서 학습 Interaction, Progression, Game UX, Pricing 반응 등을 참고.
 
-- Free: Foundations + Daily Workflow 핵심 Mission
-- Pro: 전체 개인 Curriculum, Advanced Scenario, Assessment, Cloud Progress
-- Team: Assignment, Team Dashboard, Private Learning Path, Policy-specific Mission
+단, 구현 Code, Scenario, Visual Identity, Git Learning Model은 독립적으로 설계.
 
-상세: [Product and Monetization](docs/product-monetization.md)
+상세: [References and Product Research](docs/references.md)
 
-## 참고자료에서 반영한 핵심
+## 향후 유료화
 
-VIM Master의 Content Platform Architecture처럼 Mission을 Application Code와 분리하는 방향을 채택합니다. HN Feedback에서는 초기 Login 강제와 이른 Paywall에 대한 반감, Advanced Level 부족, 더 많은 Level 요구가 반복적으로 확인됩니다.
+지금 유료 기능을 제한하는 것이 목적이 아님.
 
-따라서 Git Adventures 기준:
-
-- 첫 학습 Session 대상 Login 강제 없음
-- Free Core 완료 전 Paywall 노출 최소화
-- Free Core 자체 완결성 보장
-- Advanced / Recovery / Collaboration을 장기 Retention 핵심으로 설계
-- Account는 Cloud Sync, Device 이동, Pro/Team 기능에서 자연스럽게 요청
-
-## Project 구조
+현재 사내 Test:
 
 ```text
-.
-|--- index.html
-|--- styles.css
-|--- app.js
-|--- README.md
-|--- README.ko.md
-|--- docs/
-     |--- level-design.md
-     |--- product-monetization.md
-     |--- service-architecture.md
-     |--- content-guideline.md
+구현된 Content -> 전체 Access
 ```
 
-## Design Principles
+향후 실제 사용 결과에 따라 다음 영역을 Product Package로 구분 가능:
 
-- Repository State Transition 기반 학습
-- Command 복잡도보다 Why 선행
-- 실제 Engineering Scenario 활용
-- 초기 Mission Short Feedback Loop 유지
-- Destructive Command는 Safe Recovery Context에서만 도입
-- Git 기능과 Company Policy 구분
-- 한국어 / English를 동일 Content Model에서 지원
-- Free Core의 실질적 학습 가치 보장
-- Mission 추가 시 UI Code 수정이 필요 없는 Data-driven Architecture 목표
-- Guest-first Experience 및 Login Friction 최소화
+- Advanced Individual Practice
+- Assessment
+- Cloud Progress
+- Specialized Scenario Pack
+- Team Onboarding / Analytics
+- Company-specific Git Policy Mission
 
-## Status
+Subscription / One-time Purchase / Team License 등 Pricing Model은 현재 결정하지 않고 실제 사용 Pattern을 확인한 뒤 결정.
 
-현재 단계: Free Core MVP + 확장 가능한 Product Foundation.
+## Immediate Roadmap
 
-다음 구현 우선순위:
-
-1. Mission을 JavaScript Constant에서 Versioned Content File로 분리
-2. Mission Prerequisite 및 Track Map 추가
-3. Command Alternative / Partial Credit / Scenario Scoring 추가
-4. Account / Cloud Progress Backend 추가
-5. Payment 이전 Entitlement Layer 추가
-6. Pro Content 및 Team Domain Model 추가
-7. Hosted Deployment + Product Analytics 추가
+1. Product Vision / Core Game Loop 검증
+2. Figma 기반 Repository Board / Mission Screen 설계
+3. Versioned Mission Schema 정의
+4. 고품질 Prototype Mission 5~10개 제작
+5. 사내 Usability Test
+6. Learning / UX Problem 수정
+7. Foundations 20~30개 Mission 확장
+8. Daily Workflow / Recovery Vertical Slice 추가
+9. Content 자동 Validation 추가
+10. 실제 사용 결과 기반 다음 Service Architecture 결정
 
 ## License
 

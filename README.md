@@ -6,7 +6,7 @@ Git Adventures is a scenario-driven Git learning game built around one idea:
 
 > Learn Git by changing repository state, not by memorizing a command list.
 
-The learner receives a realistic repository situation, inspects Local / Remote state, types Git commands, and observes how Working Tree, Staging Area, Commit History, Tracking, Stash, Conflict, Release Tag, and in-progress operation state change.
+The learner receives a realistic repository situation, inspects Local / Remote state, types Git commands, and observes Working Tree, Staging Area, Commit History, Tracking, Stash, Conflict, Release Tag, publication, and in-progress operation state.
 
 ## Current phase
 
@@ -21,40 +21,17 @@ The learner receives a realistic repository situation, inspects Local / Remote s
 
 ## Playable curriculum
 
-The current prototype contains **35 Missions** across five Tracks.
+The current prototype contains **40 Missions** across five Tracks.
 
 ```text
 Foundations (4)
-  status -> diff -> selective staging -> atomic commit
-
 Daily Workflow (8)
-  branch isolation / atomic commit / fetch / pull / push / stash
-  Push Reject -> Fetch before integration decision
-  blocked Branch switch -> preserve WIP -> switch safely
-
 Recovery Lab (6)
-  safe unstage / revert shared history / stash recovery
-  conflicted stash pop
-  rebase abort
-  merge abort
-
 Collaboration (9)
-  Ahead / Behind Divergence
-  policy-driven Rebase and Merge
-  Rebase / Merge Conflict lifecycle
-  constrained force-with-lease rewrite
-  multi-file Rebase / Merge Conflict
-  deliberate rebase --skip
-
-Release & Incident (8)
-  selective Cherry-pick / Backport
-  Cherry-pick Conflict / Abort
-  dependency-ordered Backport
-  Hotfix Branch isolation
-  annotated Release Tag
-  bad Release Revert
-  new Patch Tag after recovery
+Release & Incident (13)
 ```
+
+Release & Incident now covers selective Backport, dependency ordering, Hotfix isolation, Conflict / Abort, annotated Tags, Bad Release Revert, Patch recovery, review evidence, approval gating, Tag publication, Hotfix propagation to main, and incident closure verification.
 
 Long-term curriculum target: approximately **185-273 core Missions**, plus variations and assessments.
 
@@ -68,95 +45,80 @@ Repository State
  +--- Staging Area
  +--- Conflict Set
  +--- Operation State
- |      +--- null
  |      +--- rebase
  |      +--- merge
  |      +--- cherry-pick
  +--- Commit History
- +--- Release Tags
+ +--- Local Release Tags
+ +--- Published Release Tags
+ +--- Review Gate
  +--- Remote / Tracking
- |      +--- tracking branch
- |      +--- known / actual Remote HEAD
- |      +--- ahead / behind
- |      +--- fetch / rejection state
  +--- Stash Stack
  +--- Guardrail State
-        +--- blocked Branch switch
 ```
 
-The game rewards inspection and safe reasoning rather than exact command-string guessing.
+## Git vs GitHub vs Team Policy
 
-## Conflict lifecycle
-
-Conflicts are modeled as temporary operation state, not generic failure screens.
+Git Adventures keeps these layers separate.
 
 ```text
-Operation
-   |
-Conflict Set
-   |
-   +--- inspect -> resolve every required path -> stage -> continue / commit
-   |
-   +--- abort -> exact pre-operation baseline
-   |
-   +--- skip -> only when the current commit intent is explicitly obsolete
+Git
+  = repository facts and history operations
+
+GitHub / PR Platform
+  = review conversation, CI and approval surface
+
+Team Policy
+  = evidence and approval requirements before integration
 ```
 
-See [Conflict Lifecycle](docs/conflict-lifecycle.md) and [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md).
+A review approval is therefore not simulated as a fake Git command. Git produces review evidence; the Scenario defines the approval gate.
 
-## Release / incident model
+See [Release Governance and Incident Closure](docs/release-governance.md).
 
-Release work is taught around **change intent, dependency, identity, and recovery**.
+## Release / incident lifecycle
 
 ```text
 Verified Fix
    |
 Dependency Check
    |
-Selective Backport
+Selective Backport / Hotfix Branch
    |
-Hotfix Branch
+Scope Review Evidence
+   |
+Approval Gate
+   |
+Release Integration
    |
 Verification
    |
-Annotated Tag
+Local Tag
+   |
+Tag Publication
    |
 Production
    |
    +--- Healthy
    |
    +--- Regression -> Revert -> Verify -> New Patch Tag
+   |
+Propagate final recovery to main
+   |
+Incident Closure Verification
 ```
 
 Key rules:
 
 - Backport prerequisite commits before dependent fixes.
-- Keep emergency changes isolated and reviewable on a Hotfix Branch.
-- Tag the exact Commit that passed verification.
-- Do not move a Published Release Tag to hide a bad release.
-- Recover Shared Release History with an explicit Revert when appropriate.
-- Publish verified recovery under a new Patch Version.
-
-See [Release and Backport Learning Model](docs/release-and-backport.md) and [Release Incident Lifecycle](docs/release-incident-lifecycle.md).
-
-## Force-with-lease policy
-
-`git push --force-with-lease` is exposed only in a constrained advanced Mission:
-
-- Private / coordinated branch
-- Rewrite explicitly permitted
-- Fetch immediately before push
-- Known Remote HEAD still equals Actual Remote HEAD
-
-A lease mismatch must reject the rewrite and preserve unexpected Remote work.
-
-## Learning feedback
-
-- 3-level progressive Hints: Direction -> Concept -> Command shape
-- Mastery: independent problem solving / unnecessary detours
-- Safety: protection of work and shared History
-- Mission Debrief: Why + Mastery + Safety + Hint / Detour use
-- Inspection commands do not reduce Mastery
+- Keep emergency changes isolated and reviewable.
+- Review exact Hotfix scope before approval.
+- A technically mergeable Branch is not automatically release-approved.
+- Local Tag creation and Remote Tag publication are separate states.
+- Published Release Tags are immutable release identities.
+- Preserve auditable Shared History with explicit Revert when appropriate.
+- Propagate final incident fixes back to main to avoid future regression.
+- End operational workflows with verification, not merely a successful command.
 
 ## Validation gates
 
@@ -169,12 +131,14 @@ Content Contract
       |
 Golden Mission Tests
       |
-Alternate / Invariant Tests
+Alternate / Repository Invariants
+      |
+Release Governance Invariants
       |
 Simulator Command Coverage
 ```
 
-Golden tests cover all **35 Missions**. Invariants include exact operation Abort restoration, conflict completeness, blocked-switch WIP preservation, dependency-ordered Backports, immutable Published Tags, auditable Bad Release Revert, and new Patch Tag creation for verified recovery.
+Golden tests cover all **40 Missions**. Governance invariants verify that unapproved Hotfixes cannot integrate, Local Tags do not imply publication, explicit Tag publication preserves older Release identities, and incident recovery converges back to main.
 
 ## Run locally
 
@@ -194,13 +158,11 @@ Open `http://localhost:8000`.
 - [Experience Design](docs/experience-design.md)
 - [Design Direction](docs/design-direction.md)
 - [Learning Feedback System](docs/learning-feedback-system.md)
-- [Vertical Slice](docs/vertical-slice.md)
-- [Daily Workflow Expansion](docs/daily-workflow-expansion.md)
-- [Collaboration and Divergence Expansion](docs/collaboration-expansion.md)
 - [Conflict Lifecycle](docs/conflict-lifecycle.md)
 - [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md)
 - [Release and Backport Learning Model](docs/release-and-backport.md)
 - [Release Incident Lifecycle](docs/release-incident-lifecycle.md)
+- [Release Governance and Incident Closure](docs/release-governance.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -210,25 +172,16 @@ Open `http://localhost:8000`.
 
 ## Figma
 
-Core experience design:
-
 https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
-
-Current design screens:
-
-- Track Map
-- Core Mission
-- Recovery Incident
 
 ## Next depth
 
-1. Hotfix Branch -> Release PR -> Review / approval decisions
-2. Tag publication and remote tag handling
-3. Forward-fix vs Revert / Rollback decision scenarios
-4. Hotfix propagation back to main
-5. Multiple supported release lines
-6. PR Review / Merge Strategy assessment
-7. Internal usability testing before large-scale Mission expansion
+1. Forward-fix vs Revert / Rollback decision scenarios
+2. Multiple supported release lines
+3. PR review strategy and merge strategy assessment
+4. Remote branch deletion / release cleanup policy
+5. Release verification checklist and scored assessment Missions
+6. Internal usability testing before large-scale Mission expansion
 
 ## License
 

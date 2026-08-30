@@ -120,6 +120,16 @@ Observe:
 - return within 1 / 3 / 7 days
 - voluntary advanced-Track entry
 
+### Assessment
+
+- Judgment
+- Safety
+- Evidence
+- Efficiency
+- total / PASS / REVIEW
+
+Assessment results are training feedback hypotheses and are not validated hiring or employee-performance metrics.
+
 ### Qualitative
 
 After session ask:
@@ -217,7 +227,8 @@ Do not create 200 Missions before validating the first 20-30.
 - Foundations + Daily Workflow + Recovery slice
 - local progress stable
 - responsive UI acceptable
-- basic analytics available if approved internally
+- anonymous Local Session Report available
+- Beginner / Basic / Experienced comparison possible without accounts
 
 ### Gate 4 - External Readiness
 
@@ -228,3 +239,35 @@ Do not create 200 Missions before validating the first 20-30.
 - support / feedback channel
 
 Commercial packaging decision occurs after product value is validated, not before.
+
+## 10. Local Session Report Procedure
+
+The current internal test recorder is deliberately local-first.
+
+```text
+Select Test Group
+   |
+Start Session
+   |
+Play without facilitator coaching
+   |
+End Session
+   |
+Export anonymous JSON
+   |
+Compare behavior across groups
+```
+
+Supported groups:
+
+- Beginner
+- Basic
+- Experienced
+
+The report stores Mission timing, relative Command Trace, Hint use, Inspection count, Detours, wrong attempts, unsafe attempts, Guided scores, Assessment scores, and a compact final Repository State.
+
+It does **not** request name, email, employee id, or account id.
+
+Use the JSON together with direct observation and post-session interview. Do not use it as a standalone employee ranking or certification instrument.
+
+Detailed schema and comparison guidance: [Local Usability Session Report](usability-session-report.md).

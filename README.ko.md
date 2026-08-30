@@ -125,6 +125,12 @@ python -m http.server 8000
 http://localhost:8000
 ```
 
+## Validation
+
+GitHub Actions가 PR Update마다 JavaScript Syntax와 Mission Content Contract를 검증합니다.
+
+현재 Vertical Slice는 Validation Workflow를 통과합니다.
+
 ## Product 기획 문서
 
 - [Product Vision](docs/product-vision.md)

@@ -15,7 +15,7 @@ const content=context.window.GIT_ADVENTURES_CONTENT;
 assert.equal(content.missions.length,44,'Playable browser curriculum must contain 44 missions');
 const assessments=content.missions.filter(m=>m.track==='Assessment');
 assert.equal(assessments.length,4,'Assessment Track must contain 4 missions');
-assert.deepEqual(assessments.map(m=>m.number),[41,42,43,44],'Assessment mission numbering must be continuous');
+assert.equal(assessments.map(m=>m.number).join(','),'41,42,43,44','Assessment mission numbering must be continuous');
 for(const mission of assessments){
   assert.equal(mission.assessment,true,`${mission.id}: assessment flag required`);
   assert.ok(mission.hint?.en&&mission.hint?.ko,`${mission.id}: bilingual minimal hint required`);

@@ -30,6 +30,8 @@ jobs:
           node --check engine-governance.js
           node --check assessment-scoring.js
           node --check engine-assessment.js
+          node --check session-report.js
+          node --check engine-session.js
           node --check content/missions.js
           node --check content/missions-daily.js
           node --check content/missions-collaboration.js
@@ -45,6 +47,7 @@ jobs:
           node --check tests/governance-invariants.mjs
           node --check tests/assessment.mjs
           node --check tests/assessment-scoring.mjs
+          node --check tests/session-report.mjs
           node --check tests/command-coverage.mjs
 
       - name: Validate mission content
@@ -64,6 +67,9 @@ jobs:
 
       - name: Run assessment scoring validation
         run: node tests/assessment-scoring.mjs
+
+      - name: Validate local usability session reports
+        run: node tests/session-report.mjs
 
       - name: Validate simulator command coverage
         run: node tests/command-coverage.mjs

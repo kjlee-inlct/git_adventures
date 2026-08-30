@@ -116,7 +116,7 @@ Alternate / Invariant Tests
 Simulator Command Coverage
 ```
 
-Golden tests cover all 18 Missions. Invariants now verify Remote refresh behavior, Stash preservation, conflicted Stash retention, Rebase commit rewriting, and the distinct history outcome of Merge vs Rebase.
+Golden tests cover all 18 Missions. Invariants verify Remote refresh behavior, Stash preservation, conflicted Stash retention, Rebase commit rewriting, and the distinct history outcome of Merge vs Rebase. The current validation workflow passes all stages.
 
 ## Run locally
 

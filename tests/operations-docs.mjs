@@ -4,6 +4,7 @@ import fs from 'node:fs';
 const read = path => fs.readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 
 const requiredDocs = [
+  'docs/internal-test-operations-index.md',
   'docs/internal-test-plan.md',
   'docs/first-internal-test-cycle.md',
   'docs/test-session-sheet.md',
@@ -24,6 +25,16 @@ const requiredDocs = [
 for (const path of requiredDocs) {
   assert.ok(fs.existsSync(new URL(`../${path}`, import.meta.url)), `Missing operations document: ${path}`);
 }
+
+const index = read('docs/internal-test-operations-index.md');
+for (const link of [
+  'internal-test-plan.md','first-internal-test-cycle.md','test-session-sheet.md','interview-note-template.md',
+  'internal-evidence-handling.md','report-aggregation.md','first-review-record-workflow.md','review-record-template.md',
+  'result-review-decision-framework.md','review-record-to-change-traceability.md','internal-deployment-options.md','internal-deployment-checklist.md'
+]) {
+  assert.ok(index.includes(link), `Operations Index missing link: ${link}`);
+}
+assert.match(index,/Implementation is not closure/i,'Operations Index must preserve implementation-vs-closure principle');
 
 const runbook = read('docs/first-internal-test-cycle.md');
 for (const link of ['test-session-sheet.md','interview-note-template.md','first-review-record-workflow.md','result-review-decision-framework.md','internal-deployment-options.md']) {
@@ -95,7 +106,7 @@ assert.match(serviceArchitecture,/Docker Compose required\?\s+NO/i,'Service Arch
 
 const facilitator = read('facilitator.html');
 for (const path of [
-  'first-internal-test-cycle.md','test-session-sheet.md','interview-note-template.md','internal-evidence-handling.md',
+  'internal-test-operations-index.md','first-internal-test-cycle.md','test-session-sheet.md','interview-note-template.md','internal-evidence-handling.md',
   'first-review-record-workflow.md','review-record-template.md','result-review-decision-framework.md',
   'review-record-to-change-traceability.md','internal-deployment-options.md','internal-deployment-checklist.md'
 ]) {

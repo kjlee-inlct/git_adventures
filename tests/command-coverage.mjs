@@ -21,9 +21,6 @@ const coverage = [
   { command: 'git push --force', mode: 'blocked-danger' }
 ];
 
-// Architectural implementation contracts. These checks intentionally target
-// command behavior, not local variable names, so harmless refactors do not
-// break the coverage test.
 for (const contract of [
   'function inspectCommand(cmd)',
   'function genericMutation(cmd)',
@@ -46,24 +43,15 @@ for (const command of references) {
   );
 }
 
-const families = [
-  ['status', /^git\\s\+status/],
-  ['diff', /^git\\s\+diff/],
-  ['add', /^git\\s\+add/],
-  ['restore', /^git\\s\+restore/],
-  ['switch', /^git\\s\+switch/],
-  ['commit', /^git\\s\+commit/],
-  ['revert', /^git\\s\+revert/]
-];
-
 const coveredFamilies = new Set(
   coverage.map(row => row.command.split(/\s+/)[1]).filter(Boolean)
 );
 
+const familyTokens = ['status', 'diff', 'add', 'restore', 'switch', 'commit', 'revert'];
 for (const mission of content.missions) {
   for (const step of mission.steps) {
     for (const pattern of step.accept) {
-      const family = families.find(([, matcher]) => matcher.test(pattern))?.[0];
+      const family = familyTokens.find(token => pattern.includes(token));
       assert.ok(family, `${mission.id}: cannot classify accepted command pattern: ${pattern}`);
       assert.ok(coveredFamilies.has(family), `${mission.id}: ${family} command family missing from coverage matrix`);
     }

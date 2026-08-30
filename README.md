@@ -34,18 +34,9 @@ Assessment           4
 
 The first 40 Missions are guided learning / practice. Missions 41-44 form the first Assessment Track and measure decision quality using already learned tools.
 
-Assessment currently covers:
-
-- Published regression: choose auditable Revert instead of erasing shared History
-- Supported release line: choose where a verified Fix actually belongs
-- Approved integration: choose the Merge strategy required by Scenario History Policy
-- Incident closure: verify state instead of assuming the workflow succeeded
-
-Long-term curriculum target: approximately **185-273 core Missions**, plus variations and assessments.
-
 ## Assessment design
 
-Assessment Missions use `assessment: true` and intentionally suppress the normal final **Command Shape** hint.
+Assessment Missions use `assessment: true` and suppress the final **Command Shape** hint.
 
 ```text
 Scenario Evidence
@@ -61,9 +52,7 @@ Git Action
 Outcome Verification
 ```
 
-### Assessment scoring
-
-Assessment Debrief uses four explainable axes:
+Assessment scoring uses four explainable axes:
 
 ```text
 Judgment    40
@@ -72,23 +61,13 @@ Evidence    20
 Efficiency  10
 ```
 
-These are default weights; Missions may override them when the learning objective requires another emphasis.
-
-PASS uses both total score and a Safety floor:
-
-```text
-total >= passScore
-AND
-safety >= criticalSafetyFloor
-```
-
-Useful inspection does not reduce Efficiency. Missing required inspection lowers Evidence, and unsafe Shared-History actions can fail the Safety floor even if the learner later reaches the correct state.
+PASS requires both total score and a Safety floor. Useful inspection does not reduce Efficiency; missing required inspection lowers Evidence.
 
 See [Assessment Track](docs/assessment-track.md) and [Assessment Scoring Rubric](docs/assessment-scoring.md).
 
 ## Internal usability session recorder
 
-The browser now includes an optional **local-only internal test recorder**.
+The browser includes an optional **local-only internal test recorder**.
 
 ```text
 Choose Test Group
@@ -102,17 +81,31 @@ End Session
 Export anonymous JSON
 ```
 
-Groups:
+Groups: Beginner / Basic / Experienced.
 
-- Beginner
-- Basic
-- Experienced
-
-A report records Mission timing, relative Command Trace, Hint / Inspection / Detour / Unsafe counts, Guided scores, Assessment scores, and compact final Repository state.
-
-The recorder does not request name, email, employee id, or account id. It uses a separate Local Storage key and exports a versioned JSON report for internal comparison. The data is for product/rubric calibration, not employee ranking or certification.
+Reports contain Mission timing, relative Command Trace, Hint / Inspection / Detour / Unsafe counts, Guided scores, Assessment scores, and compact final Repository state. No name, email, employee id, or account id is requested.
 
 See [Local Usability Session Report](docs/usability-session-report.md) and [Internal Test Plan](docs/internal-test-plan.md).
+
+## Local report aggregation
+
+Open `http://localhost:8000/reports.html` or use the **Reports** button in the game header.
+
+Multiple exported Session JSON files can be loaded together and compared by tester group without a backend.
+
+The Aggregator provides:
+
+- Completion Rate
+- Average / Median / P75 Time to First Command
+- Mission Duration
+- Hint / Inspection / Unsafe / Detour / Wrong rates
+- Assessment Total / Pass Rate
+- Judgment / Safety / Evidence / Efficiency averages and medians
+- Mission-level hotspot ranking
+
+Reports with unsupported schema, tester group, or `privacy.piiCollected != false` are rejected from aggregation.
+
+See [Local Usability Report Aggregation](docs/report-aggregation.md).
 
 ## Repository state model
 
@@ -138,8 +131,6 @@ Repository State
 
 ## Git vs GitHub vs Team Policy
 
-Git Adventures keeps these layers separate.
-
 ```text
 Git
   = repository facts and history operations
@@ -153,83 +144,22 @@ Team Policy
 
 A review approval is not simulated as a fake Git command. Git produces review evidence; the Scenario defines the approval gate.
 
-See [Release Governance and Incident Closure](docs/release-governance.md).
-
-## Release / incident lifecycle
-
-```text
-Verified Fix
-   |
-Dependency Check
-   |
-Selective Backport / Hotfix Branch
-   |
-Scope Review Evidence
-   |
-Approval Gate
-   |
-Release Integration
-   |
-Verification
-   |
-Local Tag
-   |
-Tag Publication
-   |
-Production
-   |
-   +--- Healthy
-   |
-   +--- Regression -> Revert -> Verify -> New Patch Tag
-   |
-Propagate final recovery to main
-   |
-Incident Closure Verification
-```
-
 ## Validation gates
-
-Every PR now validates curriculum, Assessment scoring, and the local test-report contract.
 
 ```text
 Guided curriculum (40)
-  JavaScript Syntax
-       |
-  Content Contract
-       |
-  Golden Mission Tests
-       |
-  Alternate / Repository Invariants
-       |
-  Release Governance Invariants
-       |
-  Simulator Command Coverage
+  Syntax -> Content -> Golden -> Repository Invariants
+  -> Release Governance -> Command Coverage
 
 Assessment curriculum (4)
-  Assessment Schema
-       |
-  Minimal Hint / No Command Leak
-       |
-  Expected Decision Command
-       |
-  Final State Verification
-       |
-  Scoring Rubric Contract
-       |
-  Unsafe / Evidence-loss Scoring Tests
+  Schema -> No Command Leak -> Decision -> Final State
+  -> Scoring Contract -> Unsafe / Evidence tests
 
 Internal usability data
-  Session Report Schema
-       |
-  Tester Group Contract
-       |
-  PII Non-Collection Contract
-       |
-  Command Classification
-       |
-  Guided / Assessment Score Preservation
-       |
-  JSON Summary Validation
+  Session Report Contract
+  -> PII Non-Collection
+  -> Report Aggregation Contract
+  -> Group / Mission Metrics
 ```
 
 ## Run locally
@@ -238,32 +168,25 @@ Internal usability data
 python -m http.server 8000
 ```
 
-Open `http://localhost:8000`.
+Game: `http://localhost:8000/`
+
+Reports: `http://localhost:8000/reports.html`
 
 ## Product documentation
 
 - [Product Vision](docs/product-vision.md)
 - [Game Design](docs/game-design.md)
 - [Curriculum Roadmap](docs/curriculum-roadmap.md)
-- [Level Design](docs/level-design.md)
-- [Mission Schema](docs/mission-schema.md)
-- [Experience Design](docs/experience-design.md)
-- [Design Direction](docs/design-direction.md)
-- [Learning Feedback System](docs/learning-feedback-system.md)
-- [Conflict Lifecycle](docs/conflict-lifecycle.md)
-- [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md)
-- [Release and Backport Learning Model](docs/release-and-backport.md)
-- [Release Incident Lifecycle](docs/release-incident-lifecycle.md)
-- [Release Governance and Incident Closure](docs/release-governance.md)
 - [Assessment Track](docs/assessment-track.md)
 - [Assessment Scoring Rubric](docs/assessment-scoring.md)
 - [Local Usability Session Report](docs/usability-session-report.md)
-- [Command Coverage](docs/command-coverage.md)
+- [Local Usability Report Aggregation](docs/report-aggregation.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
+- [Release Governance and Incident Closure](docs/release-governance.md)
+- [Command Coverage](docs/command-coverage.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
 - [Service Architecture](docs/service-architecture.md)
 - [Product Roadmap](docs/product-roadmap.md)
-- [References and Product Research](docs/references.md)
 
 ## Figma
 
@@ -272,8 +195,8 @@ https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 ## Next depth
 
 1. Run the first Beginner / Basic / Experienced internal sessions
-2. Compare time-to-first-command, Hint, Unsafe, Inspection, and Assessment patterns
-3. Calibrate Rubric weights / Safety floors from observed behavior
+2. Load exported reports into `reports.html`
+3. Compare repeated Group / Mission patterns before changing Rubric weights
 4. Add richer Forward-fix vs Revert vs Rollback Assessment
 5. Add multiple simultaneously supported Release Lines
 6. Improve PR Review / Merge Strategy assessment with competing valid-looking options

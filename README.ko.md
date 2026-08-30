@@ -21,15 +21,16 @@ Git Adventures는 다음 원칙을 중심으로 설계하는 Scenario 기반 Git
 
 ## 현재 Playable Curriculum
 
-현재 Prototype에는 **23개 Mission**이 있으며 4개 Track으로 구성됩니다.
+현재 Prototype에는 **26개 Mission**이 있으며 4개 Track으로 구성됩니다.
 
 ```text
 Foundations (4)
   status -> diff -> selective staging -> atomic commit
 
-Daily Workflow (7)
+Daily Workflow (8)
   Branch 격리 / Atomic Commit / fetch / pull / push / stash
-  Non-fast-forward Push Reject -> Integration 판단 전 Fetch
+  Push Reject -> Integration 판단 전 Fetch
+  Branch Switch 차단 -> WIP 보존 -> 안전한 Switch
 
 Recovery Lab (6)
   안전한 Unstage / Shared History Revert / Stash 복원
@@ -37,12 +38,13 @@ Recovery Lab (6)
   Rebase Abort
   Merge Abort
 
-Collaboration (6)
+Collaboration (8)
   Ahead / Behind Divergence
   Policy 기반 Rebase / Merge
-  Rebase Conflict -> Resolve -> Continue
-  Merge Conflict -> Resolve -> Merge Commit
+  Rebase / Merge Conflict Lifecycle
   제한된 Force-with-Lease Rewrite
+  Multi-file Rebase Conflict
+  의도적인 rebase --skip
 ```
 
 장기 목표는 약 **185~273개 Core Mission** + Scenario Variation + Assessment 규모입니다.
@@ -67,6 +69,8 @@ Repository State
  |      +--- Ahead / Behind
  |      +--- Fetch / Reject State
  +--- Stash Stack
+ +--- Guardrail State
+        +--- Blocked Branch Switch
 ```
 
 정확한 Command 문자열 맞히기보다 Inspection과 안전한 판단을 학습하도록 설계합니다.
@@ -78,16 +82,18 @@ Conflict를 Generic Fail 화면이 아니라 **진행 중인 Repository Operatio
 ```text
 Operation
    |
-Conflict
+Conflict Set
    |
-   +--- Inspect -> Resolve -> Stage -> Continue / Commit
+   +--- Inspect -> 필요한 모든 Path Resolve -> Stage -> Continue / Commit
    |
    +--- Abort -> Operation 이전 State 복원
+   |
+   +--- Skip -> 현재 Commit Intent가 명확히 불필요해진 경우에만 사용
 ```
 
-Rebase와 Merge는 서로 다른 History 결과를 만들며, Abort 역시 정답이 될 수 있는 Safety Decision으로 취급합니다.
+Rebase와 Merge는 서로 다른 History 결과를 만들며, Abort와 Skip 역시 Escape Command가 아니라 History Decision으로 다룹니다.
 
-상세: [Conflict Lifecycle](docs/conflict-lifecycle.md)
+상세: [Conflict Lifecycle](docs/conflict-lifecycle.md), [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md)
 
 ## Force-with-Lease Policy
 
@@ -126,9 +132,7 @@ Alternate / Invariant Tests
 Simulator Command Coverage
 ```
 
-**23개 Mission 전체**에 Golden Test를 적용합니다. Invariant Test는 Rebase/Merge Abort의 정확한 State 복원, Conflict 해결 State Transition, Stash Conflict 시 Entry 보존, Remote Divergence, 예상하지 못한 Remote 변경 시 Force-with-Lease Reject를 검증합니다.
-
-상세: [Simulator Command Coverage](docs/command-coverage.md)
+**26개 Mission 전체**에 Golden Test를 적용합니다. Invariant Test는 Rebase/Merge Abort의 정확한 State 복원, Multi-file Conflict 전체 해결 조건, Blocked Switch의 WIP 보존, 의도적인 Rebase Skip 의미, Stash Conflict 시 Entry 보존, Remote Divergence, 예상하지 못한 Remote 변경 시 Force-with-Lease Reject를 검증합니다.
 
 ## Local 실행
 
@@ -152,6 +156,7 @@ python -m http.server 8000
 - [Daily Workflow Expansion](docs/daily-workflow-expansion.md)
 - [Collaboration and Divergence Expansion](docs/collaboration-expansion.md)
 - [Conflict Lifecycle](docs/conflict-lifecycle.md)
+- [Worktree Guardrails and Advanced Rebase Decisions](docs/advanced-rebase-and-worktree-safety.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -173,13 +178,12 @@ https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 
 ## 다음 구현 깊이
 
-1. Working Tree 변경 때문에 Branch Switch가 차단되는 Scenario
-2. Multi-file Rebase / Merge Conflict
-3. `rebase --skip` 및 Partially Resolved Abort
-4. Release Branch 대상 Cherry-pick / Backport
-5. PR Review / Merge Strategy 판단
-6. Release / Hotfix Incident Track
-7. 대규모 Mission 확장 전 사내 Usability Test
+1. Multi-file Merge Conflict 및 Partially Resolved Abort
+2. 여러 Commit Replay 중 `rebase --skip`
+3. Release Branch 대상 Cherry-pick / Backport
+4. PR Review / Merge Strategy 판단
+5. Release / Hotfix Incident Track
+6. 대규모 Mission 확장 전 사내 Usability Test
 
 ## License
 

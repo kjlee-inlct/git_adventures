@@ -15,6 +15,7 @@
         <h1>Repository Training Ground</h1>
       </div>
       <div class="topbar-actions">
+        <button id="trackButton" class="button secondary" type="button">Track Map</button>
         <button id="languageButton" class="button secondary" type="button">한국어</button>
         <button id="resetButton" class="button secondary" type="button">Reset</button>
       </div>
@@ -32,6 +33,17 @@
       </div>
     </section>
 
+    <section id="trackMap" class="panel track-map" hidden>
+      <div class="track-map-header">
+        <div>
+          <p class="eyebrow">SKILL MAP</p>
+          <h2 id="trackMapTitle">Choose the next skill, not the next command.</h2>
+        </div>
+        <button id="closeTrackButton" class="button secondary" type="button">Close</button>
+      </div>
+      <div id="trackList" class="track-list"></div>
+    </section>
+
     <section class="workspace-grid">
       <aside class="panel mission-panel">
         <p id="missionNumber" class="eyebrow">FOUNDATIONS / 01</p>
@@ -44,8 +56,17 @@
         </div>
 
         <div class="hint-box">
-          <strong id="hintLabel">Hint</strong>
-          <p id="missionHint"></p>
+          <div class="hint-heading">
+            <strong id="hintLabel">Hint</strong>
+            <span id="hintDepth" class="hint-depth">0 / 3</span>
+          </div>
+          <p id="missionHint">Hints are progressive. Ask only when you need them.</p>
+          <button id="hintButton" class="text-button" type="button">Reveal hint</button>
+        </div>
+
+        <div class="score-strip">
+          <div><span id="masteryLabel">Mastery</span><strong id="masteryScore">100</strong></div>
+          <div><span id="safetyLabel">Safety</span><strong id="safetyScore">100</strong></div>
         </div>
 
         <div class="mission-nav">
@@ -90,6 +111,20 @@
           <div id="commitGraph" class="commit-graph"></div>
         </div>
       </aside>
+    </section>
+
+    <section id="debriefPanel" class="panel debrief-panel" hidden>
+      <div>
+        <p class="eyebrow" id="debriefLabel">MISSION DEBRIEF</p>
+        <h2 id="debriefTitle"></h2>
+        <p id="debriefBody" class="muted"></p>
+      </div>
+      <div class="debrief-scores">
+        <div><span id="debriefMasteryLabel">Mastery</span><strong id="debriefMastery">100</strong></div>
+        <div><span id="debriefSafetyLabel">Safety</span><strong id="debriefSafety">100</strong></div>
+        <div><span id="debriefHintsLabel">Hints</span><strong id="debriefHints">0</strong></div>
+        <div><span id="debriefDetoursLabel">Detours</span><strong id="debriefDetours">0</strong></div>
+      </div>
     </section>
 
     <section class="panel lesson-panel">

@@ -27,7 +27,9 @@ Group comparison
    |
 Mission hotspots
    |
-Product / Rubric decision
+Session Sheet / Interview cross-check
+   |
+Result Review Decision Framework
 ```
 
 ## Accepted Input Contract
@@ -42,6 +44,8 @@ The Aggregator rejects a report when:
 - `attempts` is not an array
 
 Rejected files are counted but excluded from all metrics.
+
+A rejected report should be reviewed as a tooling / privacy issue before attempting to alter the data manually.
 
 ## Group Metrics
 
@@ -77,7 +81,7 @@ Mission-level aggregation includes:
 
 The UI sorts hotspot rows primarily by Unsafe frequency, then low Completion, then Hint usage.
 
-This ordering is for investigation priority, not severity certification.
+This ordering is for **investigation priority**, not automatic severity or automatic backlog priority.
 
 ## Calibration Rules
 
@@ -88,7 +92,9 @@ Prefer evidence that repeats across:
 1. multiple testers in the same Group,
 2. multiple Groups,
 3. the same Mission or concept,
-4. command traces and qualitative observation.
+4. command traces,
+5. facilitator observations,
+6. post-session interview reasoning.
 
 Example:
 
@@ -115,6 +121,8 @@ Possible hypothesis:
 
 Do not immediately reveal a command.
 
+Cross-check whether the Session Sheet shows the same panel confusion across more than one Foundation Mission.
+
 ### High Hint rate in all Groups
 
 Possible hypothesis:
@@ -131,13 +139,78 @@ Possible hypothesis:
 
 This can be a valuable learning signal rather than a UI failure.
 
+Use interview reasoning to distinguish an intentional but unsafe habit from unclear product evidence.
+
 ### Experienced users complete quickly but score low Evidence
 
 Possible hypothesis:
 
 - Assessment may over-require inspection that experienced developers can infer safely.
 
-Review Evidence requirements using real trace and interview data.
+Review Evidence requirements using real trace and interview data before changing the global Rubric.
+
+### High Wrong rate with repeated same safe command
+
+Possible hypothesis:
+
+- Simulator is rejecting a defensible safe alternative.
+
+Escalate to technical review and compare against the Mission learning invariant.
+
+## Review Handoff
+
+The Aggregator does not decide product changes.
+
+After identifying a repeated pattern, create a Review Record using the [Result Review Decision Framework](result-review-decision-framework.md).
+
+Every Review Record should connect:
+
+```text
+Aggregator Pattern
+   +
+Session JSON Trace
+   +
+Session Sheet Observation
+   +
+Interview Reasoning
+   +
+Technical Review when needed
+```
+
+Then choose one explicit outcome:
+
+```text
+FIX NOW
+CHANGE MISSION ONLY
+CHANGE UI / LEARNING MODEL
+ADD ALTERNATE SOLUTION
+CHANGE RUBRIC
+OBSERVE MORE
+KEEP AS-IS
+ESCALATE TECHNICAL REVIEW
+```
+
+Do not create a product ticket from a metric row alone.
+
+## Decision Scope Rule
+
+Prefer the smallest scope that explains the evidence.
+
+```text
+One Mission affected
+  -> review Mission first
+
+Several Missions with same concept affected
+  -> review UI / learning model
+
+Several Assessments with same scoring mismatch
+  -> review global Rubric hypothesis
+
+Technically incorrect behavior
+  -> fix / escalate immediately
+```
+
+This reduces global changes caused by local content defects.
 
 ## Statistical Restraint
 
@@ -151,6 +224,8 @@ It does not claim:
 - causal learning improvement.
 
 Use Median and P75 with Average because small internal samples can contain large timing outliers.
+
+The first 3-5 sessions per group are a product-discovery sample, not a population estimate.
 
 ## Privacy
 
@@ -166,6 +241,8 @@ The tool does not request or add:
 
 Any report with `privacy.piiCollected != false` is rejected by design.
 
+Facilitator notes and interview notes must also avoid identity fields if they are stored with the same research set.
+
 ## Export
 
 The Aggregator can export a versioned aggregate JSON containing:
@@ -180,6 +257,18 @@ privacy
 
 The aggregate file is suitable for manual comparison or later import into a spreadsheet / internal analysis tool.
 
+## First-Cycle Deliverables
+
+A completed first-cycle review should have:
+
+- usable anonymous Session JSON files,
+- one [Session Sheet](test-session-sheet.md) per usable session,
+- one [Interview Note](interview-note-template.md) per usable session,
+- one aggregate report for the reviewed batch,
+- Review Records for significant patterns,
+- an explicit list of changes,
+- an explicit `Do Not Change` list.
+
 ## Next Stage
 
 After the first internal cycle, decide from evidence whether to add:
@@ -188,6 +277,6 @@ After the first internal cycle, decide from evidence whether to add:
 - cross-session trend views,
 - Mission version comparison,
 - optional internal upload endpoint,
-- richer assessment calibration analysis.
+- richer Assessment calibration analysis.
 
 Do not add central telemetry before there is a concrete operational need and privacy review.

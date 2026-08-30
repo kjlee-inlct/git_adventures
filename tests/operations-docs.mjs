@@ -5,6 +5,7 @@ const read = path => fs.readFileSync(new URL(`../${path}`, import.meta.url), 'ut
 
 const requiredDocs = [
   'AGENTS.md',
+  'Task.md',
   'docs/internal-test-operations-index.md',
   'docs/internal-test-plan.md',
   'docs/first-internal-test-cycle.md',
@@ -40,6 +41,24 @@ for (const invariant of [
 }
 assert.match(agents,/진행.*continue implementation.*not merge/is,'AGENTS.md must preserve the autonomous 진행 != merge rule');
 assert.match(agents,/44 Missions \/ 6 Tracks/i,'AGENTS.md must document the current curriculum baseline');
+
+const tasks = read('Task.md');
+for (const invariant of [
+  '44 Missions / 6 Tracks',
+  'First Internal Test Cycle - MUST DO NEXT',
+  'Beginner      3-5 usable sessions',
+  'Basic         3-5 usable sessions',
+  'Experienced   3-5 usable sessions',
+  'Docker Compose 현재 비필수',
+  'Implementation != Closure',
+  'Internal Test Server 배포',
+  '첫 Review Record 작성'
+]) {
+  assert.ok(tasks.includes(invariant), `Task.md missing current-plan invariant: ${invariant}`);
+}
+assert.match(tasks,/\[x\].*Root `AGENTS\.md`/i,'Task.md must track AGENTS.md as completed');
+assert.match(tasks,/\[ \].*Internal Test Server 배포/i,'Task.md must keep internal deployment as pending');
+assert.match(tasks,/대규모 Curriculum Expansion.*우선하지 않습니다/is,'Task.md must preserve validation-before-volume priority');
 
 const index = read('docs/internal-test-operations-index.md');
 for (const link of [

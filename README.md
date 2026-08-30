@@ -49,7 +49,7 @@ Post-session Interview
       |
 Local Report Aggregator
       |
-Evidence Review
+First Review Record
       |
 Explicit Product Decision
 ```
@@ -97,25 +97,29 @@ Multiple Session JSON files can be compared by Beginner / Basic / Experienced gr
 
 Reports with unsupported schema, tester group, or `privacy.piiCollected != false` are rejected.
 
+### First Review Record
+
+After the first **3-5 usable sessions per group**, build the first evidence-backed Review Record from:
+
+```text
+Anonymous Session JSON
+   +
+Session Sheet
+   +
+Interview Note
+   +
+Aggregator Pattern
+   +
+Technical Review when needed
+```
+
+Use [First Review Record Workflow](docs/first-review-record-workflow.md) to organize the evidence bundle and write the first traceable Review Record before choosing a product change.
+
 ### Review Decision Framework
 
 Metrics do not directly create product work.
 
-Each significant pattern should combine:
-
-```text
-Session JSON
-   +
-Aggregator pattern
-   +
-Session Sheet observation
-   +
-Interview reasoning
-   +
-Technical review when needed
-```
-
-Then choose an explicit outcome:
+Each significant pattern should then use [Result Review Decision Framework](docs/result-review-decision-framework.md) and choose one explicit outcome:
 
 ```text
 FIX NOW
@@ -130,6 +134,40 @@ ESCALATE TECHNICAL REVIEW
 
 Global Rubric changes require repeated evidence across multiple Assessment Missions and testers. One ambiguous Mission should be fixed locally first.
 
+## Docker / internal deployment
+
+**Docker Compose is not required for the current phase.**
+
+Today Git Adventures is a static browser application with no backend API or database.
+
+Recommended current deployment:
+
+```text
+Development / one PC
+  python -m http.server 8000
+
+Small shared internal server
+  Nginx / Caddy static hosting
+  OR
+  one static-web container
+```
+
+A single Nginx/Caddy container does not require Compose.
+
+Introduce Docker Compose when multiple coordinated runtime services become real requirements, for example:
+
+```text
+static-web
+   +
+report/progress API
+   +
+database/storage
+```
+
+or when reverse proxy / TLS / persistence / environment coordination materially benefits from one reproducible stack.
+
+See [Internal Deployment Options](docs/internal-deployment-options.md) and [Service Architecture](docs/service-architecture.md).
+
 ## Internal test operations document set
 
 | Artifact | Purpose |
@@ -140,7 +178,9 @@ Global Rubric changes require repeated evidence across multiple Assessment Missi
 | [Interview Note Template](docs/interview-note-template.md) | Why the tester acted that way |
 | [Local Usability Session Report](docs/usability-session-report.md) | Anonymous machine-recorded behavior |
 | [Local Usability Report Aggregation](docs/report-aggregation.md) | What repeats across sessions |
+| [First Review Record Workflow](docs/first-review-record-workflow.md) | How to turn the first real evidence bundle into a Review Record |
 | [Result Review Decision Framework](docs/result-review-decision-framework.md) | What to change / not change |
+| [Internal Deployment Options](docs/internal-deployment-options.md) | Current hosting choice and Compose adoption trigger |
 
 ## Git vs GitHub vs Team Policy
 
@@ -202,7 +242,9 @@ Reports: `http://localhost:8000/reports.html`
 - [Interview Note Template](docs/interview-note-template.md)
 - [Local Usability Session Report](docs/usability-session-report.md)
 - [Local Usability Report Aggregation](docs/report-aggregation.md)
+- [First Review Record Workflow](docs/first-review-record-workflow.md)
 - [Result Review Decision Framework](docs/result-review-decision-framework.md)
+- [Internal Deployment Options](docs/internal-deployment-options.md)
 - [Release Governance and Incident Closure](docs/release-governance.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -215,7 +257,7 @@ https://www.figma.com/design/4u02b7msrNYjPDQbITbnGi
 
 ## Next milestone
 
-Run the first **3-5 sessions per tester group** using the Facilitator presets. For each usable session, keep the anonymous Session JSON, Session Sheet, and Interview Note. Aggregate repeated patterns, create Review Records, and fix evidence-backed Mission / UI / technical problems before changing global Rubric weights or expanding content further.
+Run the first **3-5 sessions per tester group** using the Facilitator presets. For each usable session, keep the anonymous Session JSON, Session Sheet, and Interview Note. Aggregate repeated patterns, create the first Review Record, and fix evidence-backed Mission / UI / technical problems before changing global Rubric weights or expanding content further.
 
 ## License
 

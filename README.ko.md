@@ -125,11 +125,34 @@ python -m http.server 8000
 http://localhost:8000
 ```
 
-## Validation
+## Validation Gate
 
-GitHub Actions가 PR Update마다 JavaScript Syntax와 Mission Content Contract를 검증합니다.
+Mission 수를 늘리기 전에 자동 검증으로 학습 Content와 Simulator 안정성을 보호합니다.
 
-현재 Vertical Slice는 Validation Workflow를 통과합니다.
+```text
+Content Contract
+      |
+      v
+Golden Mission Test
+      |
+      v
+Alternate Solution Test
+      |
+      v
+Simulator Command Coverage
+```
+
+GitHub Actions 현재 검증 항목:
+
+- JavaScript Syntax
+- Mission ID / Number / 한국어·English Content / Difficulty / Repository State Shape
+- 8개 Mission 대표 해법 -> 기대 Final Repository State
+- 안전한 Alternate Path가 동일 Target State로 수렴하는지 확인
+- Unstage 시 Working Tree Data 보존 확인
+- 학습자에게 노출한 Command와 Simulator Coverage 일치 여부
+- 위험 Command 인식 여부
+
+상세: [Simulator Command Coverage](docs/command-coverage.md), [Vertical Slice](docs/vertical-slice.md)
 
 ## Product 기획 문서
 
@@ -141,6 +164,7 @@ GitHub Actions가 PR Update마다 JavaScript Syntax와 Mission Content Contract�
 - [Experience Design](docs/experience-design.md)
 - [Design Direction](docs/design-direction.md)
 - [Learning Feedback System](docs/learning-feedback-system.md)
+- [Simulator Command Coverage](docs/command-coverage.md)
 - [Vertical Slice](docs/vertical-slice.md)
 - [Content Guideline](docs/content-guideline.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
@@ -186,11 +210,11 @@ VIM Adventures, VIM Master, Community Discussion, Git Workflow 자료를 학습 
 
 1. 8개 Mission Vertical Slice 사내 Test
 2. 실제 사용자 행동 기반 Hint / Mastery / Safety 조정
-3. Target-state Golden Test 및 Alternate-path Regression Test 추가
-4. Simulator Command Coverage 확장
-5. 첫 Slice 검증 후 Foundations를 20~30개 고품질 Mission으로 확장
-6. Daily Workflow / Recovery 깊이 확장
-7. Track Map / Debrief 실제 사용성 검증
+3. Daily Workflow Simulator Command Coverage 확장
+4. Consequence 중심 Recovery Scenario 추가
+5. 모든 신규 Mission에 Golden Fixture 필수화
+6. 첫 Slice 검증 후 Foundations를 20~30개 고품질 Mission으로 확장
+7. Daily Workflow / Recovery 깊이 확장
 8. 실제 사용 결과 기반 Account / Analytics / 향후 Packaging 결정
 
 ## License

@@ -24,7 +24,10 @@ const expected={
 'recovery.rebase-abort.001':{branch:'feature/calibration',working:[],staged:[],head:'aa71001 Adjust calibration defaults',remote:{ahead:1,behind:1},conflictCount:0,operation:null},
 'collaboration.merge-conflict.001':{branch:'integration/device',working:[],staged:[],head:'d711010 Merge origin/integration/device',remote:{ahead:1,behind:0},conflictCount:0,operation:null},
 'recovery.merge-abort.001':{branch:'integration/power',working:[],staged:[],head:'10ab900 Integrate power telemetry',remote:{ahead:1,behind:1},conflictCount:0,operation:null},
-'collaboration.force-with-lease.001':{branch:'feature/private-cleanup',working:[],staged:[],head:'cc91003 Cleanup retry state',remote:{ahead:0,behind:0,actualHead:'cc91003',rejected:null},conflictCount:0,operation:null}
+'collaboration.force-with-lease.001':{branch:'feature/private-cleanup',working:[],staged:[],head:'cc91003 Cleanup retry state',remote:{ahead:0,behind:0,actualHead:'cc91003',rejected:null},conflictCount:0,operation:null},
+'workflow.switch-blocked.001':{branch:'main',working:[],staged:[],head:'a41c92e Initial device controller',stashCount:1,conflictCount:0,operation:null,blockedSwitch:null},
+'collaboration.rebase-multifile.001':{branch:'feature/firmware-download',working:[],staged:[],head:'d55ea31 Fix firmware checksum retry',remote:{ahead:1,behind:0},conflictCount:0,operation:null},
+'collaboration.rebase-skip.001':{branch:'feature/default-tuning',working:[],staged:[],head:'cd88120 Finalize team defaults',remote:{ahead:0,behind:0},conflictCount:0,operation:null}
 };
 for(const mission of content.missions){
  const golden=expected[mission.id];assert.ok(golden,`${mission.id}: missing golden expectation`);const {state,commands}=simulateDirectMission(mission);
@@ -37,5 +40,6 @@ for(const mission of content.missions){
  if(golden.stashCount!==undefined)assert.equal(state.stashes.length,golden.stashCount,`${mission.id}: stash count mismatch`);
  if(golden.conflictCount!==undefined)assert.equal(state.conflicts.length,golden.conflictCount,`${mission.id}: conflict count mismatch`);
  if(Object.prototype.hasOwnProperty.call(golden,'operation'))assert.equal(state.operation,golden.operation,`${mission.id}: operation mismatch`);
+ if(Object.prototype.hasOwnProperty.call(golden,'blockedSwitch'))assert.equal(state.blockedSwitch,golden.blockedSwitch,`${mission.id}: blockedSwitch mismatch`);
 }
 console.log(`Golden-tested ${content.missions.length} missions.`);

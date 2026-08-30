@@ -11,7 +11,7 @@
 <body>
   <main class="app-shell">
     <header class="topbar"><div><p class="eyebrow">GIT / ADVENTURES</p><h1>Repository Training Ground</h1></div><div class="topbar-actions"><button id="trackButton" class="button secondary" type="button">Track Map</button><button id="languageButton" class="button secondary" type="button">한국어</button><button id="resetButton" class="button secondary" type="button">Reset</button></div></header>
-    <section class="hero panel"><div><p id="heroKicker" class="eyebrow">REPOSITORY PUZZLES</p><h2 id="heroTitle"></h2><p id="heroDescription" class="muted"></p></div><div class="progress-wrap" aria-label="Course progress"><div class="progress-label"><span id="progressText"></span><span id="xpText">0 XP</span></div><div class="progress-track"><div id="progressBar" class="progress-bar"></div></div></div></section>
+    <section class="hero panel"><div><p id="heroKicker" class="eyebrow">REPOSITORY PUZZLES</p><h2 id="heroTitle"></h2><p id="heroDescription" class="muted"></p></div><div class="progress-wrap"><div class="progress-label"><span id="progressText"></span><span id="xpText">0 XP</span></div><div class="progress-track"><div id="progressBar" class="progress-bar"></div></div></div></section>
     <section id="trackMap" class="panel track-map" hidden><div class="track-map-header"><div><p class="eyebrow">SKILL MAP</p><h2 id="trackMapTitle"></h2></div><button id="closeTrackButton" class="button secondary" type="button">Close</button></div><div id="trackList" class="track-list"></div></section>
     <section class="workspace-grid">
       <aside class="panel mission-panel"><p id="missionNumber" class="eyebrow"></p><h2 id="missionTitle"></h2><p id="missionStory" class="muted"></p><div class="objective-box"><strong id="objectiveLabel">Objective</strong><p id="missionObjective"></p></div><div class="hint-box"><div class="hint-heading"><strong id="hintLabel">Hint</strong><span id="hintDepth" class="hint-depth">0 / 3</span></div><p id="missionHint"></p><button id="hintButton" class="text-button" type="button">Reveal hint</button></div><div class="score-strip"><div><span id="masteryLabel">Mastery</span><strong id="masteryScore">100</strong></div><div><span id="safetyLabel">Safety</span><strong id="safetyScore">100</strong></div></div><div class="mission-nav"><button id="previousButton" class="button secondary" type="button">Previous</button><button id="nextButton" class="button" type="button" disabled>Next mission</button></div></aside>
@@ -21,6 +21,9 @@
     <section id="debriefPanel" class="panel debrief-panel" hidden><div><p class="eyebrow" id="debriefLabel">MISSION DEBRIEF</p><h2 id="debriefTitle"></h2><p id="debriefBody" class="muted"></p></div><div class="debrief-scores"><div><span id="debriefMasteryLabel">Mastery</span><strong id="debriefMastery">100</strong></div><div><span id="debriefSafetyLabel">Safety</span><strong id="debriefSafety">100</strong></div><div><span id="debriefHintsLabel">Hints</span><strong id="debriefHints">0</strong></div><div><span id="debriefDetoursLabel">Detours</span><strong id="debriefDetours">0</strong></div></div></section>
     <section class="panel lesson-panel"><div><p id="conceptLabel" class="eyebrow">WHY THIS MATTERS</p><h2 id="conceptTitle"></h2><p id="conceptBody" class="muted"></p></div><div id="commandReference" class="command-reference"></div></section>
   </main>
-  <script src="content/missions.js"></script><script src="content/missions-daily.js"></script><script src="app.js"></script>
+  <script src="content/missions.js"></script>
+  <script src="content/missions-daily.js"></script>
+  <script src="content/missions-collaboration.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

@@ -19,6 +19,8 @@ ESCALATE TECHNICAL REVIEW
 
 It is not a learner-grading framework.
 
+For the first real calibration cycle, construct the evidence bundle and first Review Record using [First Review Record Workflow](first-review-record-workflow.md) before applying this decision framework.
+
 ## 1. Evidence Sources
 
 Every product decision should identify which evidence supports it.
@@ -307,6 +309,8 @@ Do Not Change:
 
 The `Do Not Change` field is mandatory for meaningful reviews. It reduces cascading fixes that erase working parts of the product.
 
+For the first cycle, use [First Review Record Workflow](first-review-record-workflow.md) to populate these fields from the Session JSON + Session Sheet + Interview Note + Aggregator evidence bundle.
+
 ## 12. Change Validation
 
 After a product change, define what evidence should improve.
@@ -375,3 +379,22 @@ Do not interpret them as:
 - certification thresholds.
 
 They are sufficient to discover obvious repeated product problems and generate better hypotheses for the next test cycle.
+
+## 15. Related Documents
+
+```text
+first-internal-test-cycle.md
+  -> execute sessions
+
+first-review-record-workflow.md
+  -> construct the first evidence-backed Review Record
+
+result-review-decision-framework.md
+  -> choose the product action
+
+assessment-scoring.md
+  -> global Rubric change control
+
+report-aggregation.md
+  -> descriptive cross-session patterns
+```

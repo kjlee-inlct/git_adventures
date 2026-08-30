@@ -126,6 +126,8 @@ Simulator Command Coverage
 
 Golden tests cover all **23 Missions**. Invariants verify exact Rebase/Merge Abort restoration, conflict resolution state transitions, Stash retention on conflict, Remote divergence behavior, and force-with-lease rejection when the Remote changes unexpectedly.
 
+See [Simulator Command Coverage](docs/command-coverage.md).
+
 ## Run locally
 
 ```bash

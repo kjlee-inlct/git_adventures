@@ -1,154 +1,261 @@
-# Product and Monetization
+# Product Packaging and Future Monetization
 
-## 1. Product principle
+## 1. Current Phase
+
+The current phase is internal product validation.
+
+All implemented learning content and product features should remain accessible during internal testing unless a restriction is required to test a specific entitlement behavior.
+
+```text
+Now
+ |
+ +--- Internal users
+ +--- No payment
+ +--- No artificial paywall
+ +--- Broad feature access
+ +--- Learn from usage
+ |
+ v
+Later
+ |
+ +--- Decide packaging from evidence
+ +--- Convert selected depth / service features to paid
+```
+
+The purpose of commercial planning now is architectural readiness, not early monetization.
+
+## 2. Product Principle
 
 Monetization must not damage the learning loop.
 
-Free users should reach a real outcome: understand Git state and complete a basic feature-branch workflow. Paid value should come from depth, realism, assessment, continuity, and organization features.
+A future free user should still reach a real outcome: understand Git state and complete a basic Feature Branch workflow.
 
-## 2. Reference feedback applied
+Future paid value should come from depth, realism, assessment, continuity, specialized content, and organizational value.
 
-Public feedback around Vim learning games repeatedly highlights several product risks:
+## 3. Product Risks from Reference Feedback
 
-- login before users can evaluate the product creates friction
-- an early hard paywall feels worse than a generous free sample
+Public feedback around learning games highlights several risks:
+
+- mandatory account creation before first value creates friction
+- an early hard paywall makes the product feel like a bait-and-switch
 - beginner-only content loses intermediate users
-- users want more levels and harder scenarios
-- game-like learning is attractive when the interaction itself feels satisfying
+- users want harder scenarios after the basics
+- one-time educational value may not fit a subscription-only model
+- learners value a game when it makes otherwise tedious repetition enjoyable
 
 Git Adventures response:
 
-- Guest-first onboarding
-- no mandatory login for Free Core
-- local progress before account creation
-- account prompt at natural value moments: cloud sync, Pro unlock, Team assignment
-- advanced curriculum designed from the beginning
+- Guest-first initial experience
+- Local progress possible before account creation
+- Full internal-test access
+- Beginner-to-advanced curriculum designed from the beginning
+- Future packaging separated from Mission logic
+- Future pricing model chosen only after usage and retention data exist
 
-## 3. Proposed tiers
+## 4. Future Packaging Model
 
-### Free
+The following names are planning labels, not current product restrictions.
 
-Purpose: acquisition, trust, and genuine Git competency.
+### Core
 
-- Foundations track
-- selected Daily Workflow missions
-- selected Recovery missions
-- local save
+Purpose: broad adoption and genuine Git competency.
+
+Potential contents:
+
+- Orientation
+- Foundations
+- meaningful Daily Workflow coverage
+- essential safe Recovery concepts
 - Korean / English
+- local progress
 - command reference
-- basic XP / achievements
+- core achievements
 
-### Pro
+### Individual Mastery
 
-Purpose: individual mastery and recurring value.
+Potential future paid value:
 
-Potential monthly / annual subscription or lifetime option.
-
-- all individual tracks
-- Recovery Lab
-- Collaboration Lab
-- Advanced Git
-- Release / Incident scenarios
+- complete Recovery Lab
+- Collaboration scenarios
+- History Management
+- Release / Incident packs
+- adaptive Practice Arena
 - assessments
-- detailed skill map
-- cloud progress
-- multi-device sync
-- advanced achievements
-- practice arena
+- detailed mastery map
+- cloud progress and multi-device sync
+- advanced challenge modes
 
-### Team / Business
+### Team / Organization
 
-Purpose: measurable onboarding and policy compliance.
+Potential future paid value:
 
 - organization workspace
-- seat management
 - assigned paths
-- team dashboard
-- completion analytics
-- private company-policy missions
-- custom branch / PR / release rules
+- onboarding curriculum
+- team progress dashboard
+- private company-policy Missions
+- configurable Branch / PR / Release rules
 - assessment reports
-- export / LMS integration potential
+- internal scenario packs
+- LMS / HR integration potential
 
-## 4. Pricing architecture
+## 5. Do Not Hardcode Pricing Into Content
 
-Do not couple UI directly to a payment provider.
+Mission content should use neutral capability metadata.
 
-```text
-User
- |
- v
-Entitlement Service
- |
- +--- free
- +--- pro
- +--- team
- |
- v
-Feature Gate
+Example:
 
-Payment Provider
- |
- v
-Billing Adapter
- |
- v
-Entitlement Update
+```json
+{
+  "track": "recovery",
+  "difficulty": 5,
+  "accessGroup": "advanced-practice",
+  "assessmentEligible": true
+}
 ```
 
-This permits Stripe, Lemon Squeezy, Paddle, app-store billing, coupons, or manual enterprise licensing without rewriting game logic.
+The game engine consumes the Mission regardless of future pricing.
 
-## 5. Conversion moments
+Future access policy maps entitlement to `accessGroup`.
 
-Good conversion moments:
+```text
+Mission Content
+     |
+     +--- accessGroup
+     |
+     v
+Entitlement Policy
+     |
+     +--- Internal Test: allow all
+     +--- Future Core: allow selected groups
+     +--- Future Individual: allow expanded groups
+     +--- Future Team: allow organization groups
+```
 
-- learner completes Free Foundations
-- learner tries first advanced recovery lab
-- learner wants cloud sync
-- learner starts an assessment
-- team admin wants assignments / analytics
+## 6. Payment Provider Independence
+
+If commercial billing is introduced later, payment must remain outside the game engine.
+
+```text
+User / Organization
+        |
+        v
+Billing Adapter
+        |
+        v
+Entitlement Service
+        |
+        v
+Access Policy
+        |
+        v
+Game / Content
+```
+
+This permits future options such as:
+
+- one-time purchase
+- subscription
+- lifetime individual license
+- school / classroom license
+- organization seat license
+- manual enterprise agreement
+
+without changing Mission implementation.
+
+## 7. Pricing Model Should Follow Product Usage
+
+Do not decide subscription vs one-time purchase now.
+
+Evidence required later:
+
+- Do users return weekly after curriculum completion?
+- Does Practice Arena create recurring use?
+- Are new scenario packs consumed continuously?
+- Is cloud progress valued?
+- Are assessments repeated?
+- Do teams need ongoing analytics and assignments?
+
+Possible interpretation:
+
+```text
+Mostly one-time curriculum consumption
+ -> one-time / lifetime model likely stronger
+
+Continuous practice + new scenario packs
+ -> subscription may be reasonable
+
+Organization management / analytics
+ -> recurring team pricing likely reasonable
+```
+
+## 8. Future Conversion Moments
+
+If paid packaging is introduced, show it only after meaningful value.
+
+Reasonable moments:
+
+- Foundations completed
+- learner explicitly selects an advanced scenario pack
+- learner requests cloud sync
+- learner starts a formal assessment
+- Team admin opens organization functions
 
 Avoid:
 
-- login wall on first visit
-- paywall after only a few trivial commands
-- blocking basic recovery knowledge
-- repeated modal interruptions during a mission
+- paywall before first Mission
+- account requirement before product evaluation
+- paywall after only trivial commands
+- repeated modal interruptions during a Mission
+- blocking essential safety knowledge
 
-## 6. Retention loops
+## 9. Internal Test Metrics
 
-- daily 5-minute scenario
-- streaks without punitive loss mechanics
-- weekly incident challenge
-- skill mastery map
-- spaced repetition of weak concepts
-- personalized recovery drills
-- team assignments
-- new scenario packs
+Before monetization decisions, collect product-quality evidence first.
 
-## 7. Metrics
+### Activation
 
-Acquisition:
+- first Mission start rate
+- first Mission completion rate
+- time to first successful state transition
+- first-session Track depth
 
-- landing -> first mission start
-- first mission completion
+### Learning
 
-Activation:
+- retries by mastery tag
+- hint depth
+- unsafe-command rate
+- ability to solve a similar Mission later
+- Recovery safety decisions
 
-- Foundations completion rate
-- time to first successful commit workflow
+### Engagement
 
-Learning:
+- session duration
+- Missions per session
+- return rate
+- voluntary Practice Arena use
+- advanced Track entry rate
 
-- retries per concept
-- hint usage
-- recovery-safety score
-- retention assessment after 7 / 30 days
+### Product Value
 
-Commercial:
+- where users voluntarily stop
+- which Tracks users request next
+- whether experienced users find enough depth
+- whether users would recommend the game internally
 
-- Free -> Pro conversion after meaningful free completion
-- Pro retention
-- Team seat activation
+Commercial metrics come after these learning/product metrics.
 
-Do not optimize conversion at the expense of learning completion.
+## 10. Decision Gate for Future Monetization
+
+Do not activate paid restrictions until all are true:
+
+1. Core learning experience is validated
+2. Advanced content has meaningful depth
+3. Internal users voluntarily return
+4. Product has a clear value boundary beyond basic Git knowledge
+5. Access architecture is stable
+6. Pricing hypothesis is supported by observed behavior or direct research
+
+Until then:
+
+> Design commercially, operate openly, learn aggressively.

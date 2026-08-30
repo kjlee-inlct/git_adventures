@@ -2,6 +2,18 @@
   const content = window.GIT_ADVENTURES_CONTENT;
   if (!content) throw new Error('Base mission content must load first');
 
+  const defaultRubric = {
+    weights: { judgment: 40, safety: 30, evidence: 20, efficiency: 10 },
+    passScore: 75,
+    criticalSafetyFloor: 60
+  };
+
+  const rubric = overrides => ({
+    ...defaultRubric,
+    ...overrides,
+    weights: { ...defaultRubric.weights, ...(overrides?.weights || {}) }
+  });
+
   content.missions.push(
     {
       id: "assessment.recovery-decision.001",
@@ -9,6 +21,16 @@
       track: "Assessment",
       difficulty: 5,
       assessment: true,
+      assessmentRubric: rubric({
+        criticalSafetyFloor: 70,
+        evidenceCommands: [],
+        preferredCommands: ["git revert 1430f01"],
+        unsafePatterns: ["git reset --hard", "git push --force"],
+        rationale: {
+          en: "Published release history must remain auditable. A revert adds a visible correction without erasing shipped history.",
+          ko: "Published Release History는 Audit 가능하게 유지해야 합니다. Revert는 배포 History를 지우지 않고 명시적인 교정을 추가합니다."
+        }
+      }),
       title: { en: "Choose the recovery for a published regression", ko: "Published Regression 복구 방식 판단" },
       story: {
         en: "v1.4.3 is already published. Commit 1430f01 introduced a production regression. Support and incident records must remain able to identify exactly what shipped.",
@@ -41,6 +63,16 @@
       track: "Assessment",
       difficulty: 5,
       assessment: true,
+      assessmentRubric: rubric({
+        weights: { judgment: 45, safety: 25, evidence: 20, efficiency: 10 },
+        evidenceCommands: [],
+        preferredCommands: ["git cherry-pick 8cf4300"],
+        unsafePatterns: ["release/1.3", "git merge main"],
+        rationale: {
+          en: "The supported and affected line is release/1.4. EOL branches should not receive normal fixes without an explicit policy exception.",
+          ko: "지원 중이며 영향받는 Line은 release/1.4입니다. EOL Branch는 명시적 Policy Exception 없이는 일반 Fix 대상이 아닙니다."
+        }
+      }),
       title: { en: "Choose the supported release line", ko: "지원 대상 Release Line 판단" },
       story: {
         en: "The reconnect fix is already in main. release/1.4 is still supported and affected. release/1.3 is end-of-life and receives no normal fixes under team policy.",
@@ -73,6 +105,16 @@
       track: "Assessment",
       difficulty: 5,
       assessment: true,
+      assessmentRubric: rubric({
+        weights: { judgment: 45, safety: 25, evidence: 20, efficiency: 10 },
+        evidenceCommands: [],
+        preferredCommands: ["git merge --no-ff hotfix/1.4.4"],
+        unsafePatterns: ["git rebase", "git push --force"],
+        rationale: {
+          en: "The review gate is satisfied and policy explicitly requires preserving the hotfix branch boundary in release history.",
+          ko: "Review Gate가 충족됐고 Policy가 Release History에 Hotfix Branch Boundary 보존을 명시적으로 요구합니다."
+        }
+      }),
       title: { en: "Choose the approved release integration strategy", ko: "승인된 Release Integration Strategy 판단" },
       story: {
         en: "hotfix/1.4.4 passed CI and scope review. Team policy requires preserving the reviewed hotfix branch boundary in release history. The approval gate is satisfied.",
@@ -105,6 +147,16 @@
       track: "Assessment",
       difficulty: 5,
       assessment: true,
+      assessmentRubric: rubric({
+        weights: { judgment: 25, safety: 20, evidence: 45, efficiency: 10 },
+        evidenceCommands: ["git status", "git log --oneline"],
+        preferredCommands: ["git status", "git log --oneline"],
+        unsafePatterns: ["git reset", "git push --force"],
+        rationale: {
+          en: "Closure is evidence-driven. Clean state and durable recovery history must both be verified before the incident is accepted as complete.",
+          ko: "Closure는 Evidence 기반입니다. Incident 완료 승인 전 Clean State와 Durable Recovery History를 모두 검증해야 합니다."
+        }
+      }),
       title: { en: "Verify before declaring the incident closed", ko: "Incident 종료 선언 전 Verification" },
       story: {
         en: "The patch is published, the prior bad tag remains immutable, and the recovery is expected on main. You are the final reviewer before incident closure.",

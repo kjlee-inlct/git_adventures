@@ -31,7 +31,12 @@ const expected={
 'collaboration.merge-multifile.001':{branch:'integration/device',working:[],staged:[],head:'63ce310 Merge origin/integration/device',remote:{ahead:1,behind:0},conflictCount:0,operation:null},
 'release.cherry-pick.001':{branch:'release/2.4',working:[],staged:[],head:'24cb711 Fix serial timeout handling',remote:{ahead:1,behind:0},conflictCount:0,operation:null},
 'release.cherry-pick-conflict.001':{branch:'release/2.4',working:[],staged:[],head:'24bc821 Add firmware block transfer',remote:{ahead:1,behind:0},conflictCount:0,operation:null},
-'release.cherry-pick-abort.001':{branch:'release/2.4',working:[],staged:[],head:'240aa10 Release 2.4.3',remote:{ahead:0,behind:0},conflictCount:0,operation:null}
+'release.cherry-pick-abort.001':{branch:'release/2.4',working:[],staged:[],head:'240aa10 Release 2.4.3',remote:{ahead:0,behind:0},conflictCount:0,operation:null},
+'release.backport-order.001':{branch:'release/1.4',working:[],staged:[],head:'14bd202 Backport packet bounds fix',remote:{ahead:2,behind:0}},
+'release.hotfix-branch.001':{branch:'hotfix/1.4.3',working:[],staged:[],head:'1430f01 Backport serial reconnect fix',remote:{ahead:1,behind:0}},
+'release.tag.001':{branch:'hotfix/1.4.3',working:[],staged:[],head:'1430f01 Backport serial reconnect fix',tags:['v1.4.2@1400abc','v1.4.3@1430f01']},
+'release.bad-release-revert.001':{branch:'release/1.4',working:[],staged:[],head:"1440a01 Revert 'Backport serial reconnect fix'",tags:['v1.4.2@1400abc','v1.4.3@1430f01']},
+'release.patch-tag.001':{branch:'release/1.4',working:[],staged:[],head:"1440a01 Revert 'Backport serial reconnect fix'",tags:['v1.4.2@1400abc','v1.4.3@1430f01','v1.4.4@1440a01']}
 };
 for(const mission of content.missions){
  const golden=expected[mission.id];assert.ok(golden,`${mission.id}: missing golden expectation`);const {state,commands}=simulateDirectMission(mission);
@@ -45,5 +50,6 @@ for(const mission of content.missions){
  if(golden.conflictCount!==undefined)assert.equal(state.conflicts.length,golden.conflictCount,`${mission.id}: conflict count mismatch`);
  if(Object.prototype.hasOwnProperty.call(golden,'operation'))assert.equal(state.operation,golden.operation,`${mission.id}: operation mismatch`);
  if(Object.prototype.hasOwnProperty.call(golden,'blockedSwitch'))assert.equal(state.blockedSwitch,golden.blockedSwitch,`${mission.id}: blockedSwitch mismatch`);
+ if(golden.tags)assert.deepEqual([...state.tags].sort(),[...golden.tags].sort(),`${mission.id}: tags mismatch`);
 }
 console.log(`Golden-tested ${content.missions.length} missions.`);

@@ -10,10 +10,7 @@
 <body>
   <main class="app-shell">
     <header class="topbar">
-      <div>
-        <p class="eyebrow">GIT / ADVENTURES</p>
-        <h1>Repository Training Ground</h1>
-      </div>
+      <div><p class="eyebrow">GIT / ADVENTURES</p><h1>Repository Training Ground</h1></div>
       <div class="topbar-actions">
         <button id="trackButton" class="button secondary" type="button">Track Map</button>
         <button id="languageButton" class="button secondary" type="button">한국어</button>
@@ -22,122 +19,40 @@
     </header>
 
     <section class="hero panel">
-      <div>
-        <p id="heroKicker" class="eyebrow">REPOSITORY PUZZLES</p>
-        <h2 id="heroTitle">Learn Git by changing repository state, not by memorizing commands.</h2>
-        <p id="heroDescription" class="muted">Inspect the repository, choose a safe action, and watch Working Tree, Staging Area, and History change.</p>
-      </div>
-      <div class="progress-wrap" aria-label="Course progress">
-        <div class="progress-label"><span id="progressText">Mission 1 / 8</span><span id="xpText">0 XP</span></div>
-        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
-      </div>
+      <div><p id="heroKicker" class="eyebrow">REPOSITORY PUZZLES</p><h2 id="heroTitle"></h2><p id="heroDescription" class="muted"></p></div>
+      <div class="progress-wrap" aria-label="Course progress"><div class="progress-label"><span id="progressText"></span><span id="xpText">0 XP</span></div><div class="progress-track"><div id="progressBar" class="progress-bar"></div></div></div>
     </section>
 
-    <section id="trackMap" class="panel track-map" hidden>
-      <div class="track-map-header">
-        <div>
-          <p class="eyebrow">SKILL MAP</p>
-          <h2 id="trackMapTitle">Choose the next skill, not the next command.</h2>
-        </div>
-        <button id="closeTrackButton" class="button secondary" type="button">Close</button>
-      </div>
-      <div id="trackList" class="track-list"></div>
-    </section>
+    <section id="trackMap" class="panel track-map" hidden><div class="track-map-header"><div><p class="eyebrow">SKILL MAP</p><h2 id="trackMapTitle"></h2></div><button id="closeTrackButton" class="button secondary" type="button">Close</button></div><div id="trackList" class="track-list"></div></section>
 
     <section class="workspace-grid">
       <aside class="panel mission-panel">
-        <p id="missionNumber" class="eyebrow">FOUNDATIONS / 01</p>
-        <h2 id="missionTitle"></h2>
-        <p id="missionStory" class="muted"></p>
-
-        <div class="objective-box">
-          <strong id="objectiveLabel">Objective</strong>
-          <p id="missionObjective"></p>
-        </div>
-
-        <div class="hint-box">
-          <div class="hint-heading">
-            <strong id="hintLabel">Hint</strong>
-            <span id="hintDepth" class="hint-depth">0 / 3</span>
-          </div>
-          <p id="missionHint">Hints are progressive. Ask only when you need them.</p>
-          <button id="hintButton" class="text-button" type="button">Reveal hint</button>
-        </div>
-
-        <div class="score-strip">
-          <div><span id="masteryLabel">Mastery</span><strong id="masteryScore">100</strong></div>
-          <div><span id="safetyLabel">Safety</span><strong id="safetyScore">100</strong></div>
-        </div>
-
-        <div class="mission-nav">
-          <button id="previousButton" class="button secondary" type="button">Previous</button>
-          <button id="nextButton" class="button" type="button" disabled>Next mission</button>
-        </div>
+        <p id="missionNumber" class="eyebrow"></p><h2 id="missionTitle"></h2><p id="missionStory" class="muted"></p>
+        <div class="objective-box"><strong id="objectiveLabel">Objective</strong><p id="missionObjective"></p></div>
+        <div class="hint-box"><div class="hint-heading"><strong id="hintLabel">Hint</strong><span id="hintDepth" class="hint-depth">0 / 3</span></div><p id="missionHint"></p><button id="hintButton" class="text-button" type="button">Reveal hint</button></div>
+        <div class="score-strip"><div><span id="masteryLabel">Mastery</span><strong id="masteryScore">100</strong></div><div><span id="safetyLabel">Safety</span><strong id="safetyScore">100</strong></div></div>
+        <div class="mission-nav"><button id="previousButton" class="button secondary" type="button">Previous</button><button id="nextButton" class="button" type="button" disabled>Next mission</button></div>
       </aside>
 
-      <section class="panel terminal-panel">
-        <div class="terminal-header">
-          <strong id="terminalTitle">practice-repo / terminal</strong>
-        </div>
-        <div id="terminalOutput" class="terminal-output" role="log" aria-live="polite"></div>
-        <form id="commandForm" class="command-form">
-          <label for="commandInput" class="prompt">$</label>
-          <input id="commandInput" autocomplete="off" spellcheck="false" placeholder="git status" aria-label="Git command">
-          <button class="button run" type="submit">Run</button>
-        </form>
-      </section>
+      <section class="panel terminal-panel"><div class="terminal-header"><strong id="terminalTitle">practice-repo / terminal</strong></div><div id="terminalOutput" class="terminal-output" role="log" aria-live="polite"></div><form id="commandForm" class="command-form"><label for="commandInput" class="prompt">$</label><input id="commandInput" autocomplete="off" spellcheck="false" placeholder="git status" aria-label="Git command"><button class="button run" type="submit">Run</button></form></section>
 
       <aside class="panel state-panel">
-        <div class="state-header">
-          <div>
-            <p id="stateLabel" class="eyebrow">REPOSITORY STATE</p>
-            <h2 id="branchName">main</h2>
-          </div>
-          <span id="stateBadge" class="badge">clean</span>
-        </div>
-
-        <div class="state-section">
-          <h3 id="workingTreeLabel">Working Tree</h3>
-          <div id="workingTree" class="file-list"></div>
-        </div>
-
-        <div class="state-section">
-          <h3 id="stagingLabel">Staging Area</h3>
-          <div id="stagingArea" class="file-list"></div>
-        </div>
-
-        <div class="state-section">
-          <h3 id="historyLabel">Commit History</h3>
-          <div id="commitGraph" class="commit-graph"></div>
-        </div>
+        <div class="state-header"><div><p id="stateLabel" class="eyebrow">REPOSITORY STATE</p><h2 id="branchName">main</h2></div><span id="stateBadge" class="badge">clean</span></div>
+        <div class="state-section"><h3 id="workingTreeLabel">Working Tree</h3><div id="workingTree" class="file-list"></div></div>
+        <div class="state-section"><h3 id="stagingLabel">Staging Area</h3><div id="stagingArea" class="file-list"></div></div>
+        <div class="state-section"><h3 id="remoteLabel">Remote / Tracking</h3><div id="remoteState" class="state-kv"></div></div>
+        <div class="state-section"><h3 id="stashLabel">Stash</h3><div id="stashState" class="file-list"></div></div>
+        <div class="state-section"><h3 id="historyLabel">Commit History</h3><div id="commitGraph" class="commit-graph"></div></div>
       </aside>
     </section>
 
-    <section id="debriefPanel" class="panel debrief-panel" hidden>
-      <div>
-        <p class="eyebrow" id="debriefLabel">MISSION DEBRIEF</p>
-        <h2 id="debriefTitle"></h2>
-        <p id="debriefBody" class="muted"></p>
-      </div>
-      <div class="debrief-scores">
-        <div><span id="debriefMasteryLabel">Mastery</span><strong id="debriefMastery">100</strong></div>
-        <div><span id="debriefSafetyLabel">Safety</span><strong id="debriefSafety">100</strong></div>
-        <div><span id="debriefHintsLabel">Hints</span><strong id="debriefHints">0</strong></div>
-        <div><span id="debriefDetoursLabel">Detours</span><strong id="debriefDetours">0</strong></div>
-      </div>
-    </section>
+    <section id="debriefPanel" class="panel debrief-panel" hidden><div><p class="eyebrow" id="debriefLabel">MISSION DEBRIEF</p><h2 id="debriefTitle"></h2><p id="debriefBody" class="muted"></p></div><div class="debrief-scores"><div><span id="debriefMasteryLabel">Mastery</span><strong id="debriefMastery">100</strong></div><div><span id="debriefSafetyLabel">Safety</span><strong id="debriefSafety">100</strong></div><div><span id="debriefHintsLabel">Hints</span><strong id="debriefHints">0</strong></div><div><span id="debriefDetoursLabel">Detours</span><strong id="debriefDetours">0</strong></div></div></section>
 
-    <section class="panel lesson-panel">
-      <div>
-        <p id="conceptLabel" class="eyebrow">WHY THIS MATTERS</p>
-        <h2 id="conceptTitle"></h2>
-        <p id="conceptBody" class="muted"></p>
-      </div>
-      <div id="commandReference" class="command-reference"></div>
-    </section>
+    <section class="panel lesson-panel"><div><p id="conceptLabel" class="eyebrow">WHY THIS MATTERS</p><h2 id="conceptTitle"></h2><p id="conceptBody" class="muted"></p></div><div id="commandReference" class="command-reference"></div></section>
   </main>
 
   <script src="content/missions.js"></script>
+  <script src="content/missions-daily.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

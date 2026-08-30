@@ -36,7 +36,12 @@ const expected={
 'release.hotfix-branch.001':{branch:'hotfix/1.4.3',working:[],staged:[],head:'1430f01 Backport serial reconnect fix',remote:{ahead:1,behind:0}},
 'release.tag.001':{branch:'hotfix/1.4.3',working:[],staged:[],head:'1430f01 Backport serial reconnect fix',tags:['v1.4.2@1400abc','v1.4.3@1430f01']},
 'release.bad-release-revert.001':{branch:'release/1.4',working:[],staged:[],head:"1440a01 Revert 'Backport serial reconnect fix'",tags:['v1.4.2@1400abc','v1.4.3@1430f01']},
-'release.patch-tag.001':{branch:'release/1.4',working:[],staged:[],head:"1440a01 Revert 'Backport serial reconnect fix'",tags:['v1.4.2@1400abc','v1.4.3@1430f01','v1.4.4@1440a01']}
+'release.patch-tag.001':{branch:'release/1.4',working:[],staged:[],head:"1440a01 Revert 'Backport serial reconnect fix'",tags:['v1.4.2@1400abc','v1.4.3@1430f01','v1.4.4@1440a01']},
+'release.review-evidence.001':{branch:'hotfix/1.4.4',working:[],staged:[],head:'1440b11 Restore stable reconnect behavior',reviewGate:{approved:true,evidence:true}},
+'release.approved-merge.001':{branch:'release/1.4',working:[],staged:[],head:'1440c21 Merge hotfix/1.4.4',remote:{ahead:1,behind:0},reviewGate:{approved:true,evidence:true}},
+'release.publish-tag.001':{branch:'release/1.4',working:[],staged:[],head:'1440c21 Merge hotfix/1.4.4',tags:['v1.4.3@1430f01','v1.4.4@1440c21'],publishedTags:['v1.4.3@1430f01','v1.4.4@1440c21']},
+'release.propagate-main.001':{branch:'main',working:[],staged:[],head:'2200e20 Propagate stable reconnect recovery',remote:{ahead:1,behind:0}},
+'release.closure-check.001':{branch:'main',working:[],staged:[],head:'2200e20 Propagate stable reconnect recovery',publishedTags:['v1.4.3@1430f01','v1.4.4@1440c21'],reviewGate:{approved:true,evidence:true}}
 };
 for(const mission of content.missions){
  const golden=expected[mission.id];assert.ok(golden,`${mission.id}: missing golden expectation`);const {state,commands}=simulateDirectMission(mission);
@@ -51,5 +56,7 @@ for(const mission of content.missions){
  if(Object.prototype.hasOwnProperty.call(golden,'operation'))assert.equal(state.operation,golden.operation,`${mission.id}: operation mismatch`);
  if(Object.prototype.hasOwnProperty.call(golden,'blockedSwitch'))assert.equal(state.blockedSwitch,golden.blockedSwitch,`${mission.id}: blockedSwitch mismatch`);
  if(golden.tags)assert.deepEqual([...state.tags].sort(),[...golden.tags].sort(),`${mission.id}: tags mismatch`);
+ if(golden.publishedTags)assert.deepEqual([...state.publishedTags].sort(),[...golden.publishedTags].sort(),`${mission.id}: publishedTags mismatch`);
+ if(golden.reviewGate)assert.deepEqual(state.reviewGate,golden.reviewGate,`${mission.id}: reviewGate mismatch`);
 }
 console.log(`Golden-tested ${content.missions.length} missions.`);

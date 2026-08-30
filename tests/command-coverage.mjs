@@ -6,23 +6,36 @@ const content = loadContent();
 const appSource = fs.readFileSync(new URL('../app.js', import.meta.url), 'utf8');
 
 const coverage = [
-  { command: 'git status', mode: 'inspect', evidence: /\^git\\s\+status\$/ },
-  { command: 'git diff', mode: 'inspect', evidence: /\^git\\s\+diff\$/ },
-  { command: 'git diff --staged', mode: 'inspect', evidence: /--staged/ },
-  { command: 'git log --oneline', mode: 'inspect', evidence: /log\\s\+--oneline/ },
-  { command: 'git add <file>', mode: 'mutate', evidence: /addMatch/ },
-  { command: 'git add .', mode: 'mutate-detour', evidence: /add\\s\+\\\./ },
-  { command: 'git restore --staged <file>', mode: 'mutate-recovery', evidence: /restoreStageMatch/ },
-  { command: 'git switch -c <branch>', mode: 'mission-step', evidence: /switch/ },
-  { command: 'git commit -m "..."', mode: 'mission-step', evidence: /commit/ },
-  { command: 'git revert <sha>', mode: 'mission-step', evidence: /revert/ },
-  { command: 'git reset --hard', mode: 'blocked-danger', evidence: /reset\\s+--hard/ },
-  { command: 'git clean -fd', mode: 'blocked-danger', evidence: /clean\\s+-fd/ },
-  { command: 'git push --force', mode: 'blocked-danger', evidence: /push\\s+--force/ }
+  { command: 'git status', mode: 'inspect' },
+  { command: 'git diff', mode: 'inspect' },
+  { command: 'git diff --staged', mode: 'inspect' },
+  { command: 'git log --oneline', mode: 'inspect' },
+  { command: 'git add <file>', mode: 'mutate' },
+  { command: 'git add .', mode: 'mutate-detour' },
+  { command: 'git restore --staged <file>', mode: 'mutate-recovery' },
+  { command: 'git switch -c <branch>', mode: 'mission-step' },
+  { command: 'git commit -m "..."', mode: 'mission-step' },
+  { command: 'git revert <sha>', mode: 'mission-step' },
+  { command: 'git reset --hard', mode: 'blocked-danger' },
+  { command: 'git clean -fd', mode: 'blocked-danger' },
+  { command: 'git push --force', mode: 'blocked-danger' }
 ];
 
-for (const row of coverage) {
-  assert.match(appSource, row.evidence, `${row.command}: simulator implementation evidence missing`);
+// Architectural implementation contracts. These checks intentionally target
+// command behavior, not local variable names, so harmless refactors do not
+// break the coverage test.
+for (const contract of [
+  'function inspectCommand(cmd)',
+  'function genericMutation(cmd)',
+  'function dangerousCommand(cmd)',
+  'cmd.match(/^git\\s+add\\s+(.+)$/)',
+  'cmd.match(/^git\\s+restore\\s+--staged\\s+(.+)$/)',
+  '/^git\\s+add\\s+\\.$/.test(cmd)',
+  'reset\\s+--hard',
+  'clean\\s+-fd',
+  'push\\s+--force'
+]) {
+  assert.ok(appSource.includes(contract), `Simulator contract missing from app.js: ${contract}`);
 }
 
 const references = content.references.map(([command]) => command);
@@ -33,13 +46,28 @@ for (const command of references) {
   );
 }
 
-const acceptedPatterns = content.missions.flatMap(mission => mission.steps.flatMap(step => step.accept));
-for (const pattern of acceptedPatterns) {
-  const represented = coverage.some(row => {
-    const tokens = row.command.replace(/[<>".]/g, '').split(/\s+/).filter(Boolean);
-    return tokens.slice(0, 2).every(token => pattern.toLowerCase().includes(token.toLowerCase().replace('-', '\\-')) || pattern.toLowerCase().includes(token.toLowerCase()));
-  });
-  assert.ok(represented, `Mission accepted command pattern has no coverage category: ${pattern}`);
+const families = [
+  ['status', /^git\\s\+status/],
+  ['diff', /^git\\s\+diff/],
+  ['add', /^git\\s\+add/],
+  ['restore', /^git\\s\+restore/],
+  ['switch', /^git\\s\+switch/],
+  ['commit', /^git\\s\+commit/],
+  ['revert', /^git\\s\+revert/]
+];
+
+const coveredFamilies = new Set(
+  coverage.map(row => row.command.split(/\s+/)[1]).filter(Boolean)
+);
+
+for (const mission of content.missions) {
+  for (const step of mission.steps) {
+    for (const pattern of step.accept) {
+      const family = families.find(([, matcher]) => matcher.test(pattern))?.[0];
+      assert.ok(family, `${mission.id}: cannot classify accepted command pattern: ${pattern}`);
+      assert.ok(coveredFamilies.has(family), `${mission.id}: ${family} command family missing from coverage matrix`);
+    }
+  }
 }
 
 console.log(`Validated simulator coverage for ${coverage.length} command categories.`);

@@ -26,6 +26,19 @@ jobs:
         run: |
           node --check app.js
           node --check content/missions.js
+          node --check tests/test-helpers.mjs
+          node --check tests/golden.mjs
+          node --check tests/alternate-solutions.mjs
+          node --check tests/command-coverage.mjs
 
       - name: Validate mission content
         run: node tests/content-smoke.mjs
+
+      - name: Run mission golden tests
+        run: node tests/golden.mjs
+
+      - name: Run alternate solution tests
+        run: node tests/alternate-solutions.mjs
+
+      - name: Validate simulator command coverage
+        run: node tests/command-coverage.mjs

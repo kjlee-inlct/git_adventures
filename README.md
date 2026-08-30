@@ -6,7 +6,7 @@ Git Adventures is a scenario-driven Git learning game built around one idea:
 
 > Learn Git by changing repository state, not by memorizing a command list.
 
-The learner receives a realistic repository situation, inspects Local / Remote state, types Git commands, and observes how Working Tree, Staging Area, Commit History, Tracking, and Stash change.
+The learner receives a realistic repository situation, inspects Local / Remote state, types Git commands, and observes how Working Tree, Staging Area, Commit History, Tracking, Stash, and Conflict state change.
 
 ## Current phase
 
@@ -21,24 +21,31 @@ The learner receives a realistic repository situation, inspects Local / Remote s
 
 ## Playable curriculum
 
-The current prototype contains **13 Missions**.
+The current prototype contains **18 Missions** across four Tracks.
 
 ```text
 Foundations (4)
   status -> diff -> selective staging -> atomic commit
 
-Daily Workflow (6)
-  feature branch
-  busy workspace atomic commit
+Daily Workflow (7)
+  feature branch isolation
+  atomic commit from a busy workspace
   fetch remote state
   pull a clean upstream update
   publish with push -u
   stash WIP before urgent branch switching
+  recover from non-fast-forward push rejection by fetching facts first
 
-Recovery Lab (3)
+Recovery Lab (4)
   unstage without data loss
   revert shared history
   restore stashed WIP
+  recover from a conflicted stash pop
+
+Collaboration (3)
+  read ahead / behind divergence
+  rebase a private feature branch under explicit team policy
+  merge a shared branch under history-preservation policy
 ```
 
 Long-term curriculum target: approximately **185-273 core Missions**, plus variations and assessments.
@@ -51,6 +58,7 @@ Repository State
  +--- Current Branch
  +--- Working Tree
  +--- Staging Area
+ +--- Conflict Set
  +--- Commit History
  +--- Remote / Tracking
  |      +--- tracking branch
@@ -58,11 +66,30 @@ Repository State
  |      +--- actual remote HEAD
  |      +--- ahead / behind
  |      +--- fetch state
+ |      +--- rejected push state
  |
  +--- Stash Stack
 ```
 
 The game rewards inspection and safe reasoning rather than exact command-string guessing.
+
+## History policy learning
+
+Git Adventures intentionally avoids teaching `merge` or `rebase` as universally superior.
+
+```text
+Who owns these commits?
+        |
+        +-- Private / coordinated rewrite
+        |       |
+        |       +-- Rebase may be appropriate
+        |
+        +-- Shared / already published
+                |
+                +-- Preserve ancestry unless team policy says otherwise
+```
+
+A rejected normal Push is treated as new repository evidence, not as a prompt to force-push.
 
 ## Learning feedback
 
@@ -89,7 +116,7 @@ Alternate / Invariant Tests
 Simulator Command Coverage
 ```
 
-Golden tests cover all 13 Missions. Remote/Stash invariants verify that `fetch` does not move Local HEAD, `push -u` establishes tracking, and stash push/pop preserves WIP correctly.
+Golden tests cover all 18 Missions. Invariants now verify Remote refresh behavior, Stash preservation, conflicted Stash retention, Rebase commit rewriting, and the distinct history outcome of Merge vs Rebase.
 
 ## Run locally
 
@@ -111,6 +138,7 @@ Open `http://localhost:8000`.
 - [Learning Feedback System](docs/learning-feedback-system.md)
 - [Vertical Slice](docs/vertical-slice.md)
 - [Daily Workflow Expansion](docs/daily-workflow-expansion.md)
+- [Collaboration and Divergence Expansion](docs/collaboration-expansion.md)
 - [Command Coverage](docs/command-coverage.md)
 - [Internal Test Plan](docs/internal-test-plan.md)
 - [Product Packaging and Future Monetization](docs/product-monetization.md)
@@ -132,13 +160,14 @@ Current design screens:
 
 ## Next depth
 
-1. `fetch` -> inspect divergence -> explicit Merge / Rebase decision
-2. rejected Push because Remote moved
-3. policy-driven `pull --rebase`
-4. Stash Pop Conflict
-5. Branch switch blocked by overlapping changes
-6. Collaboration Track: PR / Conflict / shared-history decisions
-7. Internal usability testing before expanding Foundations to 20-30 Missions
+1. Rebase Conflict and `rebase --continue` / `--abort`
+2. Merge Conflict and Merge abort
+3. Branch switch blocked by overlapping Working Tree changes
+4. Remote changes again after a completed Rebase
+5. `--force-with-lease` only inside an explicitly constrained advanced Scenario
+6. Cherry-pick / Backport across Release Branches
+7. PR Review and Merge strategy decisions
+8. Internal usability testing before large-scale Mission expansion
 
 ## License
 
